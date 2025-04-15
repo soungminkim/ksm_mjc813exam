@@ -17,91 +17,132 @@
 // 곱하기
 // math.ceil(값)
 
-let lotto = [];
+//let lotto = [];
+//
+//for (let i = 0; i < 6; i++){
+//    let num = Math.floor(Math.random() * 45) + 1;
+//
+//    for (let j in lotto){
+//        while(num === lotto[j]){
+//            num = Math.floor(Math.random() * 45) + 1;
+//        }
+//    }
+//    lotto.push(num);
+//}
+//lotto.sort((a,b) => a - b);
+//console.log("이번주의 로또 번호는 " + lotto);
+//
+////2번 문제10번 별찍기
+// const n = prompt("숫자를 적어주세요.");
+// let tree = '';
+//
+// for(let i=1; i<=n; i++){
+//     let star = '';
+//     for(let j=1; j<=n-i; j++){
+//         star += ' ';
+//     }
+//     for(let x=1; x<=2 * i -1; x++){
+//         star += '*';
+//     }
+//     tree += star + '\n';
+// }
+// console.log(tree);
+//
+//// 3번 문제12번 게임캐릭터클래스
+//// 데이터 여기에 class 를 작성.
+//const Wizard = class Wizard {
+//    constructor(health, mana, armor) {
+//        this.health = health;
+//        this.mana = mana;
+//        this.armor = armor;
+//    }
+//    attack(){
+//        console.log("파이어볼");
+//    }
+//}
+//
+//const x = new Wizard(545,210,10);
+//console.log(x.health, x.mana, x.armor);
+//x.attack()
+//
+////4번 문제13번
+//let planetnumber = prompt("숫자를 입력하세요");
+//let userplanet
+//
+//if (isNaN(planetnumber)) {
+//    console.log("숫자를 입력해주세요.");
+//}
+//else{
+//    switch(planetnumber) {
+//        case "1":
+//            userplanet = "수성";
+//            break;
+//        case "2":
+//            userplanet = "금성";
+//            break;
+//        case "3":
+//            userplanet = "지구";
+//            break;
+//        case "4":
+//            userplanet = "화성";
+//            break;
+//        case "5":
+//            userplanet = "목성";
+//            break;
+//        case "6":
+//            userplanet = "토성";
+//            break;
+//        case "7":
+//            userplanet = "천왕성";
+//            break;
+//        case "8":
+//            userplanet = "해왕성";
+//            break;
+//        default:
+//            console.log("해당 " + userplanet + "번쨰 행성은 없습니다.")
+//    }
+//}
+//
+//// 5번 문제16번
+//let reversinput = prompt("입력하세요");
+//let newString = "";
+//
+//for (let i = reversinput.length - 1; i>=0; i--) {
+//    newString += reversinput[i];
+//}
+//
+//console.log(newString);
 
-for (let i = 0; i < 6; i++){
-    let num = Math.floor(Math.random() * 45) + 1;
+// 리버스를 사용하는 법
+// let reversStr =reversinput.split("");
+//
+// let reverseArray = reversStr.reverse();
+//
+// let joinArray = reverseArray.join("");
+//
+// console.log(joinArray);
 
-    for (let j in lotto){
-        while(num === lotto[j]){
-            num = Math.floor(Math.random() * 45) + 1;
+class ride{
+    constructor(userkey){
+        this.userkey = userkey;
+
+        if(userkey >= 150){
+            console.log("YES");
+        }
+        else {
+            console.log("No");
         }
     }
-    lotto.push(num);
 }
-lotto.sort((a,b) => a - b);
-console.log("이번주의 로또 번호는 " + lotto);
 
-//2번 문제10번 별찍기
- const n = prompt("숫자를 적어주세요.");
- let tree = '';
-
- for(let i=1; i<=n; i++){
-     let star = '';
-     for(let j=1; j<=n-i; j++){
-         star += ' ';
-     }
-     for(let x=1; x<=2 * i -1; x++){
-         star += '*';
-     }
-     tree += star + '\n';
- }
- console.log(tree);
-
-// 3번 문제12번 게임캐릭터클래스
-// 데이터 여기에 class 를 작성.
-const Wizard = class Wizard {
-    constructor(health, mana, armor) {
-        this.health = health;
-        this.mana = mana;
-        this.armor = armor;
+let userkey = prompt("키를 입력해주세요.");
+while (true){
+    if(isNaN(userkey)){
+        userkey = prompt("숫자를 입력해주세요.");
     }
-    attack(){
-        console.log("파이어볼");
+    else{
+        new ride(userkey);
+        break;
     }
 }
 
-const x = new Wizard(545,210,10);
-console.log(x.health, x.mana, x.armor);
-x.attack()
-
-//4번 문제13번
-let planetnumber = prompt("입력하세요");
-
-switch(planetnumber){
-    case "1":console.log("수성");
-        break;
-    case "2":console.log("금성");
-        break;
-    case "3":console.log("지구");
-        break;
-    case "4":console.log("화성");
-        break;
-    case "5":console.log("목성");
-        break;
-    case "6":console.log("토성");
-        break;
-    case "7":console.log("천왕성");
-        break;
-    case "8":console.log("해왕성");
-        break;
-    default:console.log("해당 "+strInput+"번쨰 행성은 없습니다.")
-}
-
-// 5번 문제16번
-let reversinput = prompt("입력하세요");
-let newString = "";
-
-for (let i = reversinput.length - 1; i>=0; i--) {
-    newString += reversinput[i];
-}
-
-console.log(newString);
-
- let reversStr =reversinput.split("");
-
- let reverseArray = reversStr.reverse();
-
- let joinArray = reverseArray.join("");
-
- console.log(joinArray);
