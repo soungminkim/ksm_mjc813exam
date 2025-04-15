@@ -33,7 +33,7 @@ lotto.sort((a,b) => a - b);
 console.log("이번주의 로또 번호는 " + lotto);
 
 //2번 문제10번 별찍기
- const n = prompt('숫자를 입력하세요.');
+ const n = prompt("숫자를 적어주세요.");
  let tree = '';
 
  for(let i=1; i<=n; i++){
@@ -41,7 +41,7 @@ console.log("이번주의 로또 번호는 " + lotto);
      for(let j=1; j<=n-i; j++){
          star += ' ';
      }
-     for(let k=1; k<=2*i-1; k++){
+     for(let x=1; x<=2 * i -1; x++){
          star += '*';
      }
      tree += star + '\n';
@@ -66,9 +66,9 @@ console.log(x.health, x.mana, x.armor);
 x.attack()
 
 //4번 문제13번
-let strInput = prompt("입력하세요");
+let planetnumber = prompt("입력하세요");
 
-switch(strInput){
+switch(planetnumber){
     case "1":console.log("수성");
         break;
     case "2":console.log("금성");
@@ -89,16 +89,16 @@ switch(strInput){
 }
 
 // 5번 문제16번
-let strInput = prompt("입력하세요");
+let reversinput = prompt("입력하세요");
 let newString = "";
 
-for (let i = strInput.length - 1; i>=0; i--) {
-    newString += strInput[i];
+for (let i = reversinput.length - 1; i>=0; i--) {
+    newString += reversinput[i];
 }
 
 console.log(newString);
 
- let reversStr =strInput.split("");
+ let reversStr =reversinput.split("");
 
  let reverseArray = reversStr.reverse();
 
