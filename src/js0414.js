@@ -157,11 +157,11 @@ class TestAverage{
         let average = 0;
         this.test = test;
         for(let i = 0; i <test.length;i++){
-            test[i] = Math.floor(test[i])
-            average += test[i];
+            test[i] = test[i]
+            average += Number(test[i]);
         }
 
-        average = average / test.length;
+        average = Math.floor(average / test.length);
         console.log(`평균은 : ${average}`);
     }
 }
