@@ -125,46 +125,46 @@
 //this -> 클래스가 객체로 인스턴스 될떄 자기자신 객체를 말함.
 
 //문제 17 : 놀이기구 키 제한
- class Ride{
-     constructor(userkey){
-         this.userkey = userkey;
-
-         if(userkey >= 150){
-             console.log("YES");
-         }
-         else {
-             console.log("No");
-         }
-     }
- }
-
- let userkey = prompt("키를 입력해주세요.");
- while (true){
-     if(isNaN(userkey)){
-         userkey = prompt("숫자를 입력해주세요.");
-     }
-     else{
-         new Ride(userkey);
-         break;
-     }
- }
+// class Ride{
+//     constructor(userkey){
+//         this.userkey = userkey;
+//
+//         if(userkey >= 150){
+//             console.log("YES");
+//         }
+//         else {
+//             console.log("No");
+//         }
+//     }
+// }
+//
+// let userkey = prompt("키를 입력해주세요.");
+// while (true){
+//     if(isNaN(userkey)){
+//         userkey = prompt("숫자를 입력해주세요.");
+//     }
+//     else{
+//         new Ride(userkey);
+//         break;
+//     }
+// }
 
 //문제 18 : 평균 점수
 //영하네 반은 국어 수학, 영어 시험을 보았습니다. 영하는 친구들의 평균 점수를 구해주기로 했습니다.
 //공백으로 구분하여 세 과목의 점수가 주어지면 전체 평균 점수를 구하는 프로그램을 작성하세요. 단, 소숫점 자리는 모두 버립니다.
-class TestAverage{
-    constructor(test) {
-        let average = 0;
-        this.test = test;
-        for(let i = 0; i <test.length;i++){
-            test[i] = test[i]
-            average += Number(test[i]);
-        }
-
-        average = Math.floor(average / test.length);
-        console.log(`평균은 : ${average}`);
-    }
-}
-
-let test = prompt('점수를 입력하세요.').split(' ');
-new TestAverage(test);
+//class TestAverage{
+//    constructor(test) {
+//        let average = 0;
+//        this.test = test;
+//        for(let i = 0; i <test.length;i++){
+//            test[i] = test[i]
+//            average += Number(test[i]);
+//        }
+//
+//        average = Math.floor(average / test.length);
+//        console.log(`평균은 : ${average}`);
+//    }
+//}
+//
+//let test = prompt('점수를 입력하세요.').split(' ');
+//new TestAverage(test);
