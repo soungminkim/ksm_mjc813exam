@@ -125,29 +125,29 @@
 //this -> 클래스가 객체로 인스턴스 될떄 자기자신 객체를 말함.
 
 //문제 17 : 놀이기구 키 제한
-// class Ride{
-//     constructor(userkey){
-//         this.userkey = userkey;
-//
-//         if(userkey >= 150){
-//             console.log("YES");
-//         }
-//         else {
-//             console.log("No");
-//         }
-//     }
-// }
-//
-// let userkey = prompt("키를 입력해주세요.");
-// while (true){
-//     if(isNaN(userkey)){
-//         userkey = prompt("숫자를 입력해주세요.");
-//     }
-//     else{
-//         new Ride(userkey);
-//         break;
-//     }
-// }
+ class Ride{
+     constructor(userkey){
+         this.userkey = userkey;
+
+         if(userkey >= 150){
+             console.log("YES");
+         }
+         else {
+             console.log("No");
+         }
+     }
+ }
+
+ let userkey = prompt("키를 입력해주세요.");
+ while (true){
+     if(isNaN(userkey)){
+         userkey = prompt("숫자를 입력해주세요.");
+     }
+     else{
+         new Ride(userkey);
+         break;
+     }
+ }
 
 //문제 18 : 평균 점수
 //영하네 반은 국어 수학, 영어 시험을 보았습니다. 영하는 친구들의 평균 점수를 구해주기로 했습니다.
