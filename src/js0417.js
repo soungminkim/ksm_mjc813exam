@@ -1,4 +1,3 @@
-
 class Exam27 {
     maps = new Map();
     inputFunc() {
@@ -7,14 +6,14 @@ class Exam27 {
         let arrName = names.split(" ");
         let arrScore = score.split(" ");
         if (arrName.length != arrScore.length) {
-            alert("두개 배열의 길이가 다릅니다. 다시 시작하세요.");
+            alert("두개 배열의 길이가 다릅니다. 다시 입력하세요.");
             return false;   // 함수가 false 를 리턴한다.
         }
         for (let i = 0; i < arrScore.length; i++) {
             this.maps.set(arrName[i], Number(arrScore[i])); // Number 는 문자열을 숫자로 변경
             console.log(this.maps);
         }
-        return true;
+        return true; // 함수가 true 를 리턴
     }
 
     outputFunc() {
@@ -33,6 +32,9 @@ class Exam27 {
 }
 
 let exam = new Exam27();
-if ( exam.inputFunc() ) {   // inputFunc() 를 실행하고 리턴값이 true 이면
-    exam.outputFunc();  // outputFunc() 를 실행한다.
+while (true) { // 길게 작성해서 맞지 않으면 다시 물어본다.
+    if (exam.inputFunc()) {   // inputFunc() 를 실행하고 리턴값이 true 이면
+        exam.outputFunc(); // outputFunc() 를 실행한다.
+        break;
+    }
 }
