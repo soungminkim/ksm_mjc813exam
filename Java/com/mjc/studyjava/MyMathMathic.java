@@ -74,6 +74,6 @@ public class MyMathMathic {
         return Integer.toOctalString(a);
     }
     int toDec(String a){
-        return Integer.parseInt(a,10);
+        return Integer.parseInt(a);
     }
 }
