@@ -34,6 +34,9 @@ public class MyMathMathic {
     }
     boolean same(String a,String b){
         return a.equals(b);
+        //boolean same(String a, String b) {
+        //    return a != null && b != null && a.compareTo(b) == 0;
+        //}
     }
     boolean notSame(int a, int b){
         return a != b;
