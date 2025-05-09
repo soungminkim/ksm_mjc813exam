@@ -67,4 +67,45 @@ public class MyMathMathic {
     int toDec(String a){
         return Integer.parseInt(a);
     }
+
+    // 5월 9일 문제 (계산기 클래스를 업그레이드 한다.)
+    int avg(int [] array){
+        int sum = 0;
+        for (int i = 0; i < array.length; i++){
+            sum += array[i];
+        }
+        return sum / array.length;
+    }
+    int sum(int [] array){
+        int sum = 0;
+        for (int i = 0; i < array.length; i++){
+            sum += array[i];
+        }
+        return sum;
+    }
+    int sumOfNumber(int[] array, int number){
+        int sum = 0;
+        for (int i = 0; i < array.length; i++){
+            if(array[i] % number == 0){
+                sum += array[i];
+            }
+        }
+        return sum;
+    }
+
+    int sumOfLoop(int a, int b){
+        int sum = a;
+        for (int i = a; i < b; i++){
+            sum += b;
+        }
+        return a;
+    }
+
+    static int sumOfFav(int a, int b){
+        if (a > b){
+            return 0;
+        }   else {
+            return a + sumOfFav(a + 1, b);
+        }
+    }
 }
