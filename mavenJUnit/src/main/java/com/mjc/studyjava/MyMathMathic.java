@@ -178,7 +178,8 @@ public class MyMathMathic {
     // 정수 n 값과 소수 s 값인 BigDecimal 데이터형을 리턴하세요.
     BigDecimal getBigDecimal(int n, int s){
         String str = String.valueOf(n) + "." + String.valueOf(s);
-        return BigDecimal.valueOf(Double.parseDouble(str));
+        BigDecimal result = new BigDecimal(str);
+        return result;
     }
 
     // int[] 배열을 Integer[] 로 변환해서 리턴

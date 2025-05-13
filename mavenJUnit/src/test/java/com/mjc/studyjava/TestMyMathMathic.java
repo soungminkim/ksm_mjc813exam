@@ -84,8 +84,8 @@ public class TestMyMathMathic {
         assertThat(randomArray.length).isEqualTo(5);
         String sEnc1 = mmm.makeEncryptString("mjc813", 5);
         String sEnc2 = mmm.makeEncryptString("LeeSunSin", 5);
-        //assertThat(sEnc1.length()).isEqualTo(31);
-        //assertThat(sEnc2.length()).isEqualTo(46);
+        assertThat(sEnc1.length()).isEqualTo(31);
+        assertThat(sEnc2.length()).isEqualTo(46);
         assertThat(mmm.makeEncryptString(null, 5)).isEqualTo("");
         String sOrg1 = mmm.makeDecryptString(sEnc1, 5);
         String sOrg2 = mmm.makeDecryptString(sEnc2, 5);
