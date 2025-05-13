@@ -100,7 +100,7 @@ public class ChExample {
 
         while (true){
             System.out.println("-----------------------------------");
-            System.out.println("1. 예금 | 2. 적금 | 3. 잔고 | 4. 종료");
+            System.out.println("1. 예금 | 2. 출금 | 3. 잔고 | 4. 종료");
             System.out.println("------------------------------------");
             System.out.print("선택> ");
 
