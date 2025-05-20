@@ -1,6 +1,5 @@
 package com.mjc.studyjava;
 
-    //    5월15일 문제
     //한글로 표현하는 문제를 Java 소스로 구현하세요.
 public class Computer {
 
@@ -18,7 +17,6 @@ public class Computer {
     //6. 컴퓨터 5대 스펙을 출력하세요.
     //7. 컴퓨터를 끄면 "가 꺼집니다." 출력한다.
     //8. 컴퓨터 5대 Power 를 끄세요.
-
     private String name;
     private String cpu;
     private int ram;
@@ -129,7 +127,6 @@ public class Computer {
         }
 }
 
-// 5월16일 문제
 //     com.mjc813.studyjava.Computer 클래스를 업그레이드 한다.
 // 1. 기본생성자에서는 이름은 "Computer", CPU는null, RAM:null, 저장장치:null, 그래픽:null 초기화
 // 2. 첫번째 비기본생성자는 이름을 매개변수로 받는다. 나머지 필드는 null 로 초기화
