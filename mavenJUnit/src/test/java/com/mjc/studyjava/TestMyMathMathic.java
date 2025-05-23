@@ -28,8 +28,8 @@ public class TestMyMathMathic {
         assertThat(mmm.same("126", "")).isEqualTo(false);
         assertThat(mmm.same(null, "ab")).isEqualTo(false);
         assertThat(mmm.same("null", null)).isEqualTo(false);
-        assertThat(mmm.notSame(71, 51)).isEqualTo(true);
-        assertThat(mmm.notSame(26, 26)).isEqualTo(false);
+        assertThat(mmm.notsame(71, 51)).isEqualTo(true);
+        assertThat(mmm.notsame(26, 26)).isEqualTo(false);
         assertThat(mmm.big(7842, 7841)).isEqualTo(true);
         assertThat(mmm.big(5662, 5992)).isEqualTo(false);
         assertThat(mmm.big(1111, 1111)).isEqualTo(false);
@@ -94,5 +94,14 @@ public class TestMyMathMathic {
         assertThat(sOrg2).isEqualTo("LeeSunSin");
         assertThat(sOrg2.length()).isEqualTo(9);
         assertThat(mmm.makeDecryptString(null, 5)).isEqualTo("");
+
+        for( int i = 0; i < 1000; i++ ) {
+            assertThat(mmm.getRandomOneNumber()).isBetween("0", "9");
+            assertThat(mmm.getRandomOneUpperAlpha()).isBetween("A", "Z");
+            assertThat(mmm.getRandomOneLowerAlpha()).isBetween("a", "z");
+            assertThat(mmm.getRandomCharacter('0', 10)).isBetween("0", "9");
+            assertThat(mmm.getRandomCharacter('A', 26)).isBetween("A", "Z");
+            assertThat(mmm.getRandomCharacter('a', 26)).isBetween("a", "z");
+        }
     }
 }
