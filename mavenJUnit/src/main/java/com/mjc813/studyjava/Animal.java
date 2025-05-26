@@ -37,4 +37,9 @@ public class Animal {
     public Animal reproduce(String newName) {
         return new Animal(newName, 0);
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

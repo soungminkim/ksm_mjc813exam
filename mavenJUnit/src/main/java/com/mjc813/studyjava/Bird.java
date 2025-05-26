@@ -14,21 +14,25 @@ import lombok.Setter;
 public class Bird extends Animal {
     private String wings;
 
-    public Bird(String name, int age) {
+    public Bird(String name, int age, String wings) {
         super(name, age);
         this.wings = "날개";  // 기본값 설정
     }
 
     public void flap() {
-        System.out.println(super.getName() + " " + wings + " 날개짓한다.");
+        System.out.println(this.getName() + " " + this.wings + " 날개짓한다.");
     }
 
     public void fly() {
-        System.out.println(super.getName() + " " + this.wings + " 난다.");
+        System.out.println(this.getName() + " " + this.wings + " 난다.");
     }
 
     @Override
-    public Bird reproduce(String newName) {
-        return new Bird(newName, 0);
+    public Animal reproduce(String newName) {
+        return new Bird(newName, 0, this.getWings());
+    }
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }

@@ -13,22 +13,23 @@ public class Mammalia extends Animal {
     }
 
     public void feedingMilk() {
-        System.out.println(name + " 젖을 먹인다.");
+        System.out.println(super.getName() + " 젖을 먹인다.");
     }
 
     // String 타입만 처리하는 eat 메서드 오버로딩
     public void eat(String food) {
-        System.out.println(name + "은 " + food + "를 먹는다.");
-    }
-
-    // Object 타입 eat는 무시하거나 빈 구현 가능
-    @Override
-    public void eat(Object feed) {
-        // 무시하거나 부모 호출 안 함
+        if (food instanceof String) {
+            super.eat(food);
+        }
     }
 
     @Override
     public Mammalia reproduce(String newName) {
         return new Mammalia(newName, 0);
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }

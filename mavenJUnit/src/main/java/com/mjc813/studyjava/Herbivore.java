@@ -14,4 +14,9 @@ public class Herbivore extends Mammalia {
     public Herbivore reproduce(String newName) {
         return new Herbivore(newName, 0);
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

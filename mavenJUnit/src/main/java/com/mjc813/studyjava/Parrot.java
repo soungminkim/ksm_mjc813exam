@@ -8,30 +8,30 @@ package com.mjc813.studyjava;
  */
 public class Parrot extends Bird {
 
-    public Parrot(String name, int age) {
-        super(name, age);
+    public Parrot(String name, int age, String wings) {
+        super(name, age, wings);
     }
 
     // fly 메서드 재정의 - 조금만 난다
     @Override
     public void fly() {
-        System.out.println(name + " " + wings + " 조금만 난다.");
+        System.out.println(super.getName() + " " + super.getWings() + " 조금만 난다.");
     }
 
     // String 타입 매개변수 eat 메서드 오버로딩
     public void eat(String food) {
-        System.out.println(name + "은 " + food + "를 먹는다.");
-    }
-
-    // Object 타입 eat는 무시하거나 부모 호출 가능
-    @Override
-    public void eat(Object feed) {
-        // 부모 eat 호출하지 않거나 빈 구현 가능
-        //super.eat(feed);
+        if (food instanceof String) {
+            super.eat(food);
+        }
     }
 
     @Override
     public Parrot reproduce(String newName) {
-        return new Parrot(newName, 0);
+        return new Parrot(newName, 0, "앵무새날개");
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }

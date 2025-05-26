@@ -8,28 +8,30 @@ package com.mjc813.studyjava;
  */
 public class Eagle extends Bird {
 
-    public Eagle(String name, int age) {
-        super(name, age);
+    public Eagle(String name, int age, String wings) {
+        super(name, age, wings);
     }
 
     // fly 메서드 재정의 - 높이 난다
     @Override
     public void fly() {
-        System.out.println(name + " " + wings + " 높이 난다.");
+        System.out.println(super.getName() + " " + super.getWings() + " 높이 난다.");
     }
 
     // Animal 타입만 받는 eat 메서드 오버로딩
-    public void eat(Animal prey) {
-        System.out.println(name + "은 " + prey.name + "를 먹는다.");
-    }
-
-    // String 매개변수 eat는 무시 (아무 동작 안함)
-    public void eat(String food) {
-        // 아무것도 하지 않음
+    public void eat(Object prey) {
+        if (prey instanceof Animal) {
+            super.eat(prey);
+        }
     }
 
     @Override
     public Eagle reproduce(String newName) {
-        return new Eagle(newName, 0);
+        return new Eagle(newName, 0, "앵무새날개");
     }
+    @Override
+    public String toString() {
+        return this.getName();
+    }
+
 }

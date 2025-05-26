@@ -13,17 +13,18 @@ public class Carnivore extends Mammalia {
 
     // Herbivore 타입만 처리하는 eat 메서드 오버로딩
     public void eat(Herbivore prey) {
-        System.out.println(name + "은 " + prey.name + "를 먹는다.");
-    }
-
-    // String 타입 eat는 무시 (아무 동작 안함)
-    @Override
-    public void eat(String food) {
-        // 무시
+        if (prey instanceof Herbivore) {
+            System.out.println(this.getName() + "은 " + prey + "를 먹는다.");
+        }
     }
 
     @Override
     public Carnivore reproduce(String newName) {
         return new Carnivore(newName, 0);
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }
