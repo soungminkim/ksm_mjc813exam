@@ -16,6 +16,7 @@ public class TestMjcValidCheck {
         assertThat(mvc.isValidZipNumber("010-39a2-0203")).isEqualTo(false);
         assertThat(mvc.isValidZipNumber("12345")).isEqualTo(true);
         assertThat(mvc.isValidZipNumber("01234")).isEqualTo(false);
+        assertThat(mvc.isValidZipNumber("12340")).isEqualTo(true);
 
         assertThat(mvc.isValidEmail(null)).isEqualTo(false);
         assertThat(mvc.isValidEmail("")).isEqualTo(false);

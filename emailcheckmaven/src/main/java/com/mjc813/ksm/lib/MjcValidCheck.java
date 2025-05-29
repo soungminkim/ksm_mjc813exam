@@ -12,7 +12,7 @@ public class MjcValidCheck {
         if(text == null){
             return false;
         }
-        String Number = "^[1-9]{5}$";
+        String Number = "^[1-9]{1}[0-9]{4}$";
         return text.matches(Number);
     }
     public boolean isValidEmail(String text){
