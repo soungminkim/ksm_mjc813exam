@@ -2,6 +2,7 @@ package com.mjc813.ksm.lib;
 
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 public class TestMjcValidCheck {
     @Test
     public void testMjcValidCheck(){

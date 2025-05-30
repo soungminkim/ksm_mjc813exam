@@ -1,8 +1,6 @@
-package com.mjc813.study;
+package com.bjs;
 
-import com.bjs.BjsValidCheck;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class TestBjsValidCheck {
