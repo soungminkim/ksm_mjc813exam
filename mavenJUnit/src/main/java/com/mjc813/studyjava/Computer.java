@@ -3,7 +3,7 @@ package com.mjc813.studyjava;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Comparator;
+import java.util.*;
 
 @Getter
 @Setter
@@ -76,6 +76,11 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
     }
 
     @Override
+    public int hashCode(){
+        return Objects.hash(cpu, ram, storage, graphicCard);
+    }
+
+    @Override
     public boolean equals( Object o ) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -138,5 +143,32 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
         }
 
         return result;
+    }
+    public static void main(String[] args) {
+        Set<Computer> set = new HashSet<>();
+        Map<Computer, String> map = new TreeMap<>();
+        Computer c1 = new Computer("PC1", ECpu.Gen9_i7, ERam.RAM_16GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M1");
+        Computer c2 = new Computer("PC2", ECpu.Gen9_i7, ERam.RAM_16GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M2");
+
+        set.add(c1);
+        set.add(c2);
+
+        System.out.println("HashSet 저장 결과:");
+        for (Computer c : set) {
+            System.out.println(c.getName());
+        }
+        System.out.println("HashSet 크기: " + set.size());  // 1이 출력되어야 함
+
+        Computer c3 = new Computer("LowPC", ECpu.Gen9_i5, ERam.RAM_8GB, EStorage.HDD_500GB, EGraphicCard.Intel_A770, "M3");
+        Computer c4 = new Computer("HighPC", ECpu.Gen9_i9, ERam.RAM_32GB, EStorage.SSD_2000GB, EGraphicCard.RTX_4080, "M4");
+
+        map.put(c4, "고성능");
+        map.put(c1, "중간성능");
+        map.put(c3, "저성능");
+
+        System.out.println("\nTreeMap 저장 결과 (CPU 성능 기준 정렬):");
+        for (Map.Entry<Computer, String> entry : map.entrySet()) {
+            System.out.printf("%s → %s\n", entry.getKey().getName(), entry.getValue());
+        }
     }
 }
