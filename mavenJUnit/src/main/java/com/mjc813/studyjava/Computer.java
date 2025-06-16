@@ -3,9 +3,11 @@ package com.mjc813.studyjava;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Comparator;
+
 @Getter
 @Setter
-public class Computer extends Machine {
+public class Computer extends Machine implements Comparable<Computer>, Comparator<Computer> {
     private String name;
     private ECpu cpu;
     private ERam ram;
@@ -71,5 +73,70 @@ public class Computer extends Machine {
     @Override
     public void printModel() {
         System.out.println("Model : " + super.model);
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Computer other = (Computer) o;
+
+        return this.cpu == other.cpu && this.ram == other.ram && this.storage == other.storage && this.graphicCard == other.graphicCard;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Computer 정보\n" +
+                "이름 :              %s\n" +
+                "CPU :              %s\n" +
+                "RAM :              %s\n" +
+                "Storage :          %s\n" +
+                "GraphicCare :      %s" ,
+                this.name != null ? this.name : "미정",
+                this.cpu != null ? this.cpu : "조립중",
+                this.ram != null ? this.ram : "조립중",
+                this.storage != null ? this.storage : "조립중",
+                this.graphicCard != null ? this.graphicCard : "조립중"
+        );
+    }
+
+    @Override
+    public int compareTo(Computer other) {
+        if (this.cpu == null || other.cpu == null) {
+            System.out.println("미정");
+            return 0;
+        }
+        int result = this.cpu.ordinal() - other.cpu.ordinal();
+
+        if (result < 0) {
+            System.out.println("현재 컴퓨터의 CPU 성능이 더 낮습니다.");
+        } else if (result > 0) {
+            System.out.println("현재 컴퓨터의 CPU 성능이 더 높습니다.");
+        } else {
+            System.out.println("두 컴퓨터의 CPU 성능이 같습니다.");
+        }
+        return result;
+    }
+
+    @Override
+    public int compare(Computer c1, Computer c2) {
+        if (c1.ram == null || c2.ram == null) {
+            System.out.println("RAM 정보가 없습니다.");
+            return 0;
+        }
+
+        int result = c1.ram.ordinal() - c2.ram.ordinal();
+
+        if (result < 0) {
+            System.out.println("첫 번째 컴퓨터의 RAM이 더 작습니다.");
+        } else if (result > 0) {
+            System.out.println("첫 번째 컴퓨터의 RAM이 더 큽니다.");
+        } else {
+            System.out.println("두 컴퓨터의 RAM 크기는 같습니다.");
+        }
+
+        return result;
     }
 }
