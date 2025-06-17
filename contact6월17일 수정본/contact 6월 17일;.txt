@@ -1,0 +1,131 @@
+package com.mjc813.contact;
+
+import com.mjc813.mjc_exam_lib.IContact;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Contact implements IContact {
+    public String phoneNumber;
+    public String zipNumber;
+    public String email;
+    public String name; //이름?
+    public Integer age;
+
+    // 생성자 추가
+    public Contact(String name, String phoneNumber, String zipNumber, String email, Integer age) {
+        setName(name);
+        setPhoneNumber(phoneNumber);
+        setZipNumber(zipNumber);
+        setEmail(email);
+        this.age = age;
+    }
+
+    // 폰번호 유효성 검사
+    public boolean isValidPhoneNumber(String phoneNumber){
+        if(phoneNumber == null) return false;
+        return phoneNumber.matches("(010)-\\d{4}-\\d{4}");
+    }
+    // 우편번호 유효성 검사
+    public boolean isValidZipNumber(String zipNumber) {
+        if(zipNumber == null) return false;
+        return zipNumber.matches("[1-9]\\d{4}"); //맨 앞은 0아님
+    }
+
+    // 이메일 유효성 검사
+    public boolean isValidEmail(String email) {
+        if(email == null) return false;
+        return email.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,}$");
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String s) {
+        this.name = s;
+    }
+
+    @Override
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    // 폰번호 유효성 검사 후 저장
+    @Override
+    public void setPhoneNumber(String phoneNumber){
+        if(isValidPhoneNumber(phoneNumber)){
+            this.phoneNumber = phoneNumber;
+        } else {
+            throw new NotValidDataException("유효하지 않은 전화번호: " + phoneNumber);
+        }
+    }
+
+    @Override
+    public String getZipNumber() {
+        return zipNumber;
+    }
+
+    // 우편번호 유효성 검사 후 저장
+    @Override
+    public void setZipNumber(String zipNumber){
+        if(isValidZipNumber(zipNumber)){
+            this.zipNumber = zipNumber;
+        } else {
+            throw new NotValidDataException("유효하지 않은 우편번호: " + zipNumber);
+        }
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    // 이메일 유효성 검사 후 저장
+    @Override
+    public void setEmail(String email){
+        if(isValidEmail(email)){
+            this.email = email;
+        } else {
+            throw new NotValidDataException("유효하지 않은 이메일: " + email);
+        }
+    }
+
+    // 연락처 이쁘게 출력
+    @Override
+    public String getContactFullInfo() {
+        // null인 값에 대해 "N/A" 처리
+        String formattedPhoneNumber = (phoneNumber != null) ? phoneNumber : "N/A";
+        String formattedZipNumber = (zipNumber != null) ? zipNumber : "N/A";
+        String formattedEmail = (email != null) ? email : "N/A";
+
+        // 포맷에 맞게 문자열 반환
+        return String.format("Name: %s\nPhone Number: %s\nZip Number: %s\nEmail: %s",
+                (name != null ? name : "N/A"), formattedPhoneNumber, formattedZipNumber, formattedEmail);
+    }
+
+    // getCon~ 호출
+    @Override
+    public String toString(){ //toString?
+        return getContactFullInfo();
+    }
+
+    public static void main(String[] args) {
+        List<Contact> list = new ArrayList<>();
+
+        list.add(new Contact("홍길동", "010-1234-5678", "12345", "hong@test.com", 25));
+        list.add(new Contact("김철수", "010-2345-6789", "23456", "kim@test.com", 30));
+        list.add(new Contact("이영희", "010-3456-7890", "34567", "lee@test.com", 28));
+        list.add(new Contact("박민수", "010-4567-8901", "45678", "park@test.com", 22));
+        list.add(new Contact("최지우", "010-5678-9012", "56789", "choi@test.com", 35));
+
+        double avgAge = list.stream()
+                .mapToInt(c -> c.age)
+                .average()
+                .orElse(0);
+
+        System.out.printf("평균 나이: %.2f세\n", avgAge);
+    }
+}

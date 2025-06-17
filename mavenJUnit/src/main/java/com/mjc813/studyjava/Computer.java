@@ -14,23 +14,30 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
     private EStorage storage;
     private EGraphicCard graphicCard;
     private Mouse mouse = new Mouse();
+    private Integer price;
+    private Integer qty;
 
     public Computer() {
         this("Computer", null, null, null, null, "");
     }
-    public Computer( String name ) {
+
+    public Computer(String name) {
         this(name, null, null, null, null, "");
     }
-    public Computer( String name, ECpu cpu ) {
+
+    public Computer(String name, ECpu cpu) {
         this(name, cpu, null, null, null, "");
     }
-    public Computer( String name, ECpu cpu, ERam ram ) {
+
+    public Computer(String name, ECpu cpu, ERam ram) {
         this(name, cpu, ram, null, null, "");
     }
-    public Computer( String name, ECpu cpu, ERam ram, EStorage storage ) {
+
+    public Computer(String name, ECpu cpu, ERam ram, EStorage storage) {
         this(name, cpu, ram, storage, null, "");
     }
-    public Computer(String name, ECpu cpu, ERam ram, EStorage stor, EGraphicCard graphic, String model ) {
+
+    public Computer(String name, ECpu cpu, ERam ram, EStorage stor, EGraphicCard graphic, String model) {
         super(model);
         this.name = name;
         this.cpu = cpu;
@@ -53,9 +60,11 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
 //        Storage : HDD 500GB
 //        Graphic : GTX_1660
     }
+
     public void booting() {
         System.out.printf("%s 켜졌습니다.\n", this.name);
     }
+
     public void powerOff() {
         System.out.printf("%s 가 꺼집니다.\n", this.name);
     }
@@ -76,12 +85,12 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(cpu, ram, storage, graphicCard);
     }
 
     @Override
-    public boolean equals( Object o ) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -94,11 +103,11 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
     public String toString() {
         return String.format(
                 "Computer 정보\n" +
-                "이름 :              %s\n" +
-                "CPU :              %s\n" +
-                "RAM :              %s\n" +
-                "Storage :          %s\n" +
-                "GraphicCare :      %s" ,
+                        "이름 :              %s\n" +
+                        "CPU :              %s\n" +
+                        "RAM :              %s\n" +
+                        "Storage :          %s\n" +
+                        "GraphicCare :      %s",
                 this.name != null ? this.name : "미정",
                 this.cpu != null ? this.cpu : "조립중",
                 this.ram != null ? this.ram : "조립중",
@@ -144,6 +153,7 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
 
         return result;
     }
+
     public static void main(String[] args) {
         Set<Computer> set = new HashSet<>();
         Map<Computer, String> map = new TreeMap<>();
@@ -170,5 +180,43 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
         for (Map.Entry<Computer, String> entry : map.entrySet()) {
             System.out.printf("%s → %s\n", entry.getKey().getName(), entry.getValue());
         }
+
+        List<Computer> list = new ArrayList<>();
+
+        list.add(c1);
+        list.add(c2);
+        list.add(c3);
+        list.add(c4);
+        list.add(new Computer("OfficePC", ECpu.Gen9_i7, ERam.RAM_8GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M5"));
+
+        list.get(0).setPrice(500000);
+        list.get(0).setQty(5);
+        list.get(1).setPrice(1000000);
+        list.get(1).setQty(3);
+        list.get(2).setPrice(2500000);
+        list.get(2).setQty(2);
+        list.get(3).setPrice(400000);
+        list.get(3).setQty(7);
+        list.get(4).setPrice(800000);
+        list.get(4).setQty(4);
+
+        int totalStockValue = list.stream()
+                .mapToInt(c -> c.getPrice() * c.getQty())
+                .sum();
+        System.out.println("Computer 총 금액: " + totalStockValue);
+
+
+
+        ECpu minCpu = list.stream()
+                .map(Computer::getCpu)
+                .min(Comparator.naturalOrder())
+                .orElse(null);
+
+        int minCpuQtyTotal = list.stream()
+                .filter(c -> c.getCpu() == minCpu)
+                .mapToInt(Computer::getQty)
+                .sum();
+
+        System.out.println("가장 낮은 cpu: "+ minCpu + "\n재고 수량: " + minCpuQtyTotal + "개");
     }
 }
