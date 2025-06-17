@@ -18,32 +18,34 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
     private Integer qty;
 
     public Computer() {
-        this("Computer", null, null, null, null, "");
+        this("Computer", null, null, null, null, "" , null, null);
     }
 
     public Computer(String name) {
-        this(name, null, null, null, null, "");
+        this(name, null, null, null, null, "", null, null);
     }
 
     public Computer(String name, ECpu cpu) {
-        this(name, cpu, null, null, null, "");
+        this(name, cpu, null, null, null, "", null, null);
     }
 
     public Computer(String name, ECpu cpu, ERam ram) {
-        this(name, cpu, ram, null, null, "");
+        this(name, cpu, ram, null, null, "", null, null);
     }
 
     public Computer(String name, ECpu cpu, ERam ram, EStorage storage) {
-        this(name, cpu, ram, storage, null, "");
+        this(name, cpu, ram, storage, null, "", null, null);
     }
 
-    public Computer(String name, ECpu cpu, ERam ram, EStorage stor, EGraphicCard graphic, String model) {
+    public Computer(String name, ECpu cpu, ERam ram, EStorage stor, EGraphicCard graphic, String model, Integer price,Integer qty) {
         super(model);
         this.name = name;
         this.cpu = cpu;
         this.ram = ram;
         this.storage = stor;
         this.graphicCard = graphic;
+        this.price = price;
+        this.qty = qty;
     }
 //3. Computer 에는 CPU(Gen9_i5, Gen9_i7, Gen9_i9), RAM 크기 (4,8,16,32GB)
 //            , 저장장치는 SSD, HDD 종류로 용량은 500GB, 1000GB, 2000GB 가 존재한다.
@@ -157,8 +159,8 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
     public static void main(String[] args) {
         Set<Computer> set = new HashSet<>();
         Map<Computer, String> map = new TreeMap<>();
-        Computer c1 = new Computer("PC1", ECpu.Gen9_i7, ERam.RAM_16GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M1");
-        Computer c2 = new Computer("PC2", ECpu.Gen9_i7, ERam.RAM_16GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M2");
+        Computer c1 = new Computer("PC1", ECpu.Gen9_i7, ERam.RAM_16GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M1", 500000, 5);
+        Computer c2 = new Computer("PC2", ECpu.Gen9_i7, ERam.RAM_16GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M2" , 1000000, 3);
 
         set.add(c1);
         set.add(c2);
@@ -169,8 +171,8 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
         }
         System.out.println("HashSet 크기: " + set.size());  // 1이 출력되어야 함
 
-        Computer c3 = new Computer("LowPC", ECpu.Gen9_i5, ERam.RAM_8GB, EStorage.HDD_500GB, EGraphicCard.Intel_A770, "M3");
-        Computer c4 = new Computer("HighPC", ECpu.Gen9_i9, ERam.RAM_32GB, EStorage.SSD_2000GB, EGraphicCard.RTX_4080, "M4");
+        Computer c3 = new Computer("LowPC", ECpu.Gen9_i5, ERam.RAM_8GB, EStorage.HDD_500GB, EGraphicCard.Intel_A770, "M3" , 2500000 ,2);
+        Computer c4 = new Computer("HighPC", ECpu.Gen9_i9, ERam.RAM_32GB, EStorage.SSD_2000GB, EGraphicCard.RTX_4080, "M4", 400000 ,7);
 
         map.put(c4, "고성능");
         map.put(c1, "중간성능");
@@ -187,18 +189,8 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
         list.add(c2);
         list.add(c3);
         list.add(c4);
-        list.add(new Computer("OfficePC", ECpu.Gen9_i7, ERam.RAM_8GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M5"));
+        list.add(new Computer("OfficePC", ECpu.Gen9_i7, ERam.RAM_8GB, EStorage.SSD_1000GB, EGraphicCard.GTX_1660, "M5" , 800000,4));
 
-        list.get(0).setPrice(500000);
-        list.get(0).setQty(5);
-        list.get(1).setPrice(1000000);
-        list.get(1).setQty(3);
-        list.get(2).setPrice(2500000);
-        list.get(2).setQty(2);
-        list.get(3).setPrice(400000);
-        list.get(3).setQty(7);
-        list.get(4).setPrice(800000);
-        list.get(4).setQty(4);
 
         int totalStockValue = list.stream()
                 .mapToInt(c -> c.getPrice() * c.getQty())
@@ -206,17 +198,23 @@ public class Computer extends Machine implements Comparable<Computer>, Comparato
         System.out.println("Computer 총 금액: " + totalStockValue);
 
 
+        //Order 사용
+        // ECpu minCpu = list.stream()
+        //         .map(Computer::getCpu)
+        //         .min(Comparator.naturalOrder())
+        //         .orElse(null);
 
-        ECpu minCpu = list.stream()
-                .map(Computer::getCpu)
-                .min(Comparator.naturalOrder())
-                .orElse(null);
+        // int minCpuQtyTotal = list.stream()
+        //         .filter(c -> c.getCpu() == minCpu)
+        //         .mapToInt(Computer::getQty)
+        //         .sum();
 
         int minCpuQtyTotal = list.stream()
-                .filter(c -> c.getCpu() == minCpu)
+                .filter(c -> c.getCpu().equals(ECpu.Gen9_i5))
                 .mapToInt(Computer::getQty)
                 .sum();
 
-        System.out.println("가장 낮은 cpu: "+ minCpu + "\n재고 수량: " + minCpuQtyTotal + "개");
+        System.out.println("가장 낮은 cpu 재고 수량: " + minCpuQtyTotal);
+        //System.out.println("가장 낮은 cpu: "+ minCpu + "\n재고 수량: " + minCpuQtyTotal + "개");
     }
 }

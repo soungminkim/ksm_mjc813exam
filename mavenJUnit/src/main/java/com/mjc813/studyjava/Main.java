@@ -5,7 +5,7 @@ public class Main {
         Computer[] coms = new Computer[5];
         for( int i = 0; i < coms.length; i++ ) {
             coms[i] = new Computer("com" + (i+1), ECpu.Gen9_i5
-                    , ERam.RAM_8GB, EStorage.SSD_500GB, EGraphicCard.Intel_A770, "LG");
+                    , ERam.RAM_8GB, EStorage.SSD_500GB, EGraphicCard.Intel_A770, "LG" , 100000,5);
         }
         for( Computer com : coms ) {
             com.booting();
@@ -14,7 +14,7 @@ public class Main {
             com.clickMouseRightButton(600, 800);
             com.powerOff();
         }
-        Computer com = new Computer("a", null, null, null, null, "Sambo");
+        Computer com = new Computer("a", null, null, null, null, "Sambo", null,null);
         com.printModel();
         Machine m = com;
         ((Machine)com).printModel();
