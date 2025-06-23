@@ -4,7 +4,6 @@
     import java.net.InetSocketAddress;
     import java.net.ServerSocket;
     import java.net.Socket;
-    import java.net.SocketAddress;
 
     public class ServerApp {
         private ServerSocket ss = null;
@@ -43,10 +42,14 @@
             }
             @Override
             public void run() {
-                try (InputStream is = sck.getInputStream()) {
-                    byte[] barr = is.readAllBytes();
-                    String str = new String(barr);
-                    System.out.println(str);
+                try (
+                        BufferedReader reader = new BufferedReader(
+                                new InputStreamReader(sck.getInputStream()))
+                ) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line); // 받은 줄 계속 출력
+                    }
                 } catch (IOException e) {
                     System.err.println("입력 처리 중 오류: " + e.getMessage());
                 }
