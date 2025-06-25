@@ -5,7 +5,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientApp {
+public class ClientAPP2 {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
@@ -102,6 +102,6 @@ public class ClientApp {
     }
 
     public static void main(String[] args) throws IOException {
-        new ClientApp().start("127.0.0.1", 19999);
+        new ClientAPP2().start("127.0.0.1", 19999);
     }
 }

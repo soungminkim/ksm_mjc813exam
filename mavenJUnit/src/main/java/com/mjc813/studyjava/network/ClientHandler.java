@@ -48,35 +48,29 @@ public class ClientHandler implements Runnable {
                         if (cmd.room != null && server.joinRoom(cmd.room, this)) {
                             currentRoom = cmd.room;
                             out.println("true");
-                            server.broadcastToRoom(currentRoom, "(" + name + ") : 입장 했습니다.");
+                            server.broadcastToRoom(currentRoom, "(" + name + ") : 입장 했습니다.", this);
                         } else {
                             out.println("false");
                         }
                         break;
-                    case "4": // 방만들기
+                    case "4":
                         if (cmd.room != null && server.createRoom(cmd.room, this)) {
                             currentRoom = cmd.room;
-                            server.broadcastToRoom(currentRoom, "(" + name + ") : 대화방을 생성했습니다.");
-                            out.println("---------------------------------------");
-                            out.println("[" + currentRoom + "] (quit 입력시 퇴장합니다.)");
-                            out.println("---------------------------------------");
+                            server.broadcastToRoom(currentRoom, "(" + name + ") : 대화방을 생성했습니다.", this);
+                            out.println("true");
                         } else {
                             out.println("방 이름이 중복되었거나 잘못되었습니다.");
                         }
                         break;
-                    case "5": // 종료
-                        running = false;
-                        shutdown();
-                        break;
                     case "7": // 대화
                         if (currentRoom != null && cmd.msg != null) {
-                            server.broadcastToRoom(currentRoom, "(" + name + ") : " + cmd.msg);
+                            server.broadcastToRoom(currentRoom, "(" + name + ") : " + cmd.msg, this);
                         }
                         break;
                     case "8": // 방퇴장
                         if (currentRoom != null) {
                             server.leaveRoom(currentRoom, this);
-                            server.broadcastToRoom(currentRoom, "(" + name + ") : 퇴장 했습니다.");
+                            server.broadcastToRoom(currentRoom, "(" + name + ") : 퇴장 했습니다.", this);
                             currentRoom = null;
                         }
                         break;

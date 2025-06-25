@@ -73,11 +73,13 @@ public class ServerApp {
     }
 
     // 방 전체 메시지
-    public void broadcastToRoom(String room, String message) {
+    public void broadcastToRoom(String room, String message, ClientHandler sender) {
         Set<ClientHandler> members = rooms.get(room);
         if (members != null) {
             for (ClientHandler c : members) {
-                c.send(message);
+                if (c != sender){
+                    c.send(message);
+                }
             }
         }
     }
