@@ -32,7 +32,8 @@ public class ClientAPP2 {
                         System.out.println(msg);
                     }
                 }
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }).start();
 
         Scanner sc = new Scanner(System.in);
@@ -102,6 +103,10 @@ public class ClientAPP2 {
     }
 
     public static void main(String[] args) throws IOException {
-        new ClientAPP2().start("127.0.0.1", 19999);
+        if (args.length <= 0) {
+            System.out.println("java.옵션에 가서 ip 주소를 입력해주세요.");
+        } else {
+            new ClientApp().start(args[0], 19999);
+        }
     }
 }
