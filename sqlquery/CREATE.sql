@@ -14,6 +14,15 @@ CREATE TABLE location_tbl (
 		, CONSTRAINT pk_location_tbl PRIMARY KEY (id)
 );
 
+CREATE TABLE learn_tbl(
+		id INT UNSIGNED NOT NULL auto_increment
+		, lecture_id INT UNSIGNED NOT NULL
+		, socre DECIMAL(3,1) NOT NULL
+		, contact_id INT UNSIGNED NOT NULL
+		, CONSTRAINT pk_learn_tbl PRIMARY KEY (id)
+		, CONSTRAINT fk_learn_tbl FOREIGN KEY (contact_id) REFERENCES contact_tbl(id)
+);
+
 CREATE TABLE saled_tbl (
 		id INT UNSIGNED NOT NULL auto_increment
 		, sale_dt DATE NOT NULL DEFAULT (CURRENT_DATE)
@@ -28,17 +37,6 @@ CREATE TABLE saled_tbl (
     	, CONSTRAINT fk_saled_contact FOREIGN KEY (contact_id) REFERENCES contact_tbl(id)
 );
 
-
-CREATE TABLE learn_tbl(
-		id INT UNSIGNED NOT NULL auto_increment
-		, lecture_id INT UNSIGNED NOT NULL
-		, socre DECIMAL(3,1) NOT NULL
-		, contact_id INT UNSIGNED NOT NULL
-		, CONSTRAINT pk_learn_tbl PRIMARY KEY (id)
-		, CONSTRAINT fk_learn_tbl FOREIGN KEY (contact_id) REFERENCES contact_tbl(id)
-);
-
-
 CREATE TABLE lecture_tbl (
 		id INT UNSIGNED NOT NULL auto_increment
 		, subject VARCHAR(100) NOT NULL
@@ -49,4 +47,3 @@ CREATE TABLE lecture_tbl (
 		, CONSTRAINT pk_lecture_tbl PRIMARY KEY (id)
 );
 
-DROP TABLE learn_tbl  CASCADE; 
