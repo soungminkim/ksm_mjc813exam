@@ -1,4 +1,3 @@
-
 -- 판매정보 VIEW
 CREATE OR REPLACE VIEW vw_sale_info AS
 SELECT 
