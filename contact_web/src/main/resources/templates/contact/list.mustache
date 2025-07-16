@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>list</title>
+</head>
+<body>
+    <h1>사용자 목록</h1>
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>phoneNumber</th>
+            <th>zipNumber</th>
+            <th>email</th>
+        </tr>
+        {{#contact_tbl}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{phoneNumber}}</td>
+                <td>{{zipNumber}}</td>
+                <td>{{email}}</td>
+            </tr>
+        {{/contact_tbl}}
+        {{^contact_tbl}}
+            <tr>
+                <td colspan="3">검색결과가 없습니다.</td>
+            </tr>
+        {{/contact_tbl}}
+    </table>
+</body>
+</html>

@@ -1,6 +1,6 @@
 spring:
   application:
-   name: sb_first
+   name: firstmustache
 
 server:
   servlet:
