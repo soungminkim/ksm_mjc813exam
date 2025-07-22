@@ -5,6 +5,8 @@
     <title>Coffee List</title>
 </head>
 <body>
+<button onclick="location.href='/coffee/add'">➕ 커피 추가</button>
+<button onclick="location.href='/coffee/list'">📋 커피 목록</button>
 <h1 style="text-align:center;">커피 목록</h1>
 <table border="1" style="width:80%;margin:auto;">
     <thead>
@@ -24,6 +26,10 @@
         <td>{{price}}</td>
         <td>{{source}}</td>
         <td>{{shots}}</td>
+        <td>
+            <button onclick="location.href='/coffee/view?id={{id}}'">👁️ 보기</button>
+            <button onclick="location.href='/coffee/modify?id={{id}}'">✏️ 수정</button>
+        </td>
     </tr>
     {{/coffeeList}}
     </tbody>
