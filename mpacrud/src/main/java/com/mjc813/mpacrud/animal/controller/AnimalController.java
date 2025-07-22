@@ -14,16 +14,16 @@ import java.util.List;
 @Controller
 @RequestMapping("/animal")
 public class AnimalController {
-//    @Autowired
+    //    @Autowired
 //    private AnimalMybatisMapper animalMapper; // 이 밥법은 사용 가능하더라도 추천하지 않는다.
     @Autowired
     private AnimalService animalService;
 
     @GetMapping("/a")    // 클라이언트의 요청 url 주소와 method
     public String testA(Model model
-        , @RequestParam("name1") String name1   // @RequestParam : http 클라이언트에서 보낸 변수=값 형태를 받아들일수 있다.
-        , @RequestParam("name2") String name2
-        , @RequestParam("n3") String nm3
+            , @RequestParam("name1") String name1   // @RequestParam : http 클라이언트에서 보낸 변수=값 형태를 받아들일수 있다.
+            , @RequestParam("name2") String name2
+            , @RequestParam("n3") String nm3
     ) {
         model.addAttribute("name1", name1); // 화면텝플릿의 name1 이라는 키단어를 name1 변수값으로 치환한다.
         model.addAttribute("name2", name2); // 화면텝플릿의 name2 이라는 키단어를 name2 변수값으로 치환한다.
@@ -70,15 +70,19 @@ public class AnimalController {
         } catch (Throwable th) {
             System.err.println(th.toString());
         }
-        return "redirect:./list?searchType=name&searchWord=";
+        return "redirect:./list?searchType=name&searchWord=&rowsOnePage=5&page=1";
     }
 
     @GetMapping("/list")
     public String list(Model model
-            , @RequestParam("searchType") @DefaultValue("name") String searchType
-            , @RequestParam("searchWord") @DefaultValue("") String searchWord) {
+            , @ModelAttribute SearchRequestDto searchRequestDto
+//            , @RequestParam("searchType") String searchType
+//            , @RequestParam("searchWord") String searchWord
+//            , @RequestParam("rowsOnePage") Integer rowsOnePage
+//            , @RequestParam("page") Integer page
+    ) {
         try {
-            SearchRequestDto searchRequestDto = new SearchRequestDto(searchType, searchWord);
+//            SearchRequestDto searchRequestDto = new SearchRequestDto(searchType, searchWord, rowsOnePage, page, 0);
             List<AnimalDto> all = this.animalService.findWhere(searchRequestDto);
 //            List<AnimalDto> all = this.animalService.findAll();
             model.addAttribute("listWord", all);
@@ -119,7 +123,7 @@ public class AnimalController {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        return "redirect:./list?searchType=name&searchWord=";
+        return "redirect:./list?searchType=name&searchWord=&rowsOnePage=5&page=1";
     }
 
     @PostMapping("/delete")
@@ -129,6 +133,6 @@ public class AnimalController {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        return "redirect:./list?searchType=name&searchWord=";
+        return "redirect:./list?searchType=name&searchWord=&rowsOnePage=5&page=1";
     }
 }

@@ -29,5 +29,74 @@
             </tr>
         {{/contact_tbl}}
     </table>
+    {{#paging}}
+        page : {{page}} <br/>
+        rowsOnePage : {{row}} <br/>
+        Offset : {{off}} <br/>
+        Total Rows : {{totalRows}} <br/>
+        Total page : {{totalPages}} <br/>
+    {{/paging}}
+    </div>
+    <div>
+        <label for="rowsOnePage">페이지 당 행수:</label>
+        <select id="rowsOnePage" onchange="onChangeRow();">
+            <option value="2">2</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+        </select>
+    </div>
+    <div id="pageDiv"></div>
 </body>
+<script>
+        {{#paging}}
+        function setRow() {
+            let row = {{row}};
+            document.getElementById("rowsOnePage").value = row;
+        }
+
+        function onChangeRow() {
+            let page = {{page}};
+            let row = document.getElementById("rowsOnePage").value;
+            location.href = "./list?page=" + page + "&row=" + row;
+        }
+
+        function makeButtons() {
+            let buttons = makePrevButton();
+            for ( let i = 1; i <= {{totalPages}}; i++ ) {
+                buttons += makePageButton(i);
+            }
+            buttons += makeNextButton();
+            let pageDivDom = document.getElementById("pageDiv");
+            pageDivDom.innerHTML = buttons;
+        }
+
+        function makePrevButton() {
+            let page = {{page}};
+            let tag = page >= 2 ? "&nbsp<button onclick='goPage(" + (page - 1) + ");'> ◁ </button>&nbsp" : "<button onclick='#'> ◁ </button>";
+            return tag;
+        }
+
+        function makeNextButton() {
+            let page = {{page}};
+            let totalpage = {{totalPage}};
+            let tag = page < totalpage ? "&nbsp<button onclick='goPage(" + (page + 1) + ");'> ▷ </button>&nbsp" : "<button onclick='#'> ▷ </button>";
+            return tag;
+        }
+
+        function makePageButton(pg) {
+            let tag = "&nbsp<button onclick='goPage(" + pg + ");'>[" + pg + "]</button>&nbsp";
+            return tag;
+        }
+
+        function goPage(pg) {
+            let row = {{row}};
+            location.href = "./list?page=" + pg + "&row=" + row;
+        }
+
+        makeButtons();
+        setRow();
+        {{/paging}}
+</script>
 </html>

@@ -1,6 +1,7 @@
 package com.mjc813.contact_web;
 
 import com.mjc813.contact_web.dto.Contact;
+import com.mjc813.contact_web.dto.PageDto;
 import com.mjc813.contact_web.service.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,13 +21,6 @@ public class ContactController {
         return "contact/add";
     }
 
-    @GetMapping("/list")
-    public String listView(Model md) {
-        List<Contact> arraylist = contactRepository.selectAll();
-        md.addAttribute("contact_tbl", arraylist);
-        return "contact/list";
-    }
-
     @PostMapping("/addconfirm")
     public String addConfirm(@ModelAttribute Contact inputContact) {
         try {
@@ -37,6 +31,23 @@ public class ContactController {
             System.out.println(e.toString());
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/list")
+    public String selectAll(Model model
+            , @ModelAttribute PageDto pagingDto
+    ) {
+        List<Contact> contacts = null;
+        try {
+            Long totRows = this.contactRepository.acountAll();
+            pagingDto.setTotRows(totRows);
+            contacts = this.contactRepository.selectAll(pagingDto);
+        } catch (Throwable e) {
+            System.out.println(e.toString());
+        }
+        model.addAttribute("contacts", contacts);
+        model.addAttribute("paging", pagingDto);
+        return "contact/list";
     }
 
     @GetMapping("/view")

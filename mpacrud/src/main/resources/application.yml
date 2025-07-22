@@ -2,9 +2,9 @@ spring:
   application:
     name: mpacrud
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mpacrud_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: mpacrud_uesr
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://localhost:3306/mpacrud_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: mpacrud_user
     password: hiphop1234!
   mustache:
     suffix: .html
@@ -25,3 +25,9 @@ mybatis:
   type-aliases-package: com.mjc813.mpacrud
   configuration:
     map-underscore-to-camel-case: true
+
+logging:
+  level:
+    net.sf.log4jdbc: debug
+    jdbc.sqlonly: debug
+    org.mybatis: debug

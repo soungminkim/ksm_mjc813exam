@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Coffee List</title>
+</head>
+<body>
+<h1 style="text-align:center;">커피 목록</h1>
+<table border="1" style="width:80%;margin:auto;">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>이름</th>
+        <th>가격</th>
+        <th>원산지</th>
+        <th>샷 수</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#coffeeList}}
+    <tr>
+        <td>{{id}}</td>
+        <td>{{name}}</td>
+        <td>{{price}}</td>
+        <td>{{source}}</td>
+        <td>{{shots}}</td>
+    </tr>
+    {{/coffeeList}}
+    </tbody>
+</table>
+</body>
+</html>

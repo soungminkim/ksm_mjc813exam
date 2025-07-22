@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>커피 정보</title>
+    <script lang="javascript">
+        function deleteCoffee() {
+            document.delForm.submit();
+        }
+    </script>
+</head>
+<body>
+    <h1>커피 정보 출력</h1>
+    {{#data}}
+    <label for="name">이름 : </label><span id="name" >{{name}}</span> <br />
+    <label for="price">가격 : </label><span id="price" >{{price}}</span> <br />
+    <label for="source">원산지 : </label><span id="source" >{{source}}</span> <br />
+    <label for="shots">샷 수 : </label><span id="shots" >{{shots}}</span> <br />
+    <button onclick="location.href='./modify?id={{id}}'">수정</button>
+    <button onclick="deleteCoffee();">삭제</button>
+    <div style="display: none;">
+        <form name="delForm" method="post" action="./delete">
+            <input type="hidden" name="id" value="{{id}}" />
+            <input type="submit" value="삭제" />
+        </form>
+    </div>
+    {{/data}}
+    {{^data}}
+    <div>주문이 없습니다.</div>
+    {{/data}}
+</body>
+</html>

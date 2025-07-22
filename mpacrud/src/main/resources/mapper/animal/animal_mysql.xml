@@ -59,5 +59,6 @@
         WHERE ${searchType} LIKE CONCAT('%', #{searchWord}, '%')
         </if>
         ORDER BY id
+        LIMIT #{rowsOnePage} OFFSET #{offset}
     </select>
 </mapper>

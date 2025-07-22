@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>coffee 수정</title>
+</head>
+<body>
+    <h1>coffee 수정</h1>
+    {{#data}}
+    <form method="post" action="/coffee/update">
+        <label for="name">ID : </label><span>{{id}}</span><input type="hidden" id="id" name="id" value="{{id}}" readonly/> <br />
+        <label for="name">이름 : </label><input type="text" id="name" name="name" value="{{name}}" maxlength="20" /> <br />
+        <label for="price">가격 : </label><input type="number" id="price" name="price" value="{{price}}" maxlength="7" /> <br />
+        <label for="source">원산지 : </label><input type="text" id="source" name="source" value="{{source}}" maxlength="20" /> <br />
+        <label for="shots">샷 수 : </label><input type="number" id="shots" name="shots" value="{{shots}}" maxlength="3" /> <br />
+        <input type="submit" value="coffee 수정" />
+    </form>
+    {{/data}}
+    {{^data}}
+    <div>주문이 없습니다.</div>
+    {{/data}}
+</body>
+</html>
+</body>
+</html>

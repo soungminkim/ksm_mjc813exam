@@ -1,36 +1,97 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mjc813.contact_web.service.IContactMybatisMapper">
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>연락처 목록</title>
+    </head>
+    <body>
+        <h1>연락처 목록</h1>
+        <button onclick="location.href='./add'">연락처추가</button>
+        <ul>
+            {{#contacts}}
+            <a href="./view?id={{id}}">
+                <li>
+                    <div>{{id}}</div>
+                    <div>{{name}}</div>
+                    <div>{{phoneNumber}}</div>
+                    <div>{{zipNumber}}</div>
+                    <div>{{email}}</div>
+                </li>
+            </a>
+            {{/contacts}}
+            {{^contacts}}
+            <li>데이터가 없습니다.</li>
+            {{/contacts}}
+        </ul>
+        <div>
+            {{#paging}}
+            page : {{page}} <br/>
+            rowsOnePage : {{rws}} <br/>
+            Offset : {{off}} <br/>
+            Total Rows : {{totRows}} <br/>
+            Total page : {{totPage}} <br/>
+            {{/paging}}
+        </div>
+        <div>
+            <label for="rowsOnePage">페이지 당 행수:</label>
+            <select id="rowsOnePage" onchange="onChangeRWS();">
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+        <div id="pageDiv"></div>
+    </body>
+    <script>
+        {{#paging}}
+        function setRws() {
+        let rws = {{rws}};
+        document.getElementById("rowsOnePage").value = rws;
+        }
 
-    <insert id="insert" parameterType="Contact" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO contact_tbl
-            (name, phone_number, zip_number, email)
-        VALUES
-            (#{name}, #{phoneNumber}, #{zipNumber}, #{email})
-    </insert>
-    <select id="selectAll" resultType="com.mjc813.contact_web.dto.Contact">
-        SELECT id, name, phoneNumber, zipNumber, email
-        FROM contact_tbl
-        ORDER BY id
-    </select>
+        function onChangeRWS() {
+        let page = {{page}};
+        let rws = document.getElementById("rowsOnePage").value;
+        location.href = "./list?page=" + page + "&rws=" + rws;
+        }
 
-    <select id="selectOne" resultType="Contact" parameterType="Long">
-        SELECT id
-             , name
-             , phone_number
-             , zip_number
-             , email
-        FROM contact_tbl
-        WHERE id = #{id}
-    </select>
+        function makeButtons() {
+        let buttons = makePrevButton();
+        for ( let i = 1; i <= {{totPage}}; i++ ) {
+        buttons += makePageButton(i);
+        }
+        buttons += makeNextButton();
+        let pageDivDom = document.getElementById("pageDiv");
+        pageDivDom.innerHTML = buttons;
+        }
 
-    <update id="update" parameterType="Contact">
-        UPDATE contact_tbl SET
-            name = #{name}
-                             , phone_number = #{phoneNumber}
-                             , zip_number = #{zipNumber}
-                             , email = #{email}
-        WHERE id = #{id}
-    </update>
-</mapper>
+        function makePrevButton() {
+        let page = {{page}};
+        let tag = page >= 2 ? "&nbsp<button onclick='goPage(" + (page - 1) + ");'> ◁ </button>&nbsp" : "<button onclick='#'> ◁ </button>";
+        return tag;
+        }
+
+        function makeNextButton() {
+        let page = {{page}};
+        let totalpage = {{totPage}};
+        let tag = page < totalpage ? "&nbsp<button onclick='goPage(" + (page + 1) + ");'> ▷ </button>&nbsp" : "<button onclick='#'> ▷ </button>";
+        return tag;
+        }
+
+        function makePageButton(pg) {
+        let tag = "&nbsp<button onclick='goPage(" + pg + ");'>[" + pg + "]</button>&nbsp";
+        return tag;
+        }
+
+        function goPage(pg) {
+        let rws = {{rws}};
+        location.href = "./list?page=" + pg + "&rws=" + rws;
+        }
+
+        makeButtons();
+        setRws();
+        {{/paging}}
+    </script>
+</html>
