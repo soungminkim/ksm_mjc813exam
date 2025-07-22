@@ -14,4 +14,23 @@
         FROM contact_tbl
         ORDER BY id
     </select>
+
+    <select id="selectOne" resultType="Contact" parameterType="Long">
+        SELECT id
+             , name
+             , phone_number
+             , zip_number
+             , email
+        FROM contact_tbl
+        WHERE id = #{id}
+    </select>
+
+    <update id="update" parameterType="Contact">
+        UPDATE contact_tbl SET
+            name = #{name}
+                             , phone_number = #{phoneNumber}
+                             , zip_number = #{zipNumber}
+                             , email = #{email}
+        WHERE id = #{id}
+    </update>
 </mapper>

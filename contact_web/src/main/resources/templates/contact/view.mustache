@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>연락처 보기</title>
+</head>
+<body>
+<h1>연락처 보기</h1>
+{{#contact}}
+<span>ID</span>
+<div>{{id}}</div>
+<span>이름</span>
+<div>{{name}}</div>
+<span>전화번호</span>
+<div>{{phoneNumber}}</div>
+<span>우편번호</span>
+<div>{{zipNumber}}</div>
+<span>이메일</span>
+<div>{{email}}</div>
+<a href="./modify?id={{id}}"><button>수정</button></a>
+<form id="" name="" method="post" action="./delete">
+    <input type="hidden" name="id" value="{{id}}" />
+    <input type="submit" value="삭제" />
+</form>
+{{/contact}}
+{{^contact}}
+<div>데이터가 없습니다.</div>
+{{/contact}}
+</body>
+</html>

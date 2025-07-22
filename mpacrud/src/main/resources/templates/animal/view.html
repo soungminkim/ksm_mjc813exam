@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>동물 정보</title>
+    <script lang="javascript">
+        function deleteAnimal() {
+            document.delForm.submit();
+        }
+    </script>
+</head>
+<body>
+    <h1>동물 정보 출력</h1>
+    {{#data}}
+    <label for="name">동물이름 : </label><span id="name" >{{name}}</span> <br />
+    <label for="age">동물나이 : </label><span id="age" >{{age}}</span> <br />
+    <label for="kind">동물종류 : </label><span id="kind" >{{kind}}</span> <br />
+    <button onclick="location.href='./modify?id={{id}}'">수정</button>
+    <button onclick="deleteAnimal();">삭제</button>
+    <div style="display: none;">
+        <form name="delForm" method="post" action="./delete">
+            <input type="hidden" name="id" value="{{id}}" />
+            <input type="submit" value="삭제" />
+        </form>
+    </div>
+    {{/data}}
+    {{^data}}
+    <div>데이터가 없습니다.</div>
+    {{/data}}
+</body>
+</html>

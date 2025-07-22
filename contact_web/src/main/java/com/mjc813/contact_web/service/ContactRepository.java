@@ -18,4 +18,8 @@ public class ContactRepository {
     public java.util.List<Contact> selectAll() {
         return mapper.selectAll();
     }
+
+    public Contact selectOne(Long id) {return this.mapper.selectOne(id); }
+
+    public void update(Contact dto) {this.mapper.update(dto);}
 }

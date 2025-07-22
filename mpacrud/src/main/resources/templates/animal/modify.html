@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>동물 정보 수정</title>
+</head>
+<body>
+  <h1>Animal 수정</h1>
+  {{#data}}
+  <form method="post" action="/animal/update">
+    <label for="name">ID : </label><span>{{id}}</span><input type="hidden" id="id" name="id" value="{{id}}" readonly/> <br />
+    <label for="name">동물이름 : </label><input type="text" id="name" name="name" value="{{name}}" maxlength="30" /> <br />
+    <label for="age">동물나이 : </label><input type="number" id="age" name="age" value="{{age}}" maxlength="3" /> <br />
+    <label for="kind">동물종류 : </label><input type="text" id="kind" name="kind" value="{{kind}}" maxlength="30" /> <br />
+    <input type="submit" value="동물수정" />
+  </form>
+  {{/data}}
+  {{^data}}
+  <div>데이터가 없습니다.</div>
+  {{/data}}
+</body>
+</html>

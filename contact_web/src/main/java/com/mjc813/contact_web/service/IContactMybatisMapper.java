@@ -9,4 +9,6 @@ import java.util.List;
 public interface IContactMybatisMapper {
     public void insert(Contact dto);
     public List<Contact> selectAll();
+    public Contact selectOne(Long id);
+    public void update(Contact dto);
 }

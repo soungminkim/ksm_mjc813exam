@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>동물 목록</title>
+</head>
+<body>
+    <h1>동물 목록</h1>
+    <div>
+        <h5>동물 검색</h5>
+        <label for="searchType">검색종류</label>
+        <select id="searchType" name="searchType">
+            <option value="name">이름검색</option>
+            <option value="kind">종류검색</option>
+        </select>
+        <label for="searchWord">포함단어</label><input type="text" id="searchWord" name="searchWord" value="" />
+        <button onclick="doSearch();">검색</button>
+    </div>
+    <div>
+        <span>ID</span>
+        <span>동물이름</span>
+        <span>동물나이</span>
+        <span>동물종류</span>
+    </div>
+    {{#listWord}}
+    <a href="./view?id={{id}}">
+    <div>
+        <span>{{id}}</span>
+        <span>{{name}}</span>
+        <span>{{age}}</span>
+        <span>{{kind}}</span>
+    </div>
+    </a>
+    {{/listWord}}
+    {{^listWord}}
+    <div>데이터가 없습니다.</div>
+    {{/listWord}}
+    <div><button onclick="location.href='./addview'">동물추가</button></div>
+</body>
+<script>
+    function doSearch() {
+        let searchType = document.getElementById("searchType").value;
+        let searchWord = document.getElementById("searchWord").value;
+        let url = "./list?searchType=" + searchType + "&searchWord=" + searchWord;
+        document.location.href = url;
+    }
+</script>
+</html>

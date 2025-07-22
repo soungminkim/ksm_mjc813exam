@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjc813.mpacrud.animal.mybatis.AnimalMybatisMapper">
+<!--<mapper namespace="Java소스중에서 @Mapper 애노테이션있는 인터페이스 패키지Full경로">-->
+    <insert id="insertAnimal" parameterType="AnimalDto">
+        INSERT INTO animal_tbl (
+            name
+            <if test='age != null'>, age</if>
+            , kind
+        ) VALUES (
+            #{name}
+            <if test='age != null'>, #{age}</if>
+            , #{kind}
+        )
+    </insert>
+
+    <select id="findAll" resultType="AnimalDto">
+        SELECT
+            id
+            , name
+            , age
+            , kind
+        FROM animal_tbl
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="AnimalDto" parameterType="Long">
+        SELECT
+            id
+             , name
+             , age
+             , kind
+        FROM animal_tbl
+        WHERE id = #{id}
+    </select>
+
+    <update id="update" parameterType="AnimalDto">
+        UPDATE animal_tbl SET
+            name = #{name}
+            , age = #{age}
+            , kind = #{kind}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM animal_tbl
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findWhere" resultType="AnimalDto" parameterType="SearchRequestDto">
+        SELECT
+            id
+             , name
+             , age
+             , kind
+        FROM animal_tbl
+        <if test='searchWord != null and searchWord != ""'>
+        WHERE ${searchType} LIKE CONCAT('%', #{searchWord}, '%')
+        </if>
+        ORDER BY id
+    </select>
+</mapper>

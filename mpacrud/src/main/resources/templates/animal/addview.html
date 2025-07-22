@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Animal 입력 화면</title>
+</head>
+<body>
+    <h1>Animal 입력</h1>
+    <form method="post" action="/animal/insert">
+        <label for="name">동물이름 : </label><input type="text" id="name" name="name" value="" maxlength="30" /> <br />
+        <label for="age">동물나이 : </label><input type="number" id="age" name="age" value="0" maxlength="3" /> <br />
+        <label for="kind">동물종류 : </label><input type="text" id="kind" name="kind" value="" maxlength="30" /> <br />
+        <input type="submit" value="동물추가" />
+    </form>
+</body>
+</html>
