@@ -37,3 +37,4 @@ build/
 *.log
 *.zip
 
+"logs/" 
