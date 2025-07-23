@@ -41,4 +41,8 @@ public class CoffeeService {
     public Long countall() {
         return coffeeMybatis.countall();
     }
+
+    public Long countBySearch(SearchRequestDto search) {
+        return coffeeMybatis.countBySearch(search);
+    }
 }

@@ -36,7 +36,7 @@ public class CoffeeController {
     public String list(Model model
             , @ModelAttribute SearchRequestDto search) {
         try {
-            Long totalRow = this.coffeeService.countall();
+            Long totalRow = this.coffeeService.countBySearch(search);
             search.setTotalRows(totalRow);
             List<CoffeeDto> all = this.coffeeService.findWhere(search);
             model.addAttribute("coffeeList", all);

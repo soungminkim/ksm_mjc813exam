@@ -11,7 +11,9 @@
         <form method="get" action="/coffee/list" style="display:flex; gap:8px;">
             <input type="text" name="search" placeholder="커피 이름 검색" style="flex:1;">
             <button type="submit" class="btn-secondary">🔍 검색</button>
+            <button type="button" onclick="location.href='/coffee/list'" style="width:100%; height:56px;">전체 목록</button>
         </form>
+
         <button onclick="location.href='/coffee/add'">➕ 커피 추가</button>
     </div>
     <div class="table-wrapper">
