@@ -1,6 +1,7 @@
 package com.mjc813.coffee.controller;
 
 import com.mjc813.coffee.dto.CoffeeDto;
+import com.mjc813.coffee.dto.SearchRequestDto;
 import com.mjc813.coffee.mybatis.CoffeeMybatis;
 import com.mjc813.coffee.service.CoffeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,9 @@ public class CoffeeController {
     }
 
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(Model model, @ModelAttribute SearchRequestDto search) {
         try {
-            List<CoffeeDto> all = this.coffeeService.selectAll();
+            List<CoffeeDto> all = this.coffeeService.findWhere(search);
             model.addAttribute("coffeeList", all);
         } catch (Throwable th){
             System.out.println(th.toString());
@@ -65,7 +66,7 @@ public class CoffeeController {
     }
 
     @PostMapping("/delete")
-    public String delete(Long id) {
+    public String delete(@RequestParam("id") Long id) {
         try {
             this.coffeeService.deleteById(id);
         }   catch (Throwable th){

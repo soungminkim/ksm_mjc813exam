@@ -5,34 +5,37 @@
     <title>Coffee List</title>
 </head>
 <body>
-<button onclick="location.href='/coffee/add'">➕ 커피 추가</button>
-<button onclick="location.href='/coffee/list'">📋 커피 목록</button>
-<h1 style="text-align:center;">커피 목록</h1>
-<table border="1" style="width:80%;margin:auto;">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>이름</th>
-        <th>가격</th>
-        <th>원산지</th>
-        <th>샷 수</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#coffeeList}}
-    <tr>
-        <td>{{id}}</td>
-        <td>{{name}}</td>
-        <td>{{price}}</td>
-        <td>{{source}}</td>
-        <td>{{shots}}</td>
-        <td>
-            <button onclick="location.href='/coffee/view?id={{id}}'">👁️ 보기</button>
-            <button onclick="location.href='/coffee/modify?id={{id}}'">✏️ 수정</button>
-        </td>
-    </tr>
-    {{/coffeeList}}
-    </tbody>
-</table>
+    <button onclick="location.href='/coffee/add'">➕ 커피 추가</button>
+    <h1 style="text-align:center;">커피 목록</h1>
+        <form method="get" action="/coffee/list">
+            <input type="text" name="search" placeholder="커피 검색">
+            <button type="submit">🔍 검색</button>
+        </form>
+
+    <table border="1" style="width:80%;margin:auto;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>가격</th>
+                <th>원산지</th>
+                <th>샷 수</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#coffeeList}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td>{{price}}</td>
+                    <td>{{source}}</td>
+                    <td>{{shots}}</td>
+                    <td>
+                        <button onclick="location.href='/coffee/modify?id={{id}}'">✏️ 수정</button>
+                    </td>
+                </tr>
+            {{/coffeeList}}
+        </tbody>
+    </table>
 </body>
 </html>

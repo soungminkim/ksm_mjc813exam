@@ -1,6 +1,7 @@
 package com.mjc813.coffee.service;
 
 import com.mjc813.coffee.dto.CoffeeDto;
+import com.mjc813.coffee.dto.SearchRequestDto;
 import com.mjc813.coffee.mybatis.CoffeeMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,11 @@ public class CoffeeService {
 
     public void deleteById(Long id) {
         this.coffeeMybatis.deleteById(id);
+    }
+
+    public List<CoffeeDto> findWhere(SearchRequestDto serch) {
+        List<CoffeeDto> where = this.coffeeMybatis.findWhere(serch);
+        return where;
+
     }
 }

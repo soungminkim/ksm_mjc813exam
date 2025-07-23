@@ -47,8 +47,23 @@
         WHERE id = #{id}
     </update>
 
-    <delete id="delete" parameterType="Long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM coffee_tbl
         WHERE id = #{id}
     </delete>
+
+    <select id="findWhere" resultType="com.mjc813.coffee.dto.CoffeeDto" parameterType="com.mjc813.coffee.dto.SearchRequestDto">
+        SELECT
+        id
+        , name
+        , price
+        , source
+        , shots
+        FROM coffee_tbl
+        <if test='search != null and search != ""'>
+            WHERE name LIKE CONCAT('%', #{search}, '%')
+        </if>
+        ORDER BY id
+        LIMIT #{row} OFFSET #{offset}
+    </select>
 </mapper>
