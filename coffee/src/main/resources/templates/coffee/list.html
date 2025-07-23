@@ -1,41 +1,108 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>Coffee List</title>
-</head>
-<body>
-    <button onclick="location.href='/coffee/add'">➕ 커피 추가</button>
-    <h1 style="text-align:center;">커피 목록</h1>
-        <form method="get" action="/coffee/list">
-            <input type="text" name="search" placeholder="커피 검색">
-            <button type="submit">🔍 검색</button>
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>Coffee List</title>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
+    <h1>☕ 커피 목록</h1>
+    <div style="max-width:820px; margin:auto; display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <form method="get" action="/coffee/list" style="display:flex; gap:8px;">
+            <input type="text" name="search" placeholder="커피 이름 검색" style="flex:1;">
+            <button type="submit" class="btn-secondary">🔍 검색</button>
         </form>
-
-    <table border="1" style="width:80%;margin:auto;">
-        <thead>
+        <button onclick="location.href='/coffee/add'">➕ 커피 추가</button>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>이름</th>
                 <th>가격</th>
                 <th>원산지</th>
                 <th>샷 수</th>
+                <th>관리</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {{#coffeeList}}
-                <tr>
-                    <td>{{id}}</td>
-                    <td>{{name}}</td>
-                    <td>{{price}}</td>
-                    <td>{{source}}</td>
-                    <td>{{shots}}</td>
-                    <td>
-                        <button onclick="location.href='/coffee/modify?id={{id}}'">✏️ 수정</button>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{price}}</td>
+                <td>{{source}}</td>
+                <td>{{shots}}</td>
+                <td>
+                    <button onclick="location.href='/coffee/modify?id={{id}}'">✏️ 수정</button>
+                </td>
+            </tr>
             {{/coffeeList}}
-        </tbody>
-    </table>
-</body>
-</html>
+            {{^coffeeList}}
+            <tr>
+                <td colspan="6">등록된 커피가 없습니다.</td>
+            </tr>
+            {{/coffeeList}}
+            </tbody>
+        </table>
+        <div>
+            페이지: {{paging.page}} /
+            전체 페이지: {{paging.totalPage}}<br>
+            한 페이지 행수: {{paging.row}} /
+            전체 행: {{paging.totalRows}}
+        </div>
+        <div>
+            <label for="rowsOnePage">페이지 당 행수:</label>
+            <select id="rowsOnePage" onchange="onChangeRWS();">
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+        <div id="pageDiv"></div>
+        <script>
+            var page = parseInt("{{paging.page}}") || 1;
+            var row = parseInt("{{paging.row}}") || 10;
+            var totalPage = parseInt("{{paging.totalPage}}") || 1;
+            var search = "{{paging.search}}" || "";
+
+            function setRws() {
+                document.getElementById("rowsOnePage").value = row;
+            }
+            function onChangeRWS() {
+                var rws = document.getElementById("rowsOnePage").value;
+                location.href = "/coffee/list?page=" + page + "&row=" + rws + "&search=" + encodeURIComponent(search);
+            }
+            function makeButtons() {
+                var buttons = makePrevButton();
+                for (var i = 1; i <= totalPage; i++) {
+                    buttons += makePageButton(i);
+                }
+                buttons += makeNextButton();
+                document.getElementById("pageDiv").innerHTML = buttons;
+            }
+            function makePrevButton() {
+                var tag = page >= 2 ? "&nbsp;<button onclick='goPage(" + (page - 1) + ");'> ◁ </button>&nbsp;" : "<button disabled> ◁ </button>";
+                return tag;
+            }
+            function makeNextButton() {
+                var tag = page < totalPage ? "&nbsp;<button onclick='goPage(" + (page + 1) + ");'> ▷ </button>&nbsp;" : "<button disabled> ▷ </button>";
+                return tag;
+            }
+            function makePageButton(pg) {
+                var tag = "&nbsp;<button onclick='goPage(" + pg + ");'>[" + pg + "]</button>&nbsp;";
+                return tag;
+            }
+            function goPage(pg) {
+                var rws = document.getElementById("rowsOnePage").value;
+                location.href = "/coffee/list?page=" + pg + "&row=" + rws + "&search=" + encodeURIComponent(search);
+            }
+            setRws();
+            makeButtons();
+        </script>
+    </div>
+    </body>
+    </html>

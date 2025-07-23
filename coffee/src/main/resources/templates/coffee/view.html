@@ -3,30 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>커피 정보</title>
-    <script lang="javascript">
-        function deleteCoffee() {
-            document.delForm.submit();
-        }
-    </script>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>커피 정보 출력</h1>
+<h1>☕ 커피 정보</h1>
+<div class="card">
     {{#data}}
-    <label for="name">이름 : </label><span id="name" >{{name}}</span> <br />
-    <label for="price">가격 : </label><span id="price" >{{price}}</span> <br />
-    <label for="source">원산지 : </label><span id="source" >{{source}}</span> <br />
-    <label for="shots">샷 수 : </label><span id="shots" >{{shots}}</span> <br />
-    <button onclick="location.href='./modify?id={{id}}'">수정</button>
-    <button onclick="deleteCoffee();">삭제</button>
-    <div style="display: none;">
-        <form name="delForm" method="post" action="./delete">
-            <input type="hidden" name="id" value="{{id}}" />
-            <input type="submit" value="삭제" />
+    <label for="name">이름</label>
+    <div id="name">{{name}}</div>
+
+    <label for="price">가격</label>
+    <div id="price">{{price}}</div>
+
+    <label for="source">원산지</label>
+    <div id="source">{{source}}</div>
+
+    <label for="shots">샷 수</label>
+    <div id="shots">{{shots}}</div>
+
+    <div style="margin-top:24px;">
+        <button onclick="location.href='/coffee/modify?id={{id}}'">✏️ 수정</button>
+        <form method="post" action="/coffee/delete" style="display:inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+            <input type="hidden" name="id" value="{{id}}">
+            <button type="submit" style="background:#e87474;">🗑️ 삭제</button>
         </form>
+        <button type="button" class="btn-secondary" onclick="location.href='/coffee/list'">목록</button>
     </div>
     {{/data}}
     {{^data}}
-    <div>주문이 없습니다.</div>
+    <div>커피 정보를 찾을 수 없습니다.</div>
     {{/data}}
+</div>
 </body>
 </html>

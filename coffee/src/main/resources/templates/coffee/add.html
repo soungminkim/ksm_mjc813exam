@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Coffee 메뉴 추가</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Coffee 메뉴 추가</h1>
+<h1>☕ 커피 추가</h1>
 <form method="post" action="/coffee/insert">
     <label for="name">이름</label>
-    <input type="text" id="name" name="name" maxlength="20" required /> <br />
+    <input type="text" id="name" name="name" maxlength="20" required />
 
     <label for="price">가격</label>
-    <input type="number" id="price" name="price" value="0" maxlength="7" required /> <br />
+    <input type="number" id="price" name="price" value="0" maxlength="7" required />
 
     <label for="source">원산지</label>
-    <input type="text" id="source" name="source" maxlength="20" required /> <br />
+    <input type="text" id="source" name="source" maxlength="20" required />
 
     <label for="shots">샷 수</label>
-    <input type="number" id="shots" name="shots" value="0" maxlength="3" required /> <br />
+    <input type="number" id="shots" name="shots" value="0" maxlength="3" required />
 
     <button type="submit">커피 추가</button>
+    <button type="button" class="btn-secondary" onclick="history.back()">취소</button>
 </form>
 </body>
 </html>

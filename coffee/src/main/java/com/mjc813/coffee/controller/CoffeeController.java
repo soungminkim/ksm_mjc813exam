@@ -33,10 +33,14 @@ public class CoffeeController {
     }
 
     @GetMapping("/list")
-    public String list(Model model, @ModelAttribute SearchRequestDto search) {
+    public String list(Model model
+            , @ModelAttribute SearchRequestDto search) {
         try {
+            Long totalRow = this.coffeeService.countall();
+            search.setTotalRows(totalRow);
             List<CoffeeDto> all = this.coffeeService.findWhere(search);
             model.addAttribute("coffeeList", all);
+            model.addAttribute("paging", search);
         } catch (Throwable th){
             System.out.println(th.toString());
         }

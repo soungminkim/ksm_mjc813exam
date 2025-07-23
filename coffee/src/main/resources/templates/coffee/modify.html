@@ -2,28 +2,38 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>coffee 수정</title>
+    <title>커피 수정</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>coffee 수정</h1>
-    {{#data}}
-    <form method="post" action="/coffee/update">
-        <label for="name">ID : </label><span>{{id}}</span><input type="hidden" id="id" name="id" value="{{id}}" readonly/> <br />
-        <label for="name">이름 : </label><input type="text" id="name" name="name" value="{{name}}" maxlength="20" /> <br />
-        <label for="price">가격 : </label><input type="number" id="price" name="price" value="{{price}}" maxlength="7" /> <br />
-        <label for="source">원산지 : </label><input type="text" id="source" name="source" value="{{source}}" maxlength="20" /> <br />
-        <label for="shots">샷 수 : </label><input type="number" id="shots" name="shots" value="{{shots}}" maxlength="3" /> <br />
-        <input type="submit" value="coffee 수정" />
-    </form>
-    <form method="post" action="/coffee/delete" onsubmit="return confirm('정말 삭제하시겠습니까?');" style="margin-top: 20px;">
-        <input type="hidden" name="id" value="{{id}}">
-        <button type="submit">🗑️ 삭제</button>
-    </form>
-    {{/data}}
-    {{^data}}
-    <div>주문이 없습니다.</div>
-    {{/data}}
-</body>
-</html>
+<h1>☕ 커피 수정</h1>
+{{#data}}
+<form method="post" action="/coffee/update">
+    <label for="id">ID</label>
+    <input type="text" id="id" name="id" value="{{id}}" readonly style="background:#f2f2f2; color:#bbb;" />
+
+    <label for="name">이름</label>
+    <input type="text" id="name" name="name" value="{{name}}" maxlength="20" />
+
+    <label for="price">가격</label>
+    <input type="number" id="price" name="price" value="{{price}}" maxlength="7" />
+
+    <label for="source">원산지</label>
+    <input type="text" id="source" name="source" value="{{source}}" maxlength="20" />
+
+    <label for="shots">샷 수</label>
+    <input type="number" id="shots" name="shots" value="{{shots}}" maxlength="3" />
+
+    <input type="submit" value="커피 수정" />
+</form>
+<form method="post" action="/coffee/delete" onsubmit="return confirm('정말 삭제하시겠습니까?');" style="margin-top: 18px;">
+    <input type="hidden" name="id" value="{{id}}">
+    <button type="submit" style="background:#e87474;">🗑️ 삭제</button>
+    <button type="button" class="btn-secondary" onclick="location.href='/coffee/list'">목록</button>
+</form>
+{{/data}}
+{{^data}}
+<div class="card">해당 커피 정보가 없습니다.</div>
+{{/data}}
 </body>
 </html>

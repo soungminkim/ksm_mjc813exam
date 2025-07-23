@@ -14,4 +14,5 @@ public interface CoffeeMybatis {
     public void update(CoffeeDto coffeeDto);
     public void deleteById(Long id);
     public List<CoffeeDto> findWhere(SearchRequestDto search);
+    public Long countall();
 }

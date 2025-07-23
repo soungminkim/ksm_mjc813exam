@@ -36,6 +36,9 @@ public class CoffeeService {
     public List<CoffeeDto> findWhere(SearchRequestDto serch) {
         List<CoffeeDto> where = this.coffeeMybatis.findWhere(serch);
         return where;
+    }
 
+    public Long countall() {
+        return coffeeMybatis.countall();
     }
 }
