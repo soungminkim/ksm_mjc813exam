@@ -38,7 +38,18 @@ public class CoffeeController {
         try {
             Long totalRow = this.coffeeService.countBySearch(search);
             search.setTotalRows(totalRow);
+
+            int page = search.getPage();
+            int row = search.getRow();
+            int totalPage = search.getTotalPage();
+
+            if (totalPage > 0 && page > totalPage) {
+                return "redirect:/coffee/list?page=" + totalPage + "&row=" + row
+                        + (search.getSearch().isEmpty() ? "" : "&search=" + search.getSearch());
+            }
+
             List<CoffeeDto> all = this.coffeeService.findWhere(search);
+
             model.addAttribute("coffeeList", all);
             model.addAttribute("paging", search);
         } catch (Throwable th){
