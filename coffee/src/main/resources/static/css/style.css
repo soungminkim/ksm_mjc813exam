@@ -120,3 +120,15 @@ tr:nth-child(odd) {
         font-size: 0.95rem;
     }
 }
+#rowsOnePage {
+    font-size: 1rem;
+    padding: 6px 16px;
+    border-radius: 7px;
+    border: 1px solid #bbb;
+    background: #fff;
+    outline: none;
+    transition: border 0.2s;
+}
+#rowsOnePage:focus {
+    border: 1.5px solid #333;
+}

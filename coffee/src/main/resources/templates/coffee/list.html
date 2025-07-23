@@ -46,15 +46,17 @@
             {{/coffeeList}}
             </tbody>
         </table>
+        <!--
         <div>
             페이지: {{paging.page}} /
             전체 페이지: {{paging.totalPage}}<br>
             한 페이지 행수: {{paging.row}} /
             전체 행: {{paging.totalRows}}
         </div>
-        <div>
-            <label for="rowsOnePage">페이지 당 행수:</label>
-            <select id="rowsOnePage" onchange="onChangeRWS();">
+        -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:12px; margin:18px 0;">
+            <label for="rowsOnePage" style="font-weight:500;">페이지 당 행수</label>
+            <select id="rowsOnePage" onchange="onChangeRWS();" style="padding:6px 16px; border-radius:7px; border:1px solid #bbb;">
                 <option value="2">2</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
@@ -62,7 +64,7 @@
                 <option value="20">20</option>
             </select>
         </div>
-        <div id="pageDiv"></div>
+        <div id="pageDiv" style="margin:24px auto 0 auto; text-align:center;"></div>
         <script>
             var page = parseInt("{{paging.page}}") || 1;
             var row = parseInt("{{paging.row}}") || 10;
