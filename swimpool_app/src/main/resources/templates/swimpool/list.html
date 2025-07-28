@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>수영장 정보 목록</title>
+    <link href="/smbg/css/styles.css" rel="stylesheet" />
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.loadData();
+        });
+
+        $.loadData = () => {
+            $.list();
+        }
+
+        $.list = function() {
+            $.ajax({
+                url: '/api/v1/swimpool/list'
+                , type: 'get'
+            }).done(function(result, textStatus, jqXHR) {
+                console.log("Success:", result);
+                $.printList(result.data);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Error:", textStatus, errorThrown);
+            });
+        }
+
+        $.printList = (list) => {
+            let strHtml = "";
+            for ( let i = 0; i < list.length; i++ ) {
+                strHtml += $.makeOneRow(list[i]);
+            }
+            $("#listPrint").append(strHtml);
+        }
+
+        $.makeOneRow = (item) => {
+            let str = `\
+            <div class="row gx-4 gx-lg-5">\
+                <div class="col-md-4 mb-5">\
+                    <div class="card h-100">\
+                        <div class="card-body">\
+                            <div>이름 : ${item.name}</div>\
+                            <div>전화 : ${item.phoneNumber}</div>\
+                            <div>형태 : ${item.laneType}</div>\
+                            <div>개수 : ${item.lanes}</div>\
+                        </div>\
+                    </div>\
+                </div>\
+            </div>`;
+            return str;
+        }
+    </script>
+</head>
+
+<body>
+<div id="listPrint" class="container px-4 px-lg-5">
+    <div class="card text-white bg-secondary my-5 py-4 text-center">
+        <div class="card-body"><p class="text-white m-0">수영자 정보 목록</p></div>
+    </div>
+    <!-- Content Row-->
+    <div class="row gx-4 gx-lg-5">
+        <div class="col-md-4 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                <div>이름 : {name}</div>
+                    <div>전화 : {phoneNumber}</div>
+                    <div>형태 : {laneType}</div>
+                    <div>개수 : {lanes}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

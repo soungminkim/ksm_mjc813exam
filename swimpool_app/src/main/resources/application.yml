@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: swimpool_app
+  datasource:
+    url: jdbc:log4jdbc:mysql://localhost:3306/swimpool_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    username: swimmer
+    password: hiphop1234!
+  mustache:
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+    charset: UTF-8
+    servlet:
+      cache: false
+
+server:
+  port: 8084
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
