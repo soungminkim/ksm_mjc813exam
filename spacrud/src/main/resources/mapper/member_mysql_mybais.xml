@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjc813.spacrud.member.IMemberMybatis">
+
+    <insert id="addMember" parameterType="MemberDto">
+        INSERT INTO member_tbl (
+            userId
+            , passwd
+            , name
+            , nickName
+            , phone_number
+            , email
+        ) VALUES (
+            #{userId}
+            , #{passwd}
+            , #{name}
+            , #{nickName}
+            , #{phoneNumber}
+            , #{email}
+        )
+    </insert>
+
+    <select id="findAll" resultType="MemberDto">
+        SELECT
+            id
+            , userId
+            , name
+            , nickName
+        FROM member_tbl
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="MemberDto" parameterType="Long">
+        SELECT
+            id
+            , userId
+            , name
+            , nickName
+            , phone_number
+            , email
+        FROM member_tbl
+        WHERE id = #{id}
+    </select>
+
+    <update id="update" parameterType="MemberDto">
+        UPDATE member_tbl SET
+            userId = #{userId}
+            , name = #{name}
+            , nickName = #{nickName}
+            , phone_number = #{phoneNumber}
+            , email = #{email}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM member_tbl
+        WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Jquery Sample</title>
+    <script src="/js/jquery-3.7.1.slim.min.js"></script>
+    <script>
+        $(window).on( "load", function() {
+            // html 파일이 로딩이 완료되면 jquery가 시작하는 함수 1순위
+            console.log( "$(window).on('load', function(){........})" );
+
+            $("#button1").on("click", function() {
+                // id="button1" 이 클릭이 되면 function(){} 실행한다.
+                $("#input1").val( $("#div1").text() );
+                // id=div1 인 element의 innerText 값을 get 해서 id="input1" 인 element 의 value 값으로 set 한다.
+            });
+            $("#button2").on("click", function() {
+                // id="button1" 이 클릭이 되면 function(){} 실행한다.
+                $("#div2").text( $("#input2").val() );
+                // id=input2 인 element의 value 값을 get 해서 id="div2" 인 element 의 innerText 값으로 set 한다.
+            });
+        });
+        $(document).ready(function() {
+            // html 파일이 로딩이 완료되면 jquery가 시작하는 함수 2순위
+            console.log( "$(document).ready(function(){........})" );
+
+            $("#button3").on("click", function() {
+                // id="button3" 이 클릭이 되면 function(){} 실행한다.
+                $("#select1").append('<option value="C">알파벳C</option>');
+                // id="select1" 인 element 의 자식으로 추가한다.
+                $("#select1").append('<option value="D">알파벳D</option>');
+                // id="select1" 인 element 의 자식으로 추가한다.
+                $("#div2").append("<div>abcd</div>");
+                // id="div2" 인 element 의 자식으로 추가한다.
+                $("#div2").append("<div>defg</div>");
+                // id="div2" 인 element 의 자식으로 추가한다.
+                $("#select2").append('<option value="3">3</option>');
+                $("#select2").append('<option value="4">4</option>');
+            });
+            $("#select1").change(function() {
+                // id="select1"인 element 의 value 가 바뀌면 function() {} 실행한다.
+                $("#div1").text( $(this).val() );
+                // javascript this 객체를 jquery 객체로 변환후에 value 값을 get 해서 id="div1" 인 element 의 innerText 에 set 한다.
+            });
+            $("#button4").on("click", function() {
+                // id="button4" 인 element 가 클릭 되면 function(){} 실행한다.
+                $("#select1").val("B");
+                // id="select1" 인 element 의 value 값을 "B" 로 setting 한다. select 박스일경우에는 option value="B" 인 것이 선택된다.
+                $("#select2").val("2");
+                // id="select1" 인 element 의 value 값을 "2" 로 setting 한다. select 박스일경우에는 option value="2" 인 것이 선택된다.
+            });
+        });
+        $(function() {
+            // html 파일이 로딩이 완료되면 jquery가 시작하는 함수 3순위
+            console.log( "$(function(){........})" );
+            $("#button5").click(function(){
+                $("#select1 option:last-child").remove();
+                $("#select2 option").last().remove();
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>JQuery Sample #1 Get, Set</h1>
+<div id="div1">this is div1</div>
+<div id="div2">this is div2</div>
+<input type="text" id="input1" value="" />
+<input type="text" id="input2" value="" />
+<br/>
+<button id="button1">Button1</button>
+<pre><code>
+$("#button1").on("click", function() {
+    $("#input1").val( $("#div1").text() );
+});
+</code></pre>
+<button id="button2">Button2</button>
+<pre><code>
+$("#button2").on("click", function() {
+    $("#div2").text( $("#input2").val() );
+});
+</code></pre>
+
+<h1>JQuery Sample #2 select</h1>
+<select id="select1">
+    <option value="A">알파벳A</option>
+    <option value="B">알파벳B</option>
+</select>
+<pre><code>
+$("#select1").change(function() {
+    $("#div1").text( $(this).val() );
+});
+</code></pre>
+<select id="select2">
+    <option value="1">1</option>
+    <option value="2">2</option>
+</select>
+<br/>
+<button id="button3">Button3</button>
+<pre><code>
+$("#button3").on("click", function() {
+    $("#select1").append('<option value="C">알파벳C</option>');
+    $("#select1").append('<option value="D">알파벳D</option>');
+    $("#select2").append('<option value="3">3</option>');
+    $("#select2").append('<option value="4">4</option>');
+    $("#div2").append("<div>abcd</div>");
+    $("#div2").append("<div>defg</div>");
+});
+</code></pre>
+<button id="button4">Button4</button>
+<pre><code>
+$("#button4").on("click", function() {
+    $("#select1").val("B");
+    $("#select2").val("2");
+});
+</code></pre>
+<button id="button5">Button5</button>
+</body>
+</html>

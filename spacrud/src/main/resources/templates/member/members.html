@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>멤버 목록</title>
+    <link href="/css/modal.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+            crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <script src="/js/modal.js"></script>
+    <script>
+        function funcSample1() {
+            // document.getElementById("sample").innerText = "this is sample";
+            $("#sample").text("this is sample jquery");
+            $("#sample").css("color", "red");
+            $("#sample").css("font-size", "24px");
+            $("#sample").on("click", function() {
+                alert("Sample 클릭!");
+            });
+        }
+        function funcSample2() {
+            // document.getElementById("result").innerText = document.getElementById("sample").innerText;
+            $.funcSample2();
+        }
+
+        $.funcSample2 = function() {
+            $("#result").text( $("#sample").text() );
+        }
+
+        $(document).ready(function(){
+            $.loadData();
+
+            $('#showAddModalButton').click(function () {
+                // id="modal_box_add" 요소를 1000ms 동안 서서히 보여준다.
+                $('#modal_box_add').fadeIn(1000);
+                $('.modal_bg').fadeIn(1000);
+            });
+
+            $('.modalCloseButton').click(function () {
+                // id="modal_box_add" 요소와 class="modal_bg" 요소를 서서히 감춘다.
+                $('#modal_box_add').fadeOut();
+                $('.modal_bg').fadeOut();
+            });
+        });
+
+        $.loadData = () => {
+            $.ajax({
+                url: '/member/list',
+                method: 'GET'
+            }).done(function(data, textStatus, jqXHR) {
+                console.log("Success:", data.responseData);
+                $.printList(data.responseData);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Error:", textStatus, errorThrown);
+            });
+        }
+
+        $.printList = function(data) {
+            $("#listData").empty();
+            for( let i = 0; i < data.length; i++ ) {
+                let item = data[i];
+                let one = `<div onclick="$.getOne(${item.id});"><span class="d-block small opacity-50">이름 : ${item.name}</span><span class="d-block small opacity-50">닉네임 : ${item.nickName}</span></div>`;
+                $("#listData").append(one);
+            }
+        }
+
+        $.insert = function() {
+            let dataMember = {
+                "userId": $("#userId").val(),
+                "passwd": $("#passwd").val(),
+                "name": $("#name").val(),
+                "phoneNumber": $("#phoneNumber").val(),
+                "email": $("#email").val(),
+                "nickName": $("#nickName").val()
+            };
+
+            $.ajax({
+                url: '/member/insert',
+                type: "POST",
+                data: JSON.stringify(dataMember),
+                datatype: "JSON",
+                contentType: 'application/json',
+            }).done(function(data, textStatus, jqXHR) {
+                console.log("Success:", data.responseData);
+                $.loadData();
+                $.clearInputForm();
+                $(".modalCloseButton").trigger("click");
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Error:", textStatus, errorThrown);
+            });
+        };
+
+        $.clearInputForm = () => {
+            $("#userId").val("");
+            $("#passwd").val("");
+            $("#name").val("");
+            $("#phoneNumber").val("");
+            $("#email").val("");
+            $("#nickName").val("");
+        }
+
+        $.clearViewForm = () => {
+            $("#viewUserId").val("");
+            $("#viewName").val("");
+            $("#viewPhoneNumber").val("");
+            $("#viewEmail").val("");
+            $("#viewNickName").val("");
+        }
+
+        $.getOne = function(id) {
+            $.ajax({
+                url: '/member/getone?id=' + id,
+                method: 'GET'
+            }).done(function(data, textStatus, jqXHR) {
+                console.log("Success:", data.responseData);
+                $.printOne(data.responseData);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Error:", textStatus, errorThrown);
+            });
+        };
+
+        $.printOne = function(item) {
+            if(item == null || item == undefined) {
+                return;
+            }
+            $("#viewId").val(item.id);
+            $("#viewUserId").val(item.userId);
+            $("#viewName").val(item.name);
+            $("#viewPhoneNumber").val(item.phoneNumber);
+            $("#viewEmail").val(item.email);
+            $("#viewNickName").val(item.nickName);
+        }
+
+        $.update = function() {
+            let requestJson = {
+                id: Number($("#viewId").val()),
+                userId: $("#viewUserId").val(),
+                name: $("#viewName").val(),
+                phoneNumber: $("#viewPhoneNumber").val(),
+                email: $("#viewEmail").val(),
+                nickName: $("#viewNickName").val()
+            };
+
+            $.ajax({
+                url: '/member/update',
+                type: "PATCH",
+                data: JSON.stringify(requestJson),
+                datatype: "JSON",
+                contentType: 'application/json',
+            }).done(function(data, textStatus, jqXHR) {
+                console.log("Success:", data.responseData);
+                $.loadData();
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Error:", textStatus, errorThrown);
+            });
+        }
+
+        $.delete = function() {
+            let requestJson = {
+                id: Number($("#viewId").val())
+            };
+
+            $.ajax({
+                url: '/member/delete',
+                type: "DELETE",
+                data: JSON.stringify(requestJson),
+                datatype: "JSON",
+                contentType: 'application/json',
+            }).done(function(data, textStatus, jqXHR) {
+                console.log("Success:", data.responseData);
+                $.loadData();
+                $.clearViewForm();
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Error:", textStatus, errorThrown);
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>멤버 목록</h1>
+<div class="wrap">
+    <div class="content">
+        <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+            <div id="listData" class="list-group list-group-checkable d-grid gap-2 border-0">
+            </div>
+        </div>
+        <div>
+            <div id="sample"></div>
+            <div id="result"></div>
+            <button onclick="location.href='./add'">멤버추가</button>
+            <button onclick="funcSample1();">DOM id text 설정</button>
+            <button onclick="funcSample2();">DOM id text 얻기</button>
+            <div>abcdef</div>
+            <div>sdfdsf</div>
+            <div>zxcbzcxv</div>
+            <div>zxcvxzvc</div>
+        </div>
+        <div>
+            <input type="hidden" id="viewId" />
+            <div><label for="viewUserId">멤버아이디</label><input type="text" id="viewUserId"></input></div>
+            <div><label for="viewName">멤버이름</label><input type="text" id="viewName"></input></div>
+            <div><label for="viewPhoneNumber">전화번호</label><input type="text" id="viewPhoneNumber"></input></div>
+            <div><label for="viewEmail">이메일</label><input type="text" id="viewEmail"></input></div>
+            <div><label for="viewNickName">별멍</label><input  type="text"id="viewNickName"></input></div>
+            <div><button onclick="$.update();">수정확인</button></div>
+            <div><button onclick="$.delete();">삭제버튼</button></div>
+        </div>
+        <div>
+            <button id="showAddModalButton">멤버추가</button>
+        </div>
+        <div id="modal_box_add" style="display: none">
+            <h2>Board Add</h2>
+            <fieldset>
+                <div class="row"><div for="userId">멤버아이디</div><input type="text" id="userId" name="userId" maxlength="20" /></div>
+                <div class="row"><div for="passwd">멤버암호</div><input type="text" id="passwd" name="passwd" maxlength="12" /></div>
+                <div class="row"><div for="name">멤버이름</div><input type="text" id="name" name="name" maxlength="30" /></div>
+                <div class="row"><div for="phoneNumber">전화번호</div><input type="text" id="phoneNumber" name="phoneNumber" maxlength="20" /></div>
+                <div class="row"><div for="email">이메일</div><input type="text" id="email" name="email" maxlength="50" /></div>
+                <div class="row"><div for="nickName">별명</div><input type="text" id="nickName" name="nickName" maxlength="20" /></div>
+                <div class="row">
+                    <button onclick="$.insert();">추가확인</button>
+                    <button class="modalCloseButton">닫기</button>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal_bg" style="display: none"></div>
+    </div>
+</div>
+</body>
+</html>
