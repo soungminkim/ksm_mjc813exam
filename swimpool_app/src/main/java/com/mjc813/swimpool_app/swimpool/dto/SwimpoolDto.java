@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class SwimpoolDto {
+    // DB에 존재하는 컬럼 정보
     private Integer id;
     private String name;
     private Integer lanes;

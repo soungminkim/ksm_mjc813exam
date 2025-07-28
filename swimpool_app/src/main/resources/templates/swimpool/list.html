@@ -6,72 +6,220 @@
     <title>수영장 정보 목록</title>
     <link href="/smbg/css/styles.css" rel="stylesheet" />
     <script src="/js/jquery-3.7.1.min.js"></script>
+    <style>
+        #addForm, #editForm { display: none; margin-bottom: 20px; }
+        .form-row { margin-bottom: 8px; }
+        .crud-btn { margin-right: 6px; }
+
+        /* 카드 3개씩 그리드 배치 */
+        .card-list-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .card-list-row .swimpool-card {
+            flex: 1 1 30%;
+            max-width: 32%;
+            min-width: 270px;
+            margin-bottom: 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #0001;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .swimpool-card .card-body {
+            padding: 18px 20px 15px 20px;
+        }
+        @media (max-width: 900px) {
+            .card-list-row .swimpool-card { max-width: 48%; flex-basis: 48%; }
+        }
+        @media (max-width: 600px) {
+            .card-list-row { flex-direction: column; }
+            .card-list-row .swimpool-card { max-width: 100%; flex-basis: 100%; }
+        }
+    </style>
     <script>
         $(document).ready(function(){
             $.loadData();
+            // 추가 폼 토글
+            $("#btnAdd").click(function(){ $("#addForm").toggle(); });
+            // 등록
+            $("#btnAddSubmit").click(function(){
+                let data = {
+                    name: $("#addName").val(),
+                    lanes: $("#addLanes").val(),
+                    laneType: $("#addLaneType").val(),
+                    phoneNumber: $("#addPhone").val(),
+                    addr: $("#addAddr").val()
+                };
+                $.ajax({
+                    url: "/api/v1/swimpool",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(data)
+                }).done(function(result){
+                    alert("등록 성공");
+                    $("#addForm input").val("");
+                    $("#addForm").hide();
+                    $.loadData();
+                }).fail(function(){ alert("등록 실패"); });
+            });
+            // 수정폼 닫기
+            $("#btnEditCancel").click(function(){
+                $("#editForm").hide();
+            });
+            // 수정폼 제출
+            $("#btnEditSubmit").click(function(){
+                let id = $("#editId").val();
+                let data = {
+                    id: id,
+                    name: $("#editName").val(),
+                    lanes: $("#editLanes").val(),
+                    laneType: $("#editLaneType").val(),
+                    phoneNumber: $("#editPhone").val(),
+                    addr: $("#editAddr").val()
+                };
+                $.ajax({
+                    url: "/api/v1/swimpool/" + id,
+                    type: "PATCH",
+                    contentType: "application/json",
+                    data: JSON.stringify(data)
+                }).done(function(){
+                    alert("수정 성공");
+                    $("#editForm").hide();
+                    $.loadData();
+                }).fail(function(){ alert("수정 실패"); });
+            });
         });
 
-        $.loadData = () => {
-            $.list();
-        }
-
-        $.list = function() {
+        $.loadData = function() {
             $.ajax({
-                url: '/api/v1/swimpool/list'
-                , type: 'get'
-            }).done(function(result, textStatus, jqXHR) {
-                console.log("Success:", result);
+                url: '/api/v1/swimpool/list',
+                type: 'get'
+            }).done(function(result) {
+                $("#listPrint").empty();
                 $.printList(result.data);
             }).fail(function(jqXHR, textStatus, errorThrown) {
-                console.log("Error:", textStatus, errorThrown);
+                $("#listPrint").html("<div>불러오기 실패</div>");
             });
-        }
+        };
 
-        $.printList = (list) => {
-            let strHtml = "";
+        $.printList = function(list) {
+            let strHtml = '<div class="card-list-row">';
             for ( let i = 0; i < list.length; i++ ) {
                 strHtml += $.makeOneRow(list[i]);
             }
+            strHtml += '</div>';
             $("#listPrint").append(strHtml);
-        }
+        };
 
-        $.makeOneRow = (item) => {
-            let str = `\
-            <div class="row gx-4 gx-lg-5">\
-                <div class="col-md-4 mb-5">\
-                    <div class="card h-100">\
-                        <div class="card-body">\
-                            <div>이름 : ${item.name}</div>\
-                            <div>전화 : ${item.phoneNumber}</div>\
-                            <div>형태 : ${item.laneType}</div>\
-                            <div>개수 : ${item.lanes}</div>\
-                        </div>\
-                    </div>\
-                </div>\
+        $.makeOneRow = function(item) {
+            return `
+            <div class="swimpool-card" data-id="${item.id}">
+                <div class="card-body">
+                    <div><b>이름 :</b> ${item.name}</div>
+                    <div><b>전화 :</b> ${item.phoneNumber}</div>
+                    <div><b>형태 :</b> ${item.laneType}</div>
+                    <div><b>개수 :</b> ${item.lanes}</div>
+                    <div><b>주소 :</b> ${item.addr}</div>
+                    <div style="margin-top:10px;">
+                        <button class="crud-btn btnView">상세</button>
+                        <button class="crud-btn btnEdit">수정</button>
+                        <button class="crud-btn btnDel">삭제</button>
+                    </div>
+                </div>
             </div>`;
-            return str;
-        }
+        };
+
+        // ===== CRUD Event Delegation =====
+        $(document).on('click', '.btnView', function(){
+            let id = $(this).closest('.swimpool-card').data("id");
+            $.ajax({
+                url: `/api/v1/swimpool/${id}`,
+                type: "GET"
+            }).done(function(result){
+                let d = result.data;
+                alert(`상세 정보\n이름: ${d.name}\n전화: ${d.phoneNumber}\n형태: ${d.laneType}\n개수: ${d.lanes}\n주소: ${d.addr}`);
+            });
+        });
+
+        $(document).on('click', '.btnDel', function(){
+            let id = $(this).closest('.swimpool-card').data("id");
+            if(confirm("정말 삭제하시겠습니까?")){
+                $.ajax({
+                    url: `/api/v1/swimpool/${id}`,
+                    type: "DELETE"
+                }).done(function(){
+                    alert("삭제 성공");
+                    $.loadData();
+                }).fail(function(){
+                    alert("삭제 실패");
+                });
+            }
+        });
+
+        $(document).on('click', '.btnEdit', function(){
+            let id = $(this).closest('.swimpool-card').data("id");
+            $.ajax({
+                url: `/api/v1/swimpool/${id}`,
+                type: "GET"
+            }).done(function(result){
+                let d = result.data;
+                // 수정폼 값 채우기
+                $("#editId").val(d.id);
+                $("#editName").val(d.name);
+                $("#editLanes").val(d.lanes);
+                $("#editLaneType").val(d.laneType);
+                $("#editPhone").val(d.phoneNumber);
+                $("#editAddr").val(d.addr);
+                $("#editForm").show();
+                // 스크롤 포커스
+                $("html,body").animate({scrollTop:$("#editForm").offset().top-80}, 400);
+            });
+        });
     </script>
 </head>
-
 <body>
-<div id="listPrint" class="container px-4 px-lg-5">
+<div class="container px-4 px-lg-5">
     <div class="card text-white bg-secondary my-5 py-4 text-center">
-        <div class="card-body"><p class="text-white m-0">수영자 정보 목록</p></div>
+        <div class="card-body"><p class="text-white m-0">수영장 정보 목록</p></div>
     </div>
-    <!-- Content Row-->
-    <div class="row gx-4 gx-lg-5">
-        <div class="col-md-4 mb-5">
-            <div class="card h-100">
-                <div class="card-body">
-                <div>이름 : {name}</div>
-                    <div>전화 : {phoneNumber}</div>
-                    <div>형태 : {laneType}</div>
-                    <div>개수 : {lanes}</div>
-                </div>
-            </div>
+    <button id="btnAdd">수영장 추가</button>
+    <!-- 추가 폼 -->
+    <div id="addForm">
+        <div class="form-row"><input type="text" id="addName" placeholder="이름" /></div>
+        <div class="form-row"><input type="number" id="addLanes" placeholder="개수" /></div>
+        <div class="form-row">
+            <select id="addLaneType">
+                <option value="L25M">L25M</option>
+                <option value="L50M">L50M</option>
+            </select>
         </div>
+        <div class="form-row"><input type="text" id="addPhone" placeholder="전화번호" /></div>
+        <div class="form-row"><input type="text" id="addAddr" placeholder="주소" /></div>
+        <button id="btnAddSubmit">등록</button>
     </div>
+    <!-- 수정 폼 -->
+    <div id="editForm">
+        <input type="hidden" id="editId"/>
+        <div class="form-row"><input type="text" id="editName" placeholder="이름" /></div>
+        <div class="form-row"><input type="number" id="editLanes" placeholder="개수" /></div>
+        <div class="form-row">
+            <select id="editLaneType">
+                <option value="L25M">L25M</option>
+                <option value="L50M">L50M</option>
+            </select>
+        </div>
+        <div class="form-row"><input type="text" id="editPhone" placeholder="전화번호" /></div>
+        <div class="form-row"><input type="text" id="editAddr" placeholder="주소" /></div>
+        <button id="btnEditSubmit">수정완료</button>
+        <button id="btnEditCancel">취소</button>
+    </div>
+    <!-- 목록 출력 -->
+    <div id="listPrint"></div>
 </div>
 </body>
 </html>

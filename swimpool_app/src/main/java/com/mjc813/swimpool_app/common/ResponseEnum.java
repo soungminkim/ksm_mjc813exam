@@ -3,6 +3,7 @@ package com.mjc813.swimpool_app.common;
 import org.springframework.http.ResponseEntity;
 
 public enum ResponseEnum {
+    // 사용자 정의 오류
     Success(0),
     SelectFail(40),
     InsertFail(50),
