@@ -57,4 +57,12 @@
         DELETE FROM swimpool_tbl
         WHERE id = #{id}
     </delete>
+
+    <select id="findBySearch" resultType="SwimpoolDto">
+        SELECT *
+        FROM swimpool_tbl
+        WHERE name LIKE CONCAT('%', #{search}, '%')
+           OR addr LIKE CONCAT('%', #{search}, '%')
+           OR phone_number LIKE CONCAT('%', #{search}, '%')
+    </select>
 </mapper>

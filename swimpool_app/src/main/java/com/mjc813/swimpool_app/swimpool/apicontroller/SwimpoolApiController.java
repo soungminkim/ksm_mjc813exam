@@ -20,21 +20,21 @@ public class SwimpoolApiController {
 
     // 데이터 목록을 출력하는 RestFull API
     @GetMapping("/list")
-    public ResponseEntity<ResponseDto> list() {
+    public ResponseEntity<ResponseDto> list(@RequestParam(value = "search", required = false) String search) {
         try {
-            List<SwimpoolDto> list = this.swimpoolService.findAll();  // DB 에서 데이터 목록을 검색해서 리턴해야 한다.
-//            list.add(new SwimpoolDto(1, "n1", 4, "25", "111", ""));
-//            list.add(new SwimpoolDto(2, "n2", 6, "50", "222", ""));
-//            int x = 0 / 0;
+            List<SwimpoolDto> list;
+            if (search == null || search.trim().isEmpty()) {
+                list = this.swimpoolService.findAll();
+            } else {
+                list = this.swimpoolService.findBySearch(search.trim());
+            }
             return ResponseEntity.ok().body(
                     new ResponseDto(ResponseEnum.Success, "OK", list)
-                    // ResponseEntity 는 서버의 응답을 json 형식으로 문자열로 응답합니다.
             );
         } catch (Throwable e) {
             log.error(e.toString());
             return ResponseEntity.status(500).body(
                     new ResponseDto(ResponseEnum.SelectFail, "Error", e)
-                    // ResponseEntity 는 서버의 응답을 json 형식으로 문자열로 응답합니다.
             );
         }
     }
@@ -110,5 +110,7 @@ public class SwimpoolApiController {
                     // ResponseEntity 는 서버의 응답을 json 형식으로 문자열로 응답합니다.
             );
         }
+
+
     }
 }

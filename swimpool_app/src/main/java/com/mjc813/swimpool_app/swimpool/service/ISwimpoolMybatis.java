@@ -12,4 +12,5 @@ public interface ISwimpoolMybatis {
     public SwimpoolDto getOne(Integer id);
     public void update(SwimpoolDto dto);
     public void delete(Integer id);
+    public List<SwimpoolDto> findBySearch(String search);
 }
