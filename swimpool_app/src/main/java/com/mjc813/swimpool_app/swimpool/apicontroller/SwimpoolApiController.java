@@ -7,6 +7,7 @@ import com.mjc813.swimpool_app.swimpool.service.SwimpoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class SwimpoolApiController {
 
     // 데이터 목록을 출력하는 RestFull API
     @GetMapping("/list")
-    public ResponseEntity<ResponseDto> list(@RequestParam(value = "search", required = false) String search) {
+    public ResponseEntity<ResponseDto> list(@Validated @RequestParam(value = "search", required = false) String search) {
         try {
             List<SwimpoolDto> list;
             if (search == null || search.trim().isEmpty()) {
