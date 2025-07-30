@@ -3,6 +3,7 @@ package com.mjc813.swimpool_app.swimpool.apicontroller;
 import com.mjc813.swimpool_app.common.ResponseDto;
 import com.mjc813.swimpool_app.common.ResponseEnum;
 import com.mjc813.swimpool_app.swimpool.dto.SwimpoolDto;
+import com.mjc813.swimpool_app.swimpool.dto.SwimpoolPageResponseDto;
 import com.mjc813.swimpool_app.swimpool.service.SwimpoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +20,35 @@ public class SwimpoolApiController {
     @Autowired
     private SwimpoolService swimpoolService;
 
-    // 데이터 목록을 출력하는 RestFull API
+    // 데이터 목록 + 페이징 출력 RestFull API
     @GetMapping("/list")
-    public ResponseEntity<ResponseDto> list(@Validated @RequestParam(value = "search", required = false) String search) {
+    public ResponseEntity<ResponseDto> list(
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "row", required = false) Integer row,
+            @RequestParam(value = "search", required = false) String search) {
         try {
-            List<SwimpoolDto> list;
-            if (search == null || search.trim().isEmpty()) {
-                list = this.swimpoolService.findAll();
-            } else {
-                list = this.swimpoolService.findBySearch(search.trim());
-            }
-            return ResponseEntity.ok().body(
-                    new ResponseDto(ResponseEnum.Success, "OK", list)
+            // totalRows는 먼저 알아야 함 (list 쿼리 전 또는 후)
+            long totalRows = swimpoolService.countBySearch(search);
+
+            // DTO만들기 (계산/보정X)
+            SwimpoolPageResponseDto result = SwimpoolPageResponseDto.builder()
+                    .search(search)
+                    .row(row)
+                    .page(page)
+                    .totalRows(totalRows)
+                    // list 쿼리에서 offset, row는 DTO에서 getOffset(), getRow()로 꺼내씀!
+                    .build();
+
+            // 실제 데이터 목록: 반드시 DTO에서 보정된 값 사용!
+            List<SwimpoolDto> list = swimpoolService.findBySearch(
+                    search,
+                    result.getRow(),
+                    result.getOffset()
+            );
+            result.setList(list);
+
+            return ResponseEntity.ok(
+                    new ResponseDto(ResponseEnum.Success, "OK", result)
             );
         } catch (Throwable e) {
             log.error(e.toString());
@@ -39,6 +57,8 @@ public class SwimpoolApiController {
             );
         }
     }
+
+
 
     // 데이터 1개를 출력하는 RestFull API
     @GetMapping("/{id}")

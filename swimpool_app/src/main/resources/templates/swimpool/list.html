@@ -270,22 +270,42 @@
             .modal_popup input, .modal_popup select { width: 57%;}
             .modal_popup { padding: 18px 5vw;}
         }
+        #pagination button {
+            background: #fafdff;
+            color: #1877ff;
+            border: 1.1px solid #bae0ff;
+            margin: 0 2px;
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: 1.08rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 7px #a4cdf417;
+            transition: background 0.16s, color 0.16s;
+        }
+        #pagination button.cur {
+            background: #1575e0;
+            color: #fff;
+            font-weight: 700;
+            border: 1.5px solid #1877ff;
+        }
+        #pagination button:hover:not(.cur) {
+            background: #e2eaf3;
+            color: #1575e0;
+        }
     </style>
     <script src="/js/jquery-3.7.1.min.js"></script>
     <script>
         // 상세/등록/수정 모달 상태를 복구하는 함수
         function setModalMode(mode) {
-            // 모두 복구(입력 가능)
             $("#inName, #inPhoneNumber, #inAddr, #inLanes").prop("readonly", false);
             $("#inLaneType").prop("disabled", false);
             $("#modalActionBtn").show();
             $(".modalCloseButton").show();
-
             if (mode === "detail") {
-                // 읽기 전용(상세)
                 $("#inName, #inPhoneNumber, #inAddr, #inLanes").prop("readonly", true);
                 $("#inLaneType").prop("disabled", true);
-                $("#modalActionBtn").hide(); // 등록/수정 숨김
+                $("#modalActionBtn").hide();
                 $(".modalCloseButton").show();
                 $(".modal_popup h1").text("수영장 상세정보");
             } else if (mode === "edit") {
@@ -295,31 +315,162 @@
             }
         }
 
-        $(document).ready(function(){
-            $.loadData();
-            $('#showAddModalButton').click(function () {
-                $.openInsertModal();
+        // ------- 목록 및 페이징 --------
+        function loadSwimpoolList(page) {
+            const search = $('#searchInput').val() || '';
+            $.ajax({
+                url: '/api/v1/swimpool/list',
+                type: 'GET',
+                data: { search: search, page: page }
+            }).done(function(result) {
+                renderList(result.data.list || []);
+                renderPagination(result.data);
+            }).fail(function() {
+                alert("불러오기 실패");
             });
-            $.showInsertPopup = function() {
-                $.openInsertModal();
-            };
-            $('.modalCloseButton').click(function () {
-                $.closeModal();
-            });
-            $('#searchBtn').click(function(){
-                $.loadData();
-            });
-            $('#searchInput').keydown(function(e){
-                if(e.key === 'Enter') $.loadData();
-            });
-            $('#resetBtn').click(function(){
-                $('#searchInput').val('');
-                $.loadData();
-            });
-        });
+        }
 
-        // 팝업 열 때(추가/수정)
-        $.openInsertModal = function(isEdit = false, rowData = null) {
+        function renderList(list) {
+            $("#listPrint").empty();
+            let html = "";
+            for (const item of list) html += makeOneRow(item);
+            $("#listPrint").append(html);
+
+            $(".btnDetail").off('click').on('click', function() {
+                const id = $(this).data("id");
+                showDetail(id);
+            });
+            $(".btnEdit").off('click').on('click', function() {
+                const id = $(this).data("id");
+                getForEdit(id);
+            });
+            $(".btnDel").off('click').on('click', function() {
+                const id = $(this).data("id");
+                if (confirm("정말 삭제하시겠습니까?")) deleteSwimpool(id);
+            });
+        }
+
+        function renderPagination(data) {
+            const totalPages = data.totalPages;
+            const curPage = data.page;
+            if (!totalPages || totalPages < 2) return $("#pagination").empty();
+
+            let html = '';
+            if(curPage > 1) html += `<button class="page-btn" data-page="1">«</button>`;
+            if(curPage > 1) html += `<button class="page-btn" data-page="${curPage-1}">‹</button>`;
+            let start = Math.max(1, curPage - 3), end = Math.min(totalPages, curPage + 3);
+            for(let i = start; i <= end; i++) {
+                html += `<button class="page-btn${i==curPage ? ' cur' : ''}" data-page="${i}">${i}</button>`;
+            }
+            if(curPage < totalPages) html += `<button class="page-btn" data-page="${curPage+1}">›</button>`;
+            if(curPage < totalPages) html += `<button class="page-btn" data-page="${totalPages}">»</button>`;
+            $("#pagination").html(html);
+
+            $(".page-btn").off("click").on("click", function(){
+                loadSwimpoolList(parseInt($(this).data("page")));
+                window.scrollTo({top:0,behavior:"smooth"});
+            });
+        }
+
+        function makeOneRow(item) {
+            return `
+        <div class="data-row">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div>이름 : <b>${item.name}</b></div>
+                    <div>전화 : <span style="color:#1575e0">${item.phoneNumber}</span></div>
+                    <div>형태 : ${item.laneType}</div>
+                    <div>개수 : ${item.lanes}</div>
+                    <button class="btnDetail" data-id="${item.id}">상세</button>
+                    <button class="btnEdit" data-id="${item.id}">수정</button>
+                    <button class="btnDel" data-id="${item.id}">삭제</button>
+                </div>
+            </div>
+        </div>`;
+        }
+
+        // ------- CRUD(상세/등록/수정/삭제) -------
+        function showDetail(id) {
+            $.get('/api/v1/swimpool/' + id)
+                .done(function(result) {
+                    let d = result.data;
+                    $("#inName").val(d.name);
+                    $("#inPhoneNumber").val(d.phoneNumber);
+                    $("#inAddr").val(d.addr);
+                    $("#inLaneType").val(d.laneType);
+                    $("#inLanes").val(d.lanes);
+                    setModalMode("detail");
+                    $('.modal_popup').fadeIn(200);
+                    $('.modal_background').fadeIn(180);
+                }).fail(function() {
+                alert("상세조회 실패!");
+            });
+        }
+        function getForEdit(id) {
+            $.get('/api/v1/swimpool/' + id)
+                .done(function(result) {
+                    openInsertModal(true, result.data);
+                }).fail(function() {
+                alert("수정정보 불러오기 실패!");
+            });
+        }
+        function insertSwimpool() {
+            let data = {
+                name: $("#inName").val(),
+                phoneNumber: $("#inPhoneNumber").val(),
+                addr: $("#inAddr").val(),
+                laneType: $("#inLaneType").val(),
+                lanes: $("#inLanes").val()
+            };
+            $.ajax({
+                url: '/api/v1/swimpool',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            }).done(function() {
+                alert("등록 성공!");
+                closeModal();
+                loadSwimpoolList(1);
+            }).fail(function() {
+                alert("등록 실패!");
+            });
+        }
+        function updateSwimpool(id) {
+            let data = {
+                id: id,
+                name: $("#inName").val(),
+                phoneNumber: $("#inPhoneNumber").val(),
+                addr: $("#inAddr").val(),
+                laneType: $("#inLaneType").val(),
+                lanes: $("#inLanes").val()
+            };
+            $.ajax({
+                url: '/api/v1/swimpool/' + id,
+                type: 'PATCH',
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            }).done(function() {
+                alert("수정 성공!");
+                closeModal();
+                loadSwimpoolList(1);
+            }).fail(function() {
+                alert("수정 실패!");
+            });
+        }
+        function deleteSwimpool(id) {
+            $.ajax({
+                url: '/api/v1/swimpool/' + id,
+                type: 'DELETE'
+            }).done(function() {
+                alert("삭제 성공!");
+                loadSwimpoolList(1);
+            }).fail(function() {
+                alert("삭제 실패!");
+            });
+        }
+
+        // ------- 모달 오픈/클로즈 -------
+        function openInsertModal(isEdit = false, rowData = null) {
             setModalMode(isEdit ? "edit" : "insert");
             if(isEdit && rowData) {
                 $("#inName").val(rowData.name);
@@ -338,162 +489,39 @@
             }
             $('.modal_popup').fadeIn(200);
             $('.modal_background').fadeIn(180);
-        };
-
-        $.closeModal = function() {
+        }
+        function closeModal() {
             $('.modal_popup').fadeOut(120);
             $('.modal_background').fadeOut(100);
-            // 입력 가능상태로 복구 (다음에 등록/수정 누르면 이상없게)
             setTimeout(function() { setModalMode("insert"); }, 130);
-        };
+        }
 
-        // 상세보기 버튼 클릭시
-        $.detail = function(id) {
-            $.ajax({
-                url: '/api/v1/swimpool/' + id,
-                type: 'GET'
-            }).done(function(result) {
-                let d = result.data;
-                $("#inName").val(d.name);
-                $("#inPhoneNumber").val(d.phoneNumber);
-                $("#inAddr").val(d.addr);
-                $("#inLaneType").val(d.laneType);
-                $("#inLanes").val(d.lanes);
-                setModalMode("detail");
-                $('.modal_popup').fadeIn(200);
-                $('.modal_background').fadeIn(180);
-            }).fail(function() {
-                alert("상세조회 실패!");
-            });
-        };
-
-        // 등록/수정 버튼 클릭시
+        // ------- 등록/수정 버튼 핸들러 -------
         function handleModalAction() {
             const isEdit = !!$("#modalActionBtn").data("edit-id");
             if(isEdit) {
-                $.update($("#modalActionBtn").data("edit-id"));
+                updateSwimpool($("#modalActionBtn").data("edit-id"));
             } else {
-                $.insert();
+                insertSwimpool();
             }
         }
-        // 목록 불러오기
-        $.loadData = function() {
-            const keyword = $('#searchInput').val() || '';
-            $.list(keyword);
-        };
-        $.list = function(search = '') {
-            $.ajax({
-                url: '/api/v1/swimpool/list' + (search ? '?search=' + encodeURIComponent(search) : ''),
-                type: 'GET'
-            }).done(function(result) {
-                $("#listPrint .data-row").remove();
-                $.printList(result.data);
-            }).fail(function() {
-                alert("불러오기 실패");
-            });
-        };
-        $.printList = function(list) {
-            let strHtml = "";
-            for(let i = 0; i < list.length; i++) {
-                strHtml += $.makeOneRow(list[i]);
-            }
-            $("#listPrint").append(strHtml);
-            $(".btnDetail").off('click').on('click', function() {
-                const id = $(this).data("id");
-                $.detail(id);
-            });
-            $(".btnEdit").off('click').on('click', function() {
-                const id = $(this).data("id");
-                $.getForEdit(id);
-            });
-            $(".btnDel").off('click').on('click', function() {
-                const id = $(this).data("id");
-                if(confirm("정말 삭제하시겠습니까?")) $.delete(id);
-            });
-        };
-        $.makeOneRow = function(item) {
-            return `
-            <div class="data-row">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div>이름 : <b>${item.name}</b></div>
-                        <div>전화 : <span style="color:#1575e0">${item.phoneNumber}</span></div>
-                        <div>형태 : ${item.laneType}</div>
-                        <div>개수 : ${item.lanes}</div>
-                        <button class="btnDetail" data-id="${item.id}">상세</button>
-                        <button class="btnEdit" data-id="${item.id}">수정</button>
-                        <button class="btnDel" data-id="${item.id}">삭제</button>
-                    </div>
-                </div>
-            </div>`;
-        };
-        $.insert = function() {
-            let data = {
-                name: $("#inName").val(),
-                phoneNumber: $("#inPhoneNumber").val(),
-                addr: $("#inAddr").val(),
-                laneType: $("#inLaneType").val(),
-                lanes: $("#inLanes").val()
-            };
-            $.ajax({
-                url: '/api/v1/swimpool',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data)
-            }).done(function() {
-                alert("등록 성공!");
-                $.closeModal();
-                $.loadData();
-            }).fail(function() {
-                alert("등록 실패!");
-            });
-        };
-        $.getForEdit = function(id) {
-            $.ajax({
-                url: '/api/v1/swimpool/' + id,
-                type: 'GET'
-            }).done(function(result) {
-                $.openInsertModal(true, result.data);
-            }).fail(function() {
-                alert("수정정보 불러오기 실패!");
-            });
-        };
-        $.update = function(id) {
-            let data = {
-                id: id,
-                name: $("#inName").val(),
-                phoneNumber: $("#inPhoneNumber").val(),
-                addr: $("#inAddr").val(),
-                laneType: $("#inLaneType").val(),
-                lanes: $("#inLanes").val()
-            };
-            $.ajax({
-                url: '/api/v1/swimpool/' + id,
-                type: 'PATCH',
-                contentType: 'application/json',
-                data: JSON.stringify(data)
-            }).done(function() {
-                alert("수정 성공!");
-                $.closeModal();
-                $.loadData();
-            }).fail(function() {
-                alert("수정 실패!");
-            });
-        };
-        $.delete = function(id) {
-            $.ajax({
-                url: '/api/v1/swimpool/' + id,
-                type: 'DELETE'
-            }).done(function() {
-                alert("삭제 성공!");
-                $.loadData();
-            }).fail(function() {
-                alert("삭제 실패!");
-            });
-        };
-        $(document).on('click', '#modalActionBtn', handleModalAction);
+
+        // ------- 이벤트 바인딩 -------
+        $(document).ready(function(){
+            loadSwimpoolList(1); // 최초 1페이지
+
+            $('#searchBtn').click(function(){ loadSwimpoolList(1); });
+            $('#searchInput').keydown(function(e){ if(e.key === 'Enter') loadSwimpoolList(1); });
+            $('#resetBtn').click(function(){ $('#searchInput').val(''); loadSwimpoolList(1); });
+
+            // 모달/등록/수정/닫기 버튼
+            $('#showAddModalButton').click(function () { openInsertModal(); });
+            $.showInsertPopup = function() { openInsertModal(); };
+            $('.modalCloseButton').click(function () { closeModal(); });
+            $(document).on('click', '#modalActionBtn', handleModalAction);
+        });
     </script>
-</head>
+
 <body>
 <div class="wrap">
     <div class="content" style="z-index: 7;">
@@ -506,6 +534,7 @@
             수영장 정보 목록
         </div>
         <div id="listPrint" class="list-cards container px-4 px-lg-5"></div>
+        <div id="pagination" style="margin:30px 0 10px 0; text-align:center;"></div>
         <div class="modal_popup" style="display: none;">
             <h1>수영장 입력</h1>
             <div><label for="inName">이름 : </label><input type="text" id="inName" name="name" maxlength="20"/></div>

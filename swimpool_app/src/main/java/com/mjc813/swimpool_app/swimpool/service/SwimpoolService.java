@@ -35,8 +35,10 @@ public class SwimpoolService {
         this.mybatisMapper.delete(id);
     }
 
-    public List<SwimpoolDto> findBySearch(String search) {
-        // 예시 - MyBatis 또는 JPA
-        return mybatisMapper.findBySearch(search);
+    public Long countBySearch(String search) {
+        return mybatisMapper.countBySearch(search);
+    }
+    public List<SwimpoolDto> findBySearch(String search, int size, int offset) {
+        return mybatisMapper.findBySearch(search, size, offset);
     }
 }

@@ -58,11 +58,21 @@
         WHERE id = #{id}
     </delete>
 
+    <select id="countBySearch" resultType="Long">
+        SELECT COUNT(*)
+        FROM swimpool_tbl
+        WHERE (name LIKE CONCAT('%', #{search}, '%')
+            OR addr LIKE CONCAT('%', #{search}, '%')
+            OR phone_number LIKE CONCAT('%', #{search}, '%'))
+    </select>
+
     <select id="findBySearch" resultType="SwimpoolDto">
-    SELECT *
-    FROM swimpool_tbl
-    WHERE name LIKE CONCAT('%', #{search}, '%')
-       OR addr LIKE CONCAT('%', #{search}, '%')
-       OR phone_number LIKE CONCAT('%', #{search}, '%')
-</select>
+        SELECT *
+        FROM swimpool_tbl
+        WHERE (name LIKE CONCAT('%', #{search}, '%')
+            OR addr LIKE CONCAT('%', #{search}, '%')
+            OR phone_number LIKE CONCAT('%', #{search}, '%'))
+        ORDER BY id
+            LIMIT #{size} OFFSET #{offset}
+    </select>
 </mapper>
