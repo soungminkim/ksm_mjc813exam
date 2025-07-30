@@ -1,6 +1,7 @@
 package com.mjc813.cinema_crud.cinema.controller;
 
 import com.mjc813.cinema_crud.cinema.dto.CinemaDto;
+import com.mjc813.cinema_crud.cinema.dto.CinemaGenreDto;
 import com.mjc813.cinema_crud.cinema.service.CinemaService;
 import com.mjc813.cinema_crud.common.ResponseDto;
 import com.mjc813.cinema_crud.common.ResponseEnum;
@@ -38,6 +39,20 @@ public class CinemaRestController {
                     .resultData(null)
                     .build();
             return ResponseEntity.status(500).body(result);
+        }
+    }
+    @PostMapping("/genre")
+    public ResponseEntity<ResponseDto> insert2Genre(@RequestBody CinemaGenreDto dto) {
+        try {
+            this.cinemaService.insertCinemaWithGento(dto);
+            return ResponseEntity.ok().body(
+                    new ResponseDto("ok", 50010, dto)
+            );
+        } catch (Throwable e) {
+            log.error(e.toString());
+            return ResponseEntity.ok().body(
+                    new ResponseDto("insert error", 90000, dto)
+            );
         }
     }
 }
