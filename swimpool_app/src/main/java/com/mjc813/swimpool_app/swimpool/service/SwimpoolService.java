@@ -1,17 +1,20 @@
 package com.mjc813.swimpool_app.swimpool.service;
 
 import com.mjc813.swimpool_app.swimpool.dto.SwimpoolDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class SwimpoolService {
     @Autowired
     private ISwimpoolMybatis mybatisMapper;
 
     public SwimpoolDto insert(SwimpoolDto dto){
+        // log.debug(dto.getAddr()); 해당식으로 로그를 풀어낼수도 있음
         this.mybatisMapper.insert(dto);
         return dto;
     }
