@@ -27,7 +27,6 @@ public class SwimpoolApiController {
             @RequestParam(value = "row", required = false) Integer row,
             @RequestParam(value = "search", required = false) String search) {
         try {
-            // totalRows는 먼저 알아야 함 (list 쿼리 전 또는 후)
             long totalRows = swimpoolService.countBySearch(search);
 
             // DTO만들기 (계산/보정X)
@@ -36,7 +35,6 @@ public class SwimpoolApiController {
                     .row(row)
                     .page(page)
                     .totalRows(totalRows)
-                    // list 쿼리에서 offset, row는 DTO에서 getOffset(), getRow()로 꺼내씀!
                     .build();
 
             // 실제 데이터 목록: 반드시 DTO에서 보정된 값 사용!
