@@ -3,6 +3,7 @@ package com.mjc813.cinema_crud.cinema.controller;
 import com.mjc813.cinema_crud.cinema.dto.CinemaDto;
 import com.mjc813.cinema_crud.cinema.service.CinemaService;
 import com.mjc813.cinema_crud.common.ResponseDto;
+import com.mjc813.cinema_crud.common.ResponseEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +26,15 @@ public class CinemaRestController {
             this.cinemaService.insert(dto);
             ResponseDto result = ResponseDto.builder()
                     .message("success")
-                    .resultCode(50010)
+                    .resultCode(50000)
                     .resultData(dto)
                     .build();
             return ResponseEntity.ok(result);
         } catch (Throwable e){
             log.error(e.toString());
             ResponseDto result = ResponseDto.builder()
-                    .message("error")
-                    .resultCode(90000)
+                    .message("Cinema Insert Error")
+                    .resultCode(ResponseEnum.CinemaInsertFail.getCode())
                     .resultData(null)
                     .build();
             return ResponseEntity.status(500).body(result);

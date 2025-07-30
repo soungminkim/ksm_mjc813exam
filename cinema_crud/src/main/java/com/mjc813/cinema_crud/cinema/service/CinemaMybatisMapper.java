@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CinemaMybatisMapper {
-    public void insert(CinemaDto dto);
+    public void insertCinema(CinemaDto dto);
 }

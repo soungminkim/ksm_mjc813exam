@@ -1,6 +1,7 @@
 package com.mjc813.cinema_crud.genre.controller;
 
 import com.mjc813.cinema_crud.common.ResponseDto;
+import com.mjc813.cinema_crud.common.ResponseEnum;
 import com.mjc813.cinema_crud.genre.dto.GenreDto;
 import com.mjc813.cinema_crud.genre.service.GenreService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,8 @@ public class GenreRestController {
         } catch (Throwable e) {
             log.error(e.toString());
             ResponseDto result = ResponseDto.builder()
-                    .message("error")
-                    .resultCode(90000)
+                    .message("Genre Insert Error")
+                    .resultCode(ResponseEnum.GenreInsertFail.getCode())
                     .resultData(null)
                     .build();
             return ResponseEntity.status(500).body(result);

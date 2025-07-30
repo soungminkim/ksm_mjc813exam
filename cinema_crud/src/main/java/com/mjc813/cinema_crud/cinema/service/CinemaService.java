@@ -10,6 +10,6 @@ public class CinemaService {
     @Autowired
     private CinemaMybatisMapper cinemaMybatisMapper;
     public void insert(CinemaDto dto) {
-        this.cinemaMybatisMapper.insert(dto);
+        this.cinemaMybatisMapper.insertCinema(dto);
     }
 }

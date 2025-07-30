@@ -9,6 +9,6 @@ public class GenreService {
     @Autowired
     private GenreMybatisMapper genreMybatisMapper;
     public void insert(GenreDto dto) {
-        this.genreMybatisMapper.insert(dto);
+        this.genreMybatisMapper.insertGenre(dto);
     }
 }
