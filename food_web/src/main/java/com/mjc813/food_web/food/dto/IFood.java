@@ -7,8 +7,6 @@ public interface IFood {
     public Integer getSweetLevel();
     public Integer getSourLevel();
     public Integer getSaltyLevel();
-    public Long getIngredientId();
-    public Long getFoodCategoryId();
 
     public void setId(final Long id);
     public void setName(final String name);
@@ -16,8 +14,6 @@ public interface IFood {
     public void setSweetLevel(final Integer sweetLevel);
     public void setSourLevel(final Integer sourLevel);
     public void setSaltyLevel(final Integer saltyLevel);
-    public void setIngredientId(final Long ingredientId);
-    public void setFoodCategoryId(final Long foodCategoryId);
 
     default void copyMembers(IFood from) {
         setId(from.getId());
@@ -26,7 +22,5 @@ public interface IFood {
         setSweetLevel(from.getSweetLevel());
         setSourLevel(from.getSourLevel());
         setSaltyLevel(from.getSaltyLevel());
-        setIngredientId(from.getIngredientId());
-        setFoodCategoryId(from.getFoodCategoryId());
     }
 }

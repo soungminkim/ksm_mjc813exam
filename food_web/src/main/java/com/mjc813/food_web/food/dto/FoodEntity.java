@@ -15,12 +15,12 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor
 @Entity(name = "FoodEntity")
 @Table(name = "food_tbl")
-public class FoodEntity implements IFood{
+public class FoodEntity implements IFood {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20 , nullable = false, unique = true)
+    @Column(length = 20, nullable = false, unique = true)
     private String name;
 
     @Column(length = 1)
@@ -47,34 +47,11 @@ public class FoodEntity implements IFood{
     @JoinColumn(name = "food_category_id")
     private FoodCategoryEntity foodCategory;
 
-    @Override
-    public Long getIngredientId() {
-        if (this.ingredient == null) {
-            return 0L;
-        }
-        return this.ingredient.getId();
-    }
-
-    @Override
-    public void setIngredientId(Long ingredientId) {
-        if (this.ingredient == null) {
-            return;
-        }
-        this.ingredient.setId(ingredientId);
-    }
-    @Override
-    public Long getFoodCategoryId() {
-        if (this.foodCategory == null) {
-            return 0L;
-        }
-        return this.foodCategory.getId();
-    }
-
-    @Override
-    public void setFoodCategoryId(Long foodCategoryId) {
-        if (this.foodCategory == null) {
-            return;
-        }
-        this.foodCategory.setId(foodCategoryId);
+    public void copyMembers(FoodDto dto) {
+        this.name = dto.getName();
+        this.spicyLevel = dto.getSpicyLevel();
+        this.sweetLevel = dto.getSweetLevel();
+        this.sourLevel = dto.getSourLevel();
+        this.saltyLevel = dto.getSaltyLevel();
     }
 }

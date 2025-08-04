@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RepositoryRestResource(path = "food")
 public interface FoodRepository extends JpaRepository<FoodEntity, Long> {
-
 }
