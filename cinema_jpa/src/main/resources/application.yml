@@ -1,0 +1,21 @@
+# spring.application.name=cinema_jpa
+spring:
+  application:
+    name: cinema_jpa
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cinema_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8	# ?????? URL
+    username: cinema_user
+    password: hiphop1234!
+  mustache:
+    suffix: .html
+    servlet:
+      cache: false
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8287

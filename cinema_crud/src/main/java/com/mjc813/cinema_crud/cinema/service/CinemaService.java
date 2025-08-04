@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class CinemaService {
     @Autowired
@@ -15,26 +17,36 @@ public class CinemaService {
 
     @Autowired
     private GenreMybatisMapper genreMybatisMapper;
-    public void insert(CinemaDto dto) {
+
+    public void insertCinema(CinemaDto dto) {
         this.cinemaMybatisMapper.insertCinema(dto);
     }
 
     @Transactional
-    public void insertCinemaWithGento(CinemaGenreDto dto) {
+    public void insertCinemaWithGenre(CinemaGenreDto dto) {
         GenreDto genreDto = new GenreDto();
-        genreDto.setName(dto.getGenre());
+        genreDto.setName(dto.getGenreName());
 
-        CinemaDto cinemaDto = new CinemaDto();
-        cinemaDto.setName(dto.getName());
-        cinemaDto.setCasts(dto.getCasts());
-        cinemaDto.setPlayTime(dto.getPlayTime());
-        cinemaDto.setDescription(dto.getDescription());
-        cinemaDto.setRestrictAge(dto.getRestrictAge());
+        this.genreMybatisMapper.insert(genreDto);
+        dto.setGenreId(genreDto.getId());
 
-        this.genreMybatisMapper.insertGenre(genreDto);
-        cinemaDto.setGenreId(genreDto.getId());
+        this.cinemaMybatisMapper.insertCinema(dto);
+        dto.setGenreName(genreDto.getName());
+    }
 
-        this.cinemaMybatisMapper.insertCinema(cinemaDto);
-        dto.setId(cinemaDto.getId());
+    public CinemaDto findById(Long id) {
+        return this.cinemaMybatisMapper.findById(id);
+    }
+
+    public List<CinemaGenreDto> findByWhere() {
+        return this.cinemaMybatisMapper.findByWhere();
+    }
+
+    public void update(CinemaDto dto) {
+        this.cinemaMybatisMapper.update(dto);
+    }
+
+    public void delete(Long id) {
+        this.cinemaMybatisMapper.delete(id);
     }
 }

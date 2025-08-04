@@ -1,5 +1,6 @@
 package com.mjc813.cinema_crud.cinema.dto;
 
+import com.mjc813.cinema_crud.genre.dto.GenreDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,13 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CinemaGenreDto {
-    private Long id;
-    private String name;
-    private String genre;
-    private String playTime;
-    private String casts;
-    private String description;
-    private Integer restrictAge;
+public class CinemaGenreDto extends CinemaDto {
+    private String genreName;
 }
-

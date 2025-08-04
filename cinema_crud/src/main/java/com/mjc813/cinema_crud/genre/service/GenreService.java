@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 public class GenreService {
     @Autowired
     private GenreMybatisMapper genreMybatisMapper;
+
     public void insert(GenreDto dto) {
-        this.genreMybatisMapper.insertGenre(dto);
+        this.genreMybatisMapper.insert(dto);
     }
 }

@@ -5,8 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MenuController {
+
     @GetMapping("/cinema")
-    public String swimpoolMenu() {
-        return "/cinema/cinema";
+    public String cinemaHome() {
+        return "cinema";
     }
 }

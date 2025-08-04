@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "27112795-0a25-4080-87b7-7ea7874103ba",
+		"name": "mjc813 cinema",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16448427"
+	},
+	"item": [
+		{
+			"name": "cinema insert",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"홍길동전33\"\r\n    , \"genreId\": 1\r\n    , \"playTime\": \"01:35\"\r\n    , \"casts\": \"안성준, 정해훈 외 24명\"\r\n    , \"description\": \"조선시대 부패한 양반들을 혼내주는 민간 설화 기반 영화\"\r\n    , \"restrictAge\": 15\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8184/cinema",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"cinema"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cinema insert with genre",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"홍길동4편\"\r\n    , \"genreName\": \"액션4\"\r\n    , \"playTime\": \"01:66\"\r\n    , \"casts\": \"최원철 외 24명\"\r\n    , \"description\": \"최원철의 홍길동 코미디\"\r\n    , \"restrictAge\": 15\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8184/cinema/genre",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"cinema",
+						"genre"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "genre insert",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"액션\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8184/genre",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"genre"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cinema findById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8184/cinema/5",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"cinema",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cinema findByWhere",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8184/cinema/list",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"cinema",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cinema update",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2\r\n    , \"name\": \"수정영화제목\"\r\n    , \"genreId\": 1\r\n    , \"playTime\": \"02:10\"\r\n    , \"casts\": \"홍길동 외 10명\"\r\n    , \"description\": \"조선시대 부패한 양반들을 혼내주는 민간 설화 기반 영화\"\r\n    , \"restrictAge\": 15\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8184/cinema",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"cinema"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cinema delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8184/cinema",
+					"host": [
+						"localhost"
+					],
+					"port": "8184",
+					"path": [
+						"cinema"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

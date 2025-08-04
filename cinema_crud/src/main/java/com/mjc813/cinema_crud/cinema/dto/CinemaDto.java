@@ -10,12 +10,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CinemaDto {
-    private Long id;
-    private String name;
-    private Long genreId;
-    private String playTime;
-    private String casts;
-    private String description;
-    private Integer restrictAge;
+    private Long    id              ;
+    private String  name            ;
+    private Long    genreId         ;
+    private String  playTime        ;
+    private String  casts           ;
+    private String  description     ;
+    private Integer restrictAge     ;
 }
-

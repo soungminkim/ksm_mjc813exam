@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface GenreMybatisMapper {
-    public void insertGenre(GenreDto dto);
+    public void insert(GenreDto dto);
 }
