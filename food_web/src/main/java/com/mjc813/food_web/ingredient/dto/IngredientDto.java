@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IngredientDto {
+public class IngredientDto implements IIngredient {
     private Long id;
     private String name;
     private Long ingredientCategoryId;

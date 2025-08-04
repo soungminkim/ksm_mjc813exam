@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity(name = "IngredientEntity")
 @Table(name = "ingredient_tbl")
-public class IngredientEntity {
+public class IngredientEntity implements IIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

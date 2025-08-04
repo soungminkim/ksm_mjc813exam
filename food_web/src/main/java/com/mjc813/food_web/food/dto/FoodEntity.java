@@ -15,7 +15,7 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor
 @Entity(name = "FoodEntity")
 @Table(name = "food_tbl")
-public class FoodEntity {
+public class FoodEntity implements IFood{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

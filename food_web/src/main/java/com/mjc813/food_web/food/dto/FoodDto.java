@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodDto {
+public class FoodDto implements IFood{
    private Long id;
    private String name;
    private Integer spicyLevel;
