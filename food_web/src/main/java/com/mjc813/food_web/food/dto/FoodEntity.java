@@ -22,7 +22,7 @@ public class FoodEntity {
 
     @Column(length = 20 , nullable = false, unique = true)
     private String name;
-    
+
     @Column(length = 1)
     @ColumnDefault("1")
     private Integer spicyLevel;
