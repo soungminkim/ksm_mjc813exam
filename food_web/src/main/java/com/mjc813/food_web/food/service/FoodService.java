@@ -34,7 +34,11 @@ public class FoodService {
         FoodEntity foodEntity = new FoodEntity();
         foodEntity.setIngredient(ingredient);
         foodEntity.setFoodCategory(foodCategory);
-        foodEntity.copyMembers(dto);
+        foodEntity.setName(dto.getName());
+        foodEntity.setSpicyLevel(dto.getSpicyLevel());
+        foodEntity.setSweetLevel(dto.getSweetLevel());
+        foodEntity.setSourLevel(dto.getSourLevel());
+        foodEntity.setSaltyLevel(dto.getSaltyLevel());
         return foodRepository.save(foodEntity);
     }
 
@@ -55,11 +59,13 @@ public class FoodService {
     }
 
     @Transactional
-    public IFood update(Long id, FoodDto dto) {
+    public FoodDto update(Long id, FoodDto dto) {
         FoodEntity entity = foodRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("음식 정보 없음"));
+
         IngredientEntity ingredient = ingredientRepository.findById(dto.getIngredientId())
                 .orElseThrow(() -> new RuntimeException("재료 정보 없음"));
+
         FoodCategoryEntity foodCategory = foodCategoryRepository.findById(dto.getFoodCategoryId())
                 .orElseThrow(() -> new RuntimeException("카테고리 정보 없음"));
 
@@ -71,8 +77,10 @@ public class FoodService {
         entity.setIngredient(ingredient);
         entity.setFoodCategory(foodCategory);
 
-        return entity;
+        FoodEntity updated = foodRepository.save(entity);
+        return toDto(updated);
     }
+
 
     public void delete(Long id) {
         if (!foodRepository.existsById(id)) {
@@ -92,5 +100,5 @@ public class FoodService {
                 entity.getIngredient() != null ? entity.getIngredient().getId() : null,
                 entity.getFoodCategory() != null ? entity.getFoodCategory().getId() : null
         );
-        }
+    }
 }
