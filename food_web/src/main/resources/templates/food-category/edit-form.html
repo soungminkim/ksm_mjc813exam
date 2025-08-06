@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>음식 카테고리 수정</title>
+</head>
+<body>
+<h1>음식 카테고리 수정</h1>
+{{#category}}
+<form action="/view/food-category/edit/{{id}}" method="post">
+  <input type="hidden" name="id" value="{{id}}" />
+  <div>
+    <label for="name">카테고리 이름:</label>
+    <input type="text" id="name" name="name" value="{{name}}" />
+  </div>
+  <br>
+  <button type="submit">수정 완료</button>
+</form>
+{{/category}}
+<br>
+<a href="/view/food-category">목록으로 돌아가기</a>
+</body>
+</html>

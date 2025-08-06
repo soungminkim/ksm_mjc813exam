@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>음식 목록</title>
+</head>
+<body>
+<h1>음식 목록</h1>
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>이름</th>
+    <th>맛(매/단/신/짠)</th>
+    <th>재료ID</th>
+    <th>카테고리ID</th>
+    <th>관리</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#foods}}
+  <tr>
+    <td>{{id}}</td>
+    <td>{{name}}</td>
+    <td>{{spicyLevel}}/{{sweetLevel}}/{{sourLevel}}/{{saltyLevel}}</td>
+    <td>{{ingredientId}}</td>
+    <td>{{foodCategoryId}}</td>
+    <td>
+      <a href="/view/food/edit/{{id}}">수정</a>
+      <form action="/view/food/delete/{{id}}" method="post" style="display:inline;">
+        <button type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  {{/foods}}
+  </tbody>
+</table>
+<br>
+<a href="/view/food/new">새 음식 등록</a> | <a href="/">메인으로</a>
+</body>
+</html>
