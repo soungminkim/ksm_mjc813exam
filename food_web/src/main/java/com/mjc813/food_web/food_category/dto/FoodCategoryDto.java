@@ -1,15 +1,14 @@
 package com.mjc813.food_web.food_category.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.mjc813.food_web.common.IIdName;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodCategoryDto {
+@Builder
+public class FoodCategoryDto implements IIdName {
     private Long id;
     private String name;
 }

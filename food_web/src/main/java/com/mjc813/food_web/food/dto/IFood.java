@@ -1,23 +1,25 @@
 package com.mjc813.food_web.food.dto;
 
-public interface IFood {
-    public Long getId();
-    public String getName();
-    public Integer getSpicyLevel();
-    public Integer getSweetLevel();
-    public Integer getSourLevel();
-    public Integer getSaltyLevel();
+import com.mjc813.food_web.common.IIdName;
 
-    public void setId(final Long id);
-    public void setName(final String name);
-    public void setSpicyLevel(final Integer spicyLevel);
-    public void setSweetLevel(final Integer sweetLevel);
-    public void setSourLevel(final Integer sourLevel);
-    public void setSaltyLevel(final Integer saltyLevel);
+public interface IFood extends IIdName {
+    Integer getSpicyLevel();
+    void setSpicyLevel(Integer spicyLevel);
+
+    Integer getSweetLevel();
+    void setSweetLevel(Integer sweetLevel);
+
+    Integer getSourLevel();
+    void setSourLevel(Integer sourLevel);
+
+    Integer getSaltyLevel();
+    void setSaltyLevel(Integer saltyLevel);
 
     default void copyMembers(IFood from) {
-        setId(from.getId());
-        setName(from.getName());
+        if (from == null) {
+            return;
+        }
+        copyIdName(from);
         setSpicyLevel(from.getSpicyLevel());
         setSweetLevel(from.getSweetLevel());
         setSourLevel(from.getSourLevel());

@@ -2,53 +2,52 @@ package com.mjc813.food_web.ingredient_category.service;
 
 import com.mjc813.food_web.ingredient_category.dto.IngredientCategoryDto;
 import com.mjc813.food_web.ingredient_category.dto.IngredientCategoryEntity;
-import com.mjc813.food_web.ingredient_category.service.IngredientCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class IngredientCategoryService {
+
     @Autowired
     private IngredientCategoryRepository ingredientCategoryRepository;
 
-    // 등록(Create)
+    @Transactional
     public IngredientCategoryDto insert(IngredientCategoryDto dto) {
-        IngredientCategoryEntity entity = new IngredientCategoryEntity();
-        entity.setName(dto.getName());
+        IngredientCategoryEntity entity = IngredientCategoryEntity.builder()
+                .name(dto.getName())
+                .build();
         IngredientCategoryEntity saved = ingredientCategoryRepository.save(entity);
         return toDto(saved);
     }
 
-    // 전체조회(Read)
     public List<IngredientCategoryDto> findAll() {
-        List<IngredientCategoryEntity> entities = ingredientCategoryRepository.findAll();
-        List<IngredientCategoryDto> result = new ArrayList<>();
-        for (IngredientCategoryEntity entity : entities) {
-            result.add(toDto(entity));
-        }
-        return result;
+        return ingredientCategoryRepository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    // 단일조회(Read)
     public IngredientCategoryDto findById(Long id) {
         IngredientCategoryEntity entity = ingredientCategoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("카테고리 정보 없음"));
+                .orElseThrow(() -> new RuntimeException("카테고리 정보 없음: " + id));
         return toDto(entity);
     }
 
-    // 수정(Update)
+    @Transactional
     public IngredientCategoryDto update(Long id, IngredientCategoryDto dto) {
         IngredientCategoryEntity entity = ingredientCategoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("카테고리 정보 없음"));
-        entity.setName(dto.getName());
+                .orElseThrow(() -> new RuntimeException("수정할 카테고리 정보 없음: " + id));
+
+        entity.copyIdNameNotNull(dto);
+
         IngredientCategoryEntity updated = ingredientCategoryRepository.save(entity);
         return toDto(updated);
     }
 
-    // 삭제(Delete)
+    @Transactional
     public void delete(Long id) {
         if (!ingredientCategoryRepository.existsById(id)) {
             throw new RuntimeException("이미 삭제되었거나 없는 카테고리입니다.");
@@ -56,11 +55,10 @@ public class IngredientCategoryService {
         ingredientCategoryRepository.deleteById(id);
     }
 
-    // Entity -> DTO 변환 메서드
     private IngredientCategoryDto toDto(IngredientCategoryEntity entity) {
-        return new IngredientCategoryDto(
-                entity.getId(),
-                entity.getName()
-        );
+        return IngredientCategoryDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .build();
     }
 }
