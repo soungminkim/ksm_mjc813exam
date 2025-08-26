@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/swimpool-list.css">
     <script src="/js/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script>
         function setModalMode(mode) {
             $("#inName, #inPhoneNumber, #inAddr, #inLanes").prop("readonly", false);
@@ -218,7 +219,6 @@
             }
         }
 
-        // ------- 이벤트 바인딩 -------
         $(document).ready(function(){
             loadSwimpoolList(1); // 최초 1페이지
 
@@ -233,6 +233,8 @@
             $('.modalCloseButton').click(function () { closeModal(); });
             $(document).on('click', '#modalActionBtn', handleModalAction);
         });
+        alert("read cookie jquery : " + $.cookie("mycookie"));
+        $.cookie("mycookie", "value", { expires: 60 * 3 });
     </script>
 
 <body>
