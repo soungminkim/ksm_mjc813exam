@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjc813.swimpool_app.swimpool.service.IUserMybatis">
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_tbl (name, username, password, email, phone_number, role, max_lock)
+        VALUES (#{name}, #{username}, #{password}, #{email}, #{phoneNumber}, #{role}, 0)
+    </insert>
+
+    <select id="findAllUser" resultType="UserDto">
+        SELECT * FROM user_tbl
+    </select>
+
+    <select id="getOneUser" resultType="UserDto" parameterType="Long">
+        SELECT
+            id
+             , name
+             , username
+             , password
+             , email
+             , phone_number
+             , role
+             , max_lock
+        FROM user_tbl
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateUser" parameterType="UserDto">
+        UPDATE user_tbl SET
+            name = #{name}
+                , username = #{username}
+                , password = #{password}
+                , email = #{email}
+                , phone_number = #{phoneNumber}
+                , role = #{role}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUser">
+        DELETE FROM user_tbl WHERE id = #{id}
+    </delete>
+
+    <select id="countUsersBySearch" resultType="Long">
+        SELECT COUNT(*)
+        FROM user_tbl
+        WHERE (name LIKE CONCAT('%', #{search}, '%')
+            OR username LIKE CONCAT('%', #{search}, '%')
+            OR email LIKE CONCAT('%', #{search}, '%')
+            OR phone_number LIKE CONCAT('%', #{search}, '%'))
+    </select>
+
+    <select id="findUsersBySearch" resultType="UserDto">
+        SELECT
+            id, name, username, password, email, phone_number, role, max_lock
+        FROM user_tbl
+        WHERE (name LIKE CONCAT('%', #{search}, '%')
+            OR username LIKE CONCAT('%', #{search}, '%')
+            OR email LIKE CONCAT('%', #{search}, '%')
+            OR phone_number LIKE CONCAT('%', #{search}, '%'))
+        ORDER BY id DESC
+            LIMIT #{size} OFFSET #{offset}
+    </select>
+</mapper>
