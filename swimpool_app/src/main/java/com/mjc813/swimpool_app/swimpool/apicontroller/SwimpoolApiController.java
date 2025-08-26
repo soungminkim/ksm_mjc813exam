@@ -3,12 +3,11 @@ package com.mjc813.swimpool_app.swimpool.apicontroller;
 import com.mjc813.swimpool_app.common.ResponseDto;
 import com.mjc813.swimpool_app.common.ResponseEnum;
 import com.mjc813.swimpool_app.swimpool.dto.SwimpoolDto;
-import com.mjc813.swimpool_app.swimpool.dto.SwimpoolPageResponseDto;
+import com.mjc813.swimpool_app.swimpool.dto.PageResponseDto;
 import com.mjc813.swimpool_app.swimpool.service.SwimpoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class SwimpoolApiController {
             long totalRows = swimpoolService.countBySearch(search);
 
             // DTO만들기 (계산/보정X)
-            SwimpoolPageResponseDto result = SwimpoolPageResponseDto.builder()
+            PageResponseDto result = PageResponseDto.builder()
                     .search(search)
                     .row(row)
                     .page(page)
@@ -99,6 +98,7 @@ public class SwimpoolApiController {
     public ResponseEntity<ResponseDto> update(@PathVariable("id") Integer id
             , @RequestBody SwimpoolDto dto) {
         try {
+            dto.setId(id);
             SwimpoolDto result = this.swimpoolService.update(dto);   // DB 에 update 쿼리 실행 결과를 리턴한다.
             return ResponseEntity.ok().body(
                     new ResponseDto(ResponseEnum.Success, "OK", result)
