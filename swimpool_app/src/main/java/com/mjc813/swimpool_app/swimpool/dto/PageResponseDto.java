@@ -8,12 +8,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SwimpoolPageResponseDto {
+public class PageResponseDto<T> {
     private String search;
     private Integer row;        // 한 페이지 데이터 수 (null, 0, 음수 전부 처리)
     private Integer page;       // 현재 페이지 (null, 0, 음수 전부 처리)
     private Long totalRows;     // 전체 데이터 개수 (null/0 전부 처리)
-    private List<SwimpoolDto> list;
+    private List<T> list;
 
     // page 1 미만, null이면 1
     public int getPage() {
