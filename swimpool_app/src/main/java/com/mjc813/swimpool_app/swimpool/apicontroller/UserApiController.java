@@ -76,7 +76,7 @@ public class UserApiController {
     }
 
     // 데이터 1개를 삽입하는 RestFull API
-    @PostMapping("")
+    @PostMapping("register")
     public ResponseEntity<ResponseDto> insert(@RequestBody UserDto dto) {
         try {
             UserDto result = this.UserService.insertUser(dto);   // DB 에 insert 쿼리 실행 결과를 리턴한다.

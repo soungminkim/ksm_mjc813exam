@@ -15,6 +15,7 @@ public class UserService {
 
     public UserDto insertUser(UserDto dto){
         // log.debug(dto.getAddr()); 해당식으로 로그를 풀어낼수도 있음
+        dto.setRole("ROLE_USER");
         this.mybatisMapper.insertUser(dto);
         return dto;
     }
@@ -25,7 +26,7 @@ public class UserService {
 
 
     public List<UserDto> findAllUser(){
-        List<UserDto> all = this.mybatisMapper.findallUser();
+        List<UserDto> all = this.mybatisMapper.findaAllUser();
         return all;
     }
     public UserDto updateUser(UserDto dto){

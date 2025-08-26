@@ -2,283 +2,389 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <title>통합 관리 시스템 (SPA)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>수영장 정보 목록</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/swimpool-list.css">
     <script src="/js/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <script>
-        function setModalMode(mode) {
-            $("#inName, #inPhoneNumber, #inAddr, #inLanes").prop("readonly", false);
-            $("#inLaneType").prop("disabled", false);
-            $("#modalActionBtn").show();
-            $(".modalCloseButton").show();
-            if (mode === "detail") {
-                $("#inName, #inPhoneNumber, #inAddr, #inLanes").prop("readonly", true);
-                $("#inLaneType").prop("disabled", true);
-                $("#modalActionBtn").hide();
-                $(".modalCloseButton").show();
-                $(".modal_popup h1").text("수영장 상세정보");
-            } else if (mode === "edit") {
-                $(".modal_popup h1").text("수영장 정보 수정");
-            } else if (mode === "insert") {
-                $(".modal_popup h1").text("수영장 입력");
-            }
-        }
-
-        // ------- 목록 및 페이징 --------
-        function loadSwimpoolList(page) {
-            const search = $('#searchInput').val() || '';
-            const row = $('#rowPerPage').val() || 9;
-            $.ajax({
-                url: '/api/v1/swimpool/list',
-                type: 'GET',
-                data: { search: search, page: page, row: row }
-            }).done(function(result) {
-                renderList(result.data.list || []);
-                renderPagination(result.data);
-            }).fail(function() {
-                alert("불러오기 실패");
-            });
-        }
-
-        function renderList(list) {
-            $("#listPrint").empty();
-            let html = "";
-            for (const item of list) html += makeOneRow(item);
-            $("#listPrint").append(html);
-
-            $(".btnDetail").off('click').on('click', function() {
-                const id = $(this).data("id");
-                showDetail(id);
-            });
-            $(".btnEdit").off('click').on('click', function() {
-                const id = $(this).data("id");
-                getForEdit(id);
-            });
-            $(".btnDel").off('click').on('click', function() {
-                const id = $(this).data("id");
-                if (confirm("정말 삭제하시겠습니까?")) deleteSwimpool(id);
-            });
-        }
-
-        function renderPagination(data) {
-            const totalPages = data.totalPages;
-            const curPage = data.page;
-            if (!totalPages || totalPages < 2) return $("#pagination").empty();
-
-            let html = '';
-            if(curPage > 1) html += `<button class="page-btn" data-page="1">«</button>`;
-            if(curPage > 1) html += `<button class="page-btn" data-page="${curPage-1}">‹</button>`;
-            let start = Math.max(1, curPage - 3), end = Math.min(totalPages, curPage + 3);
-            for(let i = start; i <= end; i++) {
-                html += `<button class="page-btn${i==curPage ? ' cur' : ''}" data-page="${i}">${i}</button>`;
-            }
-            if(curPage < totalPages) html += `<button class="page-btn" data-page="${curPage+1}">›</button>`;
-            if(curPage < totalPages) html += `<button class="page-btn" data-page="${totalPages}">»</button>`;
-            $("#pagination").html(html);
-
-            $(".page-btn").off("click").on("click", function(){
-                loadSwimpoolList(parseInt($(this).data("page")));
-                window.scrollTo({top:0,behavior:"smooth"});
-            });
-        }
-
-        function makeOneRow(item) {
-            return `
-        <div class="data-row">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div>이름 : <b>${item.name}</b></div>
-                    <div>전화 : <span style="color:#1575e0">${item.phoneNumber}</span></div>
-                    <div>형태 : ${item.laneType}</div>
-                    <div>개수 : ${item.lanes}</div>
-                    <button class="btnDetail" data-id="${item.id}">상세</button>
-                    <button class="btnEdit" data-id="${item.id}">수정</button>
-                    <button class="btnDel" data-id="${item.id}">삭제</button>
-                </div>
-            </div>
-        </div>`;
-        }
-
-        // ------- CRUD(상세/등록/수정/삭제) -------
-        function showDetail(id) {
-            $.get('/api/v1/swimpool/' + id)
-                .done(function(result) {
-                    let d = result.data;
-                    $("#inName").val(d.name);
-                    $("#inPhoneNumber").val(d.phoneNumber);
-                    $("#inAddr").val(d.addr);
-                    $("#inLaneType").val(d.laneType);
-                    $("#inLanes").val(d.lanes);
-                    setModalMode("detail");
-                    $('.modal_popup').fadeIn(200);
-                    $('.modal_background').fadeIn(180);
-                }).fail(function() {
-                alert("상세조회 실패!");
-            });
-        }
-        function getForEdit(id) {
-            $.get('/api/v1/swimpool/' + id)
-                .done(function(result) {
-                    openInsertModal(true, result.data);
-                }).fail(function() {
-                alert("수정정보 불러오기 실패!");
-            });
-        }
-        function insertSwimpool() {
-            let data = {
-                name: $("#inName").val(),
-                phoneNumber: $("#inPhoneNumber").val(),
-                addr: $("#inAddr").val(),
-                laneType: $("#inLaneType").val(),
-                lanes: $("#inLanes").val()
-            };
-            $.ajax({
-                url: '/api/v1/swimpool',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data)
-            }).done(function() {
-                alert("등록 성공!");
-                closeModal();
-                loadSwimpoolList(1);
-            }).fail(function() {
-                alert("등록 실패!");
-            });
-        }
-        function updateSwimpool(id) {
-            let data = {
-                id: id,
-                name: $("#inName").val(),
-                phoneNumber: $("#inPhoneNumber").val(),
-                addr: $("#inAddr").val(),
-                laneType: $("#inLaneType").val(),
-                lanes: $("#inLanes").val()
-            };
-            $.ajax({
-                url: '/api/v1/swimpool/' + id,
-                type: 'PATCH',
-                contentType: 'application/json',
-                data: JSON.stringify(data)
-            }).done(function() {
-                alert("수정 성공!");
-                closeModal();
-                loadSwimpoolList(1);
-            }).fail(function() {
-                alert("수정 실패!");
-            });
-        }
-        function deleteSwimpool(id) {
-            $.ajax({
-                url: '/api/v1/swimpool/' + id,
-                type: 'DELETE'
-            }).done(function() {
-                alert("삭제 성공!");
-                loadSwimpoolList(1);
-            }).fail(function() {
-                alert("삭제 실패!");
-            });
-        }
-
-        // ------- 모달 오픈/클로즈 -------
-        function openInsertModal(isEdit = false, rowData = null) {
-            setModalMode(isEdit ? "edit" : "insert");
-            if(isEdit && rowData) {
-                $("#inName").val(rowData.name);
-                $("#inPhoneNumber").val(rowData.phoneNumber);
-                $("#inAddr").val(rowData.addr);
-                $("#inLaneType").val(rowData.laneType);
-                $("#inLanes").val(rowData.lanes);
-                $("#modalActionBtn").text("수정완료").data("edit-id", rowData.id);
-            } else {
-                $("#inName").val('');
-                $("#inPhoneNumber").val('');
-                $("#inAddr").val('');
-                $("#inLaneType").val('25');
-                $("#inLanes").val('');
-                $("#modalActionBtn").text("등록").removeData("edit-id");
-            }
-            $('.modal_popup').fadeIn(200);
-            $('.modal_background').fadeIn(180);
-        }
-        function closeModal() {
-            $('.modal_popup').fadeOut(120);
-            $('.modal_background').fadeOut(100);
-            setTimeout(function() { setModalMode("insert"); }, 130);
-        }
-
-        // ------- 등록/수정 버튼 핸들러 -------
-        function handleModalAction() {
-            const isEdit = !!$("#modalActionBtn").data("edit-id");
-            if(isEdit) {
-                updateSwimpool($("#modalActionBtn").data("edit-id"));
-            } else {
-                insertSwimpool();
-            }
-        }
-
-        $(document).ready(function(){
-            loadSwimpoolList(1); // 최초 1페이지
-
-            $('#searchBtn').click(function(){ loadSwimpoolList(1); });
-            $('#searchInput').keydown(function(e){ if(e.key === 'Enter') loadSwimpoolList(1); });
-            $('#resetBtn').click(function(){ $('#searchInput').val(''); loadSwimpoolList(1); });
-            $('#rowPerPage').change(function(){ loadSwimpoolList(1); }); // 행수 변경시
-
-            // 모달/등록/수정/닫기 버튼
-            $('#showAddModalButton').click(function () { openInsertModal(); });
-            $.showInsertPopup = function() { openInsertModal(); };
-            $('.modalCloseButton').click(function () { closeModal(); });
-            $(document).on('click', '#modalActionBtn', handleModalAction);
-        });
-        alert("read cookie jquery : " + $.cookie("mycookie"));
-        $.cookie("mycookie", "value", { expires: 60 * 3 });
-    </script>
+</head>
 
 <body>
 <div class="wrap">
-    <div class="content" style="z-index: 7;">
+    <nav class="top-nav">
+        <button class="nav-btn" data-view="swimpool">🏊 수영장 목록</button>
+        <button class="nav-btn" data-view="user">👥 사용자 관리</button>
+    </nav>
+
+    <div id="swimpoolSection" class="content-section">
         <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="이름, 주소 등 검색">
-            <button id="searchBtn">🔍 검색</button>
-            <button id="resetBtn">전체목록</button>
-            <select id="rowPerPage" style="margin-left:10px;">
-                <option value="6">6개씩</option>
-                <option value="9" selected>9개씩</option>
-                <option value="12">12개씩</option>
-                <option value="15">15개씩</option>
-            </select>
+            <input type="text" id="swimpoolSearchInput" placeholder="수영장 이름, 주소 등 검색">
+            <button id="swimpoolSearchBtn">🔍 검색</button>
+            <button id="swimpoolResetBtn">전체목록</button>
         </div>
         <div class="info-card">
             수영장 정보 목록
+            <button id="showAddSwimpoolModalButton" class="nav-btn" style="float: right; font-size: 14px; padding: 5px 10px;">수영장 추가</button>
         </div>
-        <div id="listPrint" class="list-cards container px-4 px-lg-5"></div>
-        <div id="pagination" style="margin:30px 0 10px 0; text-align:center;"></div>
-        <div class="modal_popup" style="display: none;">
-            <h1>수영장 입력</h1>
-            <div><label for="inName">이름 : </label><input type="text" id="inName" name="name" maxlength="20"/></div>
-            <div><label for="inPhoneNumber">번호 : </label><input type="text" id="inPhoneNumber" name="phoneNumber" maxlength="20"/></div>
-            <div><label for="inAddr">주소 : </label><input type="text" id="inAddr" name="addr" maxlength="20"/></div>
-            <div><label for="inLaneType">레인타입 : </label>
-                <select id="inLaneType" name="laneType">
-                    <option value="L25M">L25M</option>
-                    <option value="L50M">L50M</option>
-                </select>
-            </div>
-            <div><label for="inLanes">레인수 : </label><input type="number" id="inLanes" name="lanes" maxlength="2" /></div>
-            <div style="margin-top: 12px;">
-                <button id="modalActionBtn">등록</button>
-                <button class="modalCloseButton">닫기</button>
-            </div>
+        <div id="swimpoolListPrint" class="list-cards"></div>
+        <div id="swimpoolPagination" class="pagination-container"></div>
+    </div>
+
+    <div id="userSection" class="content-section" style="display: none;">
+        <div class="search-bar">
+            <input type="text" id="userSearchInput" placeholder="사용자 이름, 아이디, 이메일 등 검색">
+            <button id="userSearchBtn">🔍 검색</button>
+            <button id="userResetBtn">전체목록</button>
         </div>
-        <div class="modal_background" style="display: none;"></div>
-        <div class="add-btns">
-            <button onclick="$.showInsertPopup();">수영장 추가 1</button>
-            <button id="showAddModalButton">수영장 추가 2</button>
+        <div class="info-card">
+            사용자 정보 목록
+            <button id="showRegisterBtn" class="nav-btn" style="float: right; font-size: 14px; padding: 5px 10px;">신규 회원 등록</button>
+        </div>
+        <div id="userListPrint" class="list-cards"></div>
+        <div id="userPagination" class="pagination-container"></div>
+    </div>
+
+    <div id="registerSection" class="content-section" style="display: none;">
+        <div class="form-container">
+            <h1>신규 회원 등록</h1>
+            <form id="registerForm">
+                <div class="form-group"><label for="regName">이름</label><input type="text" id="regName" required></div>
+                <div class="form-group"><label for="regUsername">아이디</label><input type="text" id="regUsername" required></div>
+                <div class="form-group"><label for="regPassword">비밀번호</label><input type="password" id="regPassword" required></div>
+                <div class="form-group"><label for="regPasswordConfirm">비밀번호 확인</label><input type="password" id="regPasswordConfirm" required></div>
+                <div class="form-group"><label for="regEmail">이메일</label><input type="email" id="regEmail" required></div>
+                <div class="form-group"><label for="regPhoneNumber">전화번호</label><input type="tel" id="regPhoneNumber"></div>
+                <button type="submit" class="submit-btn">등록하기</button>
+            </form>
         </div>
     </div>
+</div> <div id="swimpoolModal" class="modal_popup" style="display: none;">
+    <h1>수영장 정보</h1>
+    <div><label for="inSwimpoolName">이름 : </label><input type="text" id="inSwimpoolName" /></div>
+    <div><label for="inSwimpoolPhoneNumber">번호 : </label><input type="text" id="inSwimpoolPhoneNumber" /></div>
+    <div><label for="inSwimpoolAddr">주소 : </label><input type="text" id="inSwimpoolAddr" /></div>
+    <div><label for="inSwimpoolLaneType">레인타입 : </label>
+        <select id="inSwimpoolLaneType">
+            <option value="L25M">L25M</option>
+            <option value="L50M">L50M</option>
+        </select>
+    </div>
+    <div><label for="inSwimpoolLanes">레인수 : </label><input type="number" id="inSwimpoolLanes" /></div>
+    <div style="margin-top: 12px;">
+        <button id="swimpoolModalActionBtn">저장</button>
+        <button class="modalCloseButton">닫기</button>
+    </div>
 </div>
+
+<div id="userModal" class="modal_popup" style="display: none;">
+    <h1>사용자 정보</h1>
+    <input type="hidden" id="inUserId">
+    <div><label>이름 : </label><input type="text" id="inUserName" /></div>
+    <div><label>아이디 : </label><input type="text" id="inUserUsername" readonly /></div>
+    <div><label>이메일 : </label><input type="text" id="inUserEmail" /></div>
+    <div><label>전화번호 : </label><input type="text" id="inUserPhoneNumber" /></div>
+    <div><label>권한 : </label>
+        <select id="inUserRole">
+            <option value="ROLE_USER">일반사용자</option>
+            <option value="ROLE_ADMIN">관리자</option>
+        </select>
+    </div>
+    <div style="margin-top: 12px;">
+        <button id="userModalActionBtn">수정완료</button>
+        <button class="modalCloseButton">닫기</button>
+    </div>
+</div>
+
+<div class="modal_background" style="display: none;"></div>
+
+
+<script>
+    $(document).ready(function(){
+        // =================================================================
+        // SPA 화면 전환 로직 (가장 중요!)
+        // =================================================================
+        function switchView(viewName) {
+            $('.content-section').hide();
+            $('.nav-btn').removeClass('active');
+
+            if (viewName === 'swimpool') {
+                $('#swimpoolSection').show();
+                $('.nav-btn[data-view="swimpool"]').addClass('active');
+                loadSwimpoolList(1);
+            } else if (viewName === 'user') {
+                $('#userSection').show();
+                $('.nav-btn[data-view="user"]').addClass('active');
+                loadUserList(1);
+            } else if (viewName === 'register') {
+                $('#registerSection').show();
+                $('.nav-btn[data-view="user"]').addClass('active');
+                $('#registerForm')[0].reset();
+            }
+        }
+
+        // =================================================================
+        // 수영장 관리 (Swimpool) 기능
+        // =================================================================
+        function loadSwimpoolList(page) {
+            const search = $('#swimpoolSearchInput').val() || '';
+            $.ajax({
+                url: '/api/v1/swimpool/list',
+                type: 'GET',
+                data: { search: search, page: page, row: 9 }
+            }).done(result => {
+                renderSwimpoolList(result.data.list || []);
+                renderSwimpoolPagination(result.data);
+            }).fail(() => alert("수영장 목록 로딩 실패"));
+        }
+
+        function renderSwimpoolList(list) {
+            const container = $("#swimpoolListPrint").empty();
+            list.forEach(item => container.append(makeSwimpoolRow(item)));
+
+            container.off('click').on('click', 'button', function() {
+                const id = $(this).data('id');
+                if ($(this).hasClass('btnSwimpoolEdit')) {
+                    getSwimpoolForEdit(id);
+                } else if ($(this).hasClass('btnSwimpoolDel')) {
+                    if (confirm("정말 삭제하시겠습니까?")) deleteSwimpool(id);
+                }
+            });
+        }
+
+        function makeSwimpoolRow(item) {
+            return `
+        <div class="data-row"><div class="card h-100"><div class="card-body">
+            <div>이름 : <b>${item.name}</b></div>
+            <div>전화 : <span style="color:#1575e0">${item.phoneNumber}</span></div>
+            <div>형태 : ${item.laneType} / ${item.lanes} 레인</div>
+            <button class="btnSwimpoolEdit" data-id="${item.id}">수정</button>
+            <button class="btnSwimpoolDel" data-id="${item.id}">삭제</button>
+        </div></div></div>`;
+        }
+
+        function renderSwimpoolPagination(data) {
+            const { totalPages, page: curPage } = data;
+            const container = $("#swimpoolPagination").empty();
+            if (!totalPages || totalPages < 2) return;
+
+            let html = '';
+            if (curPage > 1) html += `<button class="page-btn" data-page="${curPage - 1}">‹</button>`;
+            for (let i = Math.max(1, curPage - 2); i <= Math.min(totalPages, curPage + 2); i++) {
+                html += `<button class="page-btn${i === curPage ? ' cur' : ''}" data-page="${i}">${i}</button>`;
+            }
+            if (curPage < totalPages) html += `<button class="page-btn" data-page="${curPage + 1}">›</button>`;
+
+            container.html(html);
+            container.find(".page-btn").on("click", function() {
+                loadSwimpoolList(parseInt($(this).data("page")));
+            });
+        }
+
+        function openSwimpoolModal(mode, data = null) {
+            $('#swimpoolModal h1').text(mode === 'insert' ? '수영장 입력' : '수영장 정보 수정');
+            $('#swimpoolModalActionBtn').text(mode === 'insert' ? '등록' : '수정완료').data("mode", mode);
+
+            if (data) {
+                $('#swimpoolModalActionBtn').data("id", data.id);
+                $('#inSwimpoolName').val(data.name);
+                $('#inSwimpoolPhoneNumber').val(data.phoneNumber);
+                $('#inSwimpoolAddr').val(data.addr);
+                $('#inSwimpoolLaneType').val(data.laneType);
+                $('#inSwimpoolLanes').val(data.lanes);
+            } else {
+                $('#inSwimpoolName, #inSwimpoolPhoneNumber, #inSwimpoolAddr, #inSwimpoolLanes').val('');
+                $('#inSwimpoolLaneType').val('L25M');
+            }
+            $('#swimpoolModal, .modal_background').fadeIn(200);
+        }
+
+        function handleSwimpoolAction() {
+            const mode = $('#swimpoolModalActionBtn').data("mode");
+            const id = $('#swimpoolModalActionBtn').data("id");
+            const data = {
+                name: $("#inSwimpoolName").val(),
+                phoneNumber: $("#inSwimpoolPhoneNumber").val(),
+                addr: $("#inSwimpoolAddr").val(),
+                laneType: $("#inSwimpoolLaneType").val(),
+                lanes: $("#inSwimpoolLanes").val()
+            };
+            const isInsert = mode === 'insert';
+            const url = isInsert ? '/api/v1/swimpool' : `/api/v1/swimpool/${id}`;
+            const type = isInsert ? 'POST' : 'PATCH';
+
+            $.ajax({ url, type, contentType: 'application/json', data: JSON.stringify(data) })
+                .done(() => {
+                    alert(`${isInsert ? '등록' : '수정'} 성공!`);
+                    closeModal();
+                    loadSwimpoolList(1);
+                }).fail(() => alert(`${isInsert ? '등록' : '수정'} 실패!`));
+        }
+
+        function getSwimpoolForEdit(id) { $.get('/api/v1/swimpool/' + id).done(res => openSwimpoolModal('edit', res.data)); }
+        function deleteSwimpool(id) { $.ajax({ url: '/api/v1/swimpool/' + id, type: 'DELETE' }).done(() => { alert("삭제 성공!"); loadSwimpoolList(1); }); }
+
+        // =================================================================
+        // 사용자 관리 (User) 기능
+        // =================================================================
+        function loadUserList(page) {
+            const search = $('#userSearchInput').val() || '';
+            $.ajax({
+                url: '/api/v1/user/list',
+                type: 'GET',
+                data: { search, page, row: 9 }
+            }).done(result => {
+                renderUserList(result.data.list || []);
+                renderUserPagination(result.data);
+            }).fail(() => alert("사용자 목록 로딩 실패"));
+        }
+
+        function renderUserList(list) {
+            const container = $("#userListPrint").empty();
+            list.forEach(item => container.append(makeUserRow(item)));
+
+            container.off('click').on('click', 'button', function() {
+                const id = $(this).data('id');
+                if ($(this).hasClass('btnUserEdit')) {
+                    getForUserEdit(id);
+                } else if ($(this).hasClass('btnUserDel')) {
+                    if (confirm("정말 이 사용자를 삭제하시겠습니까?")) deleteUser(id);
+                }
+            });
+        }
+
+        function makeUserRow(item) {
+            const roleText = item.role === 'ROLE_ADMIN' ? '관리자' : '일반사용자';
+            return `
+        <div class="data-row"><div class="card h-100"><div class="card-body">
+            <div>이름: <b>${item.name}</b> (${item.username})</div>
+            <div>이메일: <span style="color:#1575e0">${item.email}</span></div>
+            <div>권한: ${roleText}</div>
+            <button class="btnUserEdit" data-id="${item.id}">수정</button>
+            <button class="btnUserDel" data-id="${item.id}">삭제</button>
+        </div></div></div>`;
+        }
+
+        function renderUserPagination(data) {
+            const { totalPages, page: curPage } = data;
+            const container = $("#userPagination").empty();
+            if (!totalPages || totalPages < 2) return;
+
+            let html = '';
+            if (curPage > 1) html += `<button class="page-btn" data-page="${curPage - 1}">‹</button>`;
+            for (let i = Math.max(1, curPage - 2); i <= Math.min(totalPages, curPage + 2); i++) {
+                html += `<button class="page-btn${i === curPage ? ' cur' : ''}" data-page="${i}">${i}</button>`;
+            }
+            if (curPage < totalPages) html += `<button class="page-btn" data-page="${curPage + 1}">›</button>`;
+
+            container.html(html);
+            container.find(".page-btn").on("click", function() {
+                loadUserList(parseInt($(this).data("page")));
+            });
+        }
+
+        function getForUserEdit(id) {
+            $.get('/api/v1/user/' + id).done(result => {
+                const user = result.data;
+                $("#inUserId").val(user.id);
+                $("#inUserName").val(user.name);
+                $("#inUserUsername").val(user.username);
+                $("#inUserEmail").val(user.email);
+                $("#inUserPhoneNumber").val(user.phoneNumber);
+                $("#inUserRole").val(user.role);
+                $('#userModal, .modal_background').fadeIn(200);
+            }).fail(() => alert("사용자 정보 로딩 실패"));
+        }
+
+        function updateUser() {
+            const id = $("#inUserId").val();
+            const data = {
+                id,
+                name: $("#inUserName").val(),
+                email: $("#inUserEmail").val(),
+                phoneNumber: $("#inUserPhoneNumber").val(),
+                role: $("#inUserRole").val()
+            };
+            $.ajax({
+                url: '/api/v1/user/' + id,
+                type: 'PATCH',
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            }).done(() => {
+                alert("수정 성공");
+                closeModal();
+                loadUserList(1);
+            }).fail(() => alert("수정 실패"));
+        }
+
+        function deleteUser(id) {
+            $.ajax({ url: '/api/v1/user/' + id, type: 'DELETE' })
+                .done(() => {
+                    alert("삭제 성공");
+                    loadUserList(1);
+                }).fail(() => alert("삭제 실패"));
+        }
+
+        // =================================================================
+        // 회원가입 (Register) 기능
+        // =================================================================
+        function registerUser() {
+            const password = $('#regPassword').val();
+            if (password !== $('#regPasswordConfirm').val()) {
+                alert("비밀번호가 일치하지 않습니다.");
+                return;
+            }
+            const userData = {
+                name: $('#regName').val(),
+                username: $('#regUsername').val(),
+                password,
+                email: $('#regEmail').val(),
+                phoneNumber: $('#regPhoneNumber').val()
+            };
+            $.ajax({
+                url: '/api/v1/user/register',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData)
+            }).done(() => {
+                alert("회원가입 성공!");
+                switchView('user');
+            }).fail(() => alert("회원가입 실패. 아이디 또는 이메일 중복 가능"));
+        }
+
+        // =================================================================
+        // 공용 및 이벤트 핸들러
+        // =================================================================
+        function closeModal() {
+            $('.modal_popup, .modal_background').fadeOut(120);
+        }
+
+        // 네비게이션 버튼 이벤트
+        $('.nav-btn').on('click', function() { switchView($(this).data('view')); });
+        $(document).on('click', '#showRegisterBtn', () => switchView('register'));
+
+        // 수영장 이벤트
+        $('#swimpoolSearchBtn').on('click', () => loadSwimpoolList(1));
+        $('#swimpoolResetBtn').on('click', () => { $('#swimpoolSearchInput').val(''); loadSwimpoolList(1); });
+        $('#showAddSwimpoolModalButton').on('click', () => openSwimpoolModal('insert'));
+        $('#swimpoolModalActionBtn').on('click', handleSwimpoolAction);
+
+        // 사용자 이벤트
+        $('#userSearchBtn').on('click', () => loadUserList(1));
+        $('#userResetBtn').on('click', () => { $('#userSearchInput').val(''); loadUserList(1); });
+        $('#userModalActionBtn').on('click', updateUser);
+
+        // 회원가입 폼 제출 이벤트
+        $('#registerForm').on('submit', e => {
+            e.preventDefault();
+            registerUser();
+        });
+
+        // 공용 모달 닫기 버튼
+        $('.modalCloseButton').on('click', closeModal);
+
+        // 초기 화면 로드
+        switchView('swimpool');
+    });
+</script>
 </body>
 </html>
