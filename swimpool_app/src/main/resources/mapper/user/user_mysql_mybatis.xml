@@ -26,13 +26,17 @@
     </select>
 
     <update id="updateUser" parameterType="UserDto">
-        UPDATE user_tbl SET
-            name = #{name}
-                , username = #{username}
-                , password = #{password}
-                , email = #{email}
-                , phone_number = #{phoneNumber}
-                , role = #{role}
+        UPDATE user_tbl
+        <set>
+            name = #{name},
+            username = #{username},
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            email = #{email},
+            phone_number = #{phoneNumber},
+            role = #{role}
+        </set>
         WHERE id = #{id}
     </update>
 
