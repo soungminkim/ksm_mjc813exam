@@ -16,6 +16,10 @@ public interface IFood extends IIdName {
     Integer getSaltyLevel();
     void setSaltyLevel(Integer saltyLevel);
 
+    String getDescription();
+    void setDescription(String description);
+
+
 //	Long getIngredientId();
 //    void setIngredientId(Long ingredientId);
 //

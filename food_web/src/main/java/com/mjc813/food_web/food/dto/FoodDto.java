@@ -35,6 +35,10 @@ public class FoodDto implements IFood {
     @Max(10)
     private Integer saltyLevel;
 
+    @Max(65000)
+    private String description;
+
+
     private Long foodCategoryId;
 
     @JsonIgnore

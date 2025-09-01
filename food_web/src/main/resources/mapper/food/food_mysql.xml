@@ -10,6 +10,7 @@
             , spicy_level
             , sweet_level
             , food_category_id
+            , description
         ) VALUES (
             #{name}
             , #{saltyLevel}
@@ -17,6 +18,7 @@
             , #{spicyLevel}
             , #{sweetLevel}
             , #{foodCategoryId}
+            , #{description}
         )
     </insert>
 
@@ -29,6 +31,7 @@
             , spicy_level = #{sweetLevel}
             , sweet_level = #{foodCategoryId}
             , food_category_id = #{ingredientId}
+            , description = #{description}
         WHERE ID = #{id}
     </update>
 
@@ -46,6 +49,7 @@
             , spicy_level
             , sweet_level
             , food_category_id
+            , description
         FROM food_tbl
         WHERE ID = #{id}
     </select>
@@ -58,6 +62,7 @@
              , ft.sour_level
              , ft.spicy_level
              , ft.sweet_level
+             , ft.description
              , ft.food_category_id
              , fct.name AS food_category_name
         FROM food_tbl AS ft
@@ -73,6 +78,7 @@
              , ft.sour_level
              , ft.spicy_level
              , ft.sweet_level
+             , ft.description
              , ft.food_category_id
              , fct.name AS food_category_name
         FROM food_tbl AS ft

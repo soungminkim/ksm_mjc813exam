@@ -26,6 +26,10 @@ public class FoodEntity implements IFood {
     private Integer sourLevel;
     private Integer saltyLevel;
 
+    @Column(length = 65500)
+    private String description;
+
+
 //    @Transient
 //    private Long ingredientId;  // @Entity 는 Long 형의 외래키 id 를 사용하지 않습니다. IFood 이라는 인터페이스 때문에 등장
 
