@@ -1,64 +1,90 @@
 package com.mjc813.food_web.ingredient_category.service;
 
+import com.mjc813.food_web.common.IIdName;
 import com.mjc813.food_web.ingredient_category.dto.IngredientCategoryDto;
 import com.mjc813.food_web.ingredient_category.dto.IngredientCategoryEntity;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class IngredientCategoryService {
+    @Autowired
+    private IngredientCategoryMapper mapper;
 
     @Autowired
-    private IngredientCategoryRepository ingredientCategoryRepository;
+    private IngredientCategoryRepository repository;
 
-    @Transactional
-    public IngredientCategoryDto insert(IngredientCategoryDto dto) {
-        IngredientCategoryEntity entity = IngredientCategoryEntity.builder()
-                .name(dto.getName())
-                .build();
-        IngredientCategoryEntity saved = ingredientCategoryRepository.save(entity);
-        return toDto(saved);
+    public IIdName insertRepository(IngredientCategoryDto dto) {
+        IngredientCategoryEntity entity = new IngredientCategoryEntity();
+        entity.copyMembersIdName(dto);
+        IngredientCategoryEntity result = this.repository.save(entity);
+        return result;
     }
 
-    public List<IngredientCategoryDto> findAll() {
-        return ingredientCategoryRepository.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+    public IIdName insertMybatis(IngredientCategoryDto dto) {
+        this.mapper.insert(dto);
+        return dto;
     }
 
-    public IngredientCategoryDto findById(Long id) {
-        IngredientCategoryEntity entity = ingredientCategoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("카테고리 정보 없음: " + id));
-        return toDto(entity);
+    public IIdName updateRepository(IngredientCategoryDto dto) {
+        return this.insertRepository(dto);
     }
 
-    @Transactional
-    public IngredientCategoryDto update(Long id, IngredientCategoryDto dto) {
-        IngredientCategoryEntity entity = ingredientCategoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("수정할 카테고리 정보 없음: " + id));
-
-        entity.copyIdNameNotNull(dto);
-
-        IngredientCategoryEntity updated = ingredientCategoryRepository.save(entity);
-        return toDto(updated);
+    public IIdName updateMybatis(IngredientCategoryDto dto) {
+        this.mapper.update(dto);
+        return dto;
     }
 
-    @Transactional
-    public void delete(Long id) {
-        if (!ingredientCategoryRepository.existsById(id)) {
-            throw new RuntimeException("이미 삭제되었거나 없는 카테고리입니다.");
+    public Boolean deleteRepository(Long id) {
+        this.repository.deleteById(id);
+        return true;
+    }
+
+    public Boolean deleteMybatis(Long id) {
+        this.mapper.delete(id);
+        return true;
+    }
+
+    public IIdName findByIdRepository(Long id) throws Exception {
+        Optional<IngredientCategoryEntity> find = this.repository.findById(id);
+        if ( find.isPresent() ) {
+            return find.get();
+        } else {
+            throw new NotFoundException(String.format("data cat not found [%d]", id));
         }
-        ingredientCategoryRepository.deleteById(id);
     }
 
-    private IngredientCategoryDto toDto(IngredientCategoryEntity entity) {
-        return IngredientCategoryDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .build();
+    public IIdName findByIdMybatis(Long id) throws Exception {
+        IngredientCategoryDto find = this.mapper.findById(id);
+        if ( find != null ) {
+            return find;
+        } else {
+            throw new NotFoundException(String.format("data cat not found [%d]", id));
+        }
+    }
+
+    public List<IIdName> findAllRepository() {
+        List<IngredientCategoryEntity> all = this.repository.findAllByOrderByIdDesc();
+        List<IIdName> result = all.parallelStream()
+                .map(x -> (IIdName)x).toList();
+        return result;
+    }
+
+    public List<IIdName> findAllMybatis() {
+        List<IngredientCategoryDto> all = this.mapper.findAll();
+        List<IIdName> result = all.parallelStream()
+                .map(x -> (IIdName)x).toList();
+        return result;
+    }
+
+    public Page<IngredientCategoryEntity> findByNameContainsRepository(String name, Pageable pageable) {
+        Page<IngredientCategoryEntity> page = this.repository.findByNameContains(name, pageable);
+        return page;
     }
 }

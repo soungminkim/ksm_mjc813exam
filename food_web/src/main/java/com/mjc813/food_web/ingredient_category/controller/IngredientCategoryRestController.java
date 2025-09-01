@@ -1,10 +1,18 @@
 package com.mjc813.food_web.ingredient_category.controller;
 
+import com.mjc813.food_web.common.CommonRestController;
+import com.mjc813.food_web.common.IIdName;
+import com.mjc813.food_web.common.ResponseCode;
 import com.mjc813.food_web.common.ResponseDto;
 import com.mjc813.food_web.ingredient_category.dto.IngredientCategoryDto;
+import com.mjc813.food_web.ingredient_category.dto.IngredientCategoryEntity;
 import com.mjc813.food_web.ingredient_category.service.IngredientCategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,68 +21,90 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/ingredient/category")
-public class IngredientCategoryRestController {
+@RequestMapping("/api/v1/ingredient_category")
+public class IngredientCategoryRestController extends CommonRestController {
     @Autowired
     private IngredientCategoryService ingredientCategoryService;
 
-    // 등록(Create)
     @PostMapping("")
-    public ResponseEntity<ResponseDto> insert(@Validated @RequestBody IngredientCategoryDto dto) {
+    public ResponseEntity<ResponseDto> insert(
+            @Validated @RequestBody IngredientCategoryDto dto
+    ) {
         try {
-            var result = ingredientCategoryService.insert(dto);
-            return ResponseEntity.ok(new ResponseDto("success", 10000, result));
-        } catch (Throwable e) {
-            log.error(e.toString());
-            return ResponseEntity.ok(new ResponseDto("insert error", 20000, dto));
+            IIdName iIdName = this.ingredientCategoryService.insertRepository(dto);
+//            IIdName iIdName = this.IngredientCategoryService.insertMybatis(dto);
+            return this.getReponseEntity(ResponseCode.SUCCESS, "OK", iIdName, null);
+        } catch (Throwable th) {
+            log.error(th.toString());
+            return this.getReponseEntity(ResponseCode.INSERT_FAIL, "Error", dto, th);
         }
     }
 
-    // 전체조회(Read)
-    @GetMapping("")
-    public ResponseEntity<ResponseDto> list() {
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResponseDto> update(
+            @PathVariable Long id
+            , @Validated @RequestBody IngredientCategoryDto dto
+    ) {
         try {
-            List<IngredientCategoryDto> list = ingredientCategoryService.findAll();
-            return ResponseEntity.ok(new ResponseDto("success", 10000, list));
-        } catch (Throwable e) {
-            log.error(e.toString());
-            return ResponseEntity.ok(new ResponseDto("list error", 20000, null));
+            IIdName iIdName = this.ingredientCategoryService.updateRepository(dto);
+//            IIdName iIdName = this.IngredientCategoryService.updateMybatis(dto);
+            return this.getReponseEntity(ResponseCode.SUCCESS, "OK", iIdName, null);
+        } catch (Throwable th) {
+            log.error(th.toString());
+            return this.getReponseEntity(ResponseCode.UPDATE_FAIL, "Error", dto, th);
         }
     }
 
-    // 단일조회(Read)
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getOne(@PathVariable Long id) {
-        try {
-            IngredientCategoryDto dto = ingredientCategoryService.findById(id);
-            return ResponseEntity.ok(new ResponseDto("success", 10000, dto));
-        } catch (Throwable e) {
-            log.error(e.toString());
-            return ResponseEntity.ok(new ResponseDto("get error", 20000, id));
-        }
-    }
-
-    // 수정(Update)
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto> update(@PathVariable Long id, @Validated @RequestBody IngredientCategoryDto dto) {
-        try {
-            var result = ingredientCategoryService.update(id, dto);
-            return ResponseEntity.ok(new ResponseDto("success", 10000, result));
-        } catch (Throwable e) {
-            log.error(e.toString());
-            return ResponseEntity.ok(new ResponseDto("update error", 20000, dto));
-        }
-    }
-
-    // 삭제(Delete)
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto> delete(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto> delete(
+            @PathVariable Long id
+    ) {
         try {
-            ingredientCategoryService.delete(id);
-            return ResponseEntity.ok(new ResponseDto("success", 10000, null));
-        } catch (Throwable e) {
-            log.error(e.toString());
-            return ResponseEntity.ok(new ResponseDto("delete error", 20000, id));
+            Boolean bResult = this.ingredientCategoryService.deleteRepository(id);
+//            Boolean bResult = this.IngredientCategoryService.deleteMybatis(id);
+            return this.getReponseEntity(ResponseCode.SUCCESS, "OK", bResult, null);
+        } catch (Throwable th) {
+            log.error(th.toString());
+            return this.getReponseEntity(ResponseCode.DELETE_FAIL, "Error", id, th);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto> findById(@PathVariable Long id) {
+        try {
+            IIdName find = this.ingredientCategoryService.findByIdRepository(id);
+//            IIdName find = this.IngredientCategoryService.findByIdMybatis(id);
+            return this.getReponseEntity(ResponseCode.SUCCESS, "OK", find, null);
+        } catch (Throwable th) {
+            log.error(th.toString());
+            return this.getReponseEntity(ResponseCode.SELECT_FAIL, "Error", id, th);
+        }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResponseDto> findAll() {
+        try {
+            List<IIdName> all = this.ingredientCategoryService.findAllRepository();
+//            List<IIdName> all = this.IngredientCategoryService.findAllMybatis(id);
+            return this.getReponseEntity(ResponseCode.SUCCESS, "OK", all, null);
+        } catch (Throwable th) {
+            log.error(th.toString());
+            return this.getReponseEntity(ResponseCode.SELECT_FAIL, "Error", null, th);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDto> findBySearch(
+            @RequestParam("name") String name
+            , @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+            Pageable pageable) {
+        try {
+            Page<IngredientCategoryEntity> all = this.ingredientCategoryService.findByNameContainsRepository(name, pageable);
+//            Page<FoodCategoryDto> all = this.foodCategoryService.findByNameContainsMybatis(name, pageable);
+            return this.getReponseEntity(ResponseCode.SUCCESS, "OK", all, null);
+        } catch (Throwable th) {
+            log.error(th.toString());
+            return this.getReponseEntity(ResponseCode.SELECT_FAIL, "Error", null, th);
         }
     }
 }
