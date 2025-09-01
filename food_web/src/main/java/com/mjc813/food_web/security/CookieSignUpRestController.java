@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/cookiesign")
-public class CookieSignUpRestController extends CommonRestController {
+public class CookieSignUpRestController extends CommonRestController { // 쿠키방식 인증
 
     @Autowired
     private MemberService memberService;
@@ -62,8 +62,9 @@ public class CookieSignUpRestController extends CommonRestController {
                 MyDataNotFoundException md = new MyDataNotFoundException("login failed");
                 return this.getReponseEntity(ResponseCode.SIGNIN_FAIL, md.getMessage(), requestDto, md);
             }
+            // 로그인시 쿠키가 생성
             Cookie cookie = new Cookie(WebSecurityConfig.idKeyName, iMember.getId().toString());
-            cookie.setMaxAge( 60 * 60 * 3 * 1 );
+            cookie.setMaxAge( 60 * 60 * 3 * 1 ); // 3시간
             cookie.setSecure(true);
             cookie.setPath("/");
             response.addCookie(cookie);

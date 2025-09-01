@@ -32,8 +32,11 @@ public class DaoAuthTokenFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
+            // 세션에서 사용자 ID 추출
             Object obj = request.getSession().getAttribute(WebSecurityConfig.idKeyName);
+
             if ( obj == null ) {
+                // 데이터 베이스에서 사용자 정보 조회
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -41,6 +44,7 @@ public class DaoAuthTokenFilter extends OncePerRequestFilter {
             log.debug("DaoAuthTokenFilter.doFilterInternal userId : {}", userId);
             if (userId != null ) {
                 MemberDto find = memberService.findById(Long.parseLong(userId));
+                // Spring Security Context에 인증 정보 설정
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 find,

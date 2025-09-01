@@ -64,6 +64,7 @@ public class SpringbootSignUpRestController extends CommonRestController {
     ) {
         try {
             IMember iMember = this.memberService.login(requestDto);
+            // Spring Security 표준 인증 + 세션 결합
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);

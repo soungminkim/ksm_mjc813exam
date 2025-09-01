@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/sessionsign")
-public class SessionSignUpRestController extends CommonRestController {
+public class SessionSignUpRestController extends CommonRestController { // 세션방식 로그인
 
     @Autowired
     private MemberService memberService;
@@ -68,6 +68,7 @@ public class SessionSignUpRestController extends CommonRestController {
 //            cookie.setSecure(true);
 //            cookie.setPath("/");
 //            response.addCookie(cookie);
+            // 세션에 사용자 ID 저장
             httpSession.setAttribute(WebSecurityConfig.idKeyName, iMember.getId().toString());
             httpSession.setMaxInactiveInterval( 60 * 60 * 3 * 1 );
             return this.getReponseEntity(ResponseCode.SUCCESS, "OK", iMember, null);

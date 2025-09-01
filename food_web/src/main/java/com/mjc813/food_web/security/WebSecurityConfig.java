@@ -29,8 +29,8 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-    public static final String idKeyName = "mjc813fw";
-    public static final String loginUserKey = "loginUser";
+    public static final String idKeyName = "mjc813fw"; // 세션 쿠키 키 이름
+    public static final String loginUserKey = "loginUser"; // 모델 속성 키
 
     @Autowired
     private PasswordEncoder encoder;
@@ -56,7 +56,7 @@ public class WebSecurityConfig {
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((x) ->
-                        x.requestMatchers("/").permitAll()
+                        x.requestMatchers("/").permitAll() //parmitAll은 로그인 없이 접속이 가능
                                         .requestMatchers("/signpage/**").permitAll()
                                         .requestMatchers("/main/**").permitAll()
                                         .requestMatchers("/cookiesign/**").permitAll()
@@ -64,12 +64,14 @@ public class WebSecurityConfig {
                                         .requestMatchers("/springsign/**").permitAll()
                                         .requestMatchers("/bootswatch/**").permitAll()
                                         .requestMatchers("/error/**").permitAll()
+                                // hasAuthority(ERole.ADMIN) ADMIN 권한이 필요함
                                         .requestMatchers("/food/**").hasAuthority(ERole.ADMIN.toString())
                                         .requestMatchers("/api/v1/food/**").hasAuthority(ERole.ADMIN.toString())
                                         .requestMatchers("/member/**").hasAuthority(ERole.ADMIN.toString())
                                         .requestMatchers("/api/v1/member/**").hasAuthority(ERole.ADMIN.toString())
                                         .anyRequest().authenticated()
                 )
+                // authenticated(): 나머지는 로그인이 필요함
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(daoAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 ;
