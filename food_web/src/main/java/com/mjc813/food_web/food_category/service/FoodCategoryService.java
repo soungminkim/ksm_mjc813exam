@@ -1,65 +1,97 @@
 package com.mjc813.food_web.food_category.service;
 
+import com.mjc813.food_web.common.IIdName;
 import com.mjc813.food_web.food_category.dto.FoodCategoryDto;
 import com.mjc813.food_web.food_category.dto.FoodCategoryEntity;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class FoodCategoryService {
+    @Autowired
+    private FoodCategoryMapper mapper;
 
     @Autowired
-    private FoodCategoryRepository foodCategoryRepository;
+    private FoodCategoryRepository repository;
 
-    @Transactional
-    public FoodCategoryDto insert(FoodCategoryDto dto) {
-        FoodCategoryEntity entity = FoodCategoryEntity.builder()
-                .name(dto.getName())
-                .build();
-        FoodCategoryEntity saved = foodCategoryRepository.save(entity);
-        return toDto(saved);
+    public IIdName insertRepository(FoodCategoryDto dto) {
+        FoodCategoryEntity entity = new FoodCategoryEntity();
+        entity.copyMembersIdName(dto);
+        FoodCategoryEntity result = this.repository.save(entity);
+        return result;
     }
 
-    public List<FoodCategoryDto> findAll() {
-        return foodCategoryRepository.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+    public IIdName insertMybatis(FoodCategoryDto dto) {
+        this.mapper.insert(dto);
+        return dto;
     }
 
-    public FoodCategoryDto findById(Long id) {
-        FoodCategoryEntity entity = foodCategoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("카테고리 정보 없음: " + id));
-        return toDto(entity);
+    public IIdName updateRepository(FoodCategoryDto dto) {
+        return this.insertRepository(dto);
     }
 
-    @Transactional
-    public FoodCategoryDto update(Long id, FoodCategoryDto dto) {
-        FoodCategoryEntity entity = foodCategoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("수정할 카테고리 정보 없음: " + id));
-
-        // 공용 인터페이스의 디폴트 메서드 사용
-        entity.copyIdNameNotNull(dto);
-
-        FoodCategoryEntity updated = foodCategoryRepository.save(entity);
-        return toDto(updated);
+    public IIdName updateMybatis(FoodCategoryDto dto) {
+        this.mapper.update(dto);
+        return dto;
     }
 
-    @Transactional
-    public void delete(Long id) {
-        if (!foodCategoryRepository.existsById(id)) {
-            throw new RuntimeException("이미 삭제되었거나 없는 카테고리입니다.");
+    public Boolean deleteRepository(Long id) {
+        this.repository.deleteById(id);
+        return true;
+    }
+
+    public Boolean deleteMybatis(Long id) {
+        this.mapper.delete(id);
+        return true;
+    }
+
+    public IIdName findByIdRepository(Long id) throws Exception {
+        Optional<FoodCategoryEntity> find = this.repository.findById(id);
+        if ( find.isPresent() ) {
+            return find.get();
+        } else {
+            throw new NotFoundException(String.format("data cat not found [%d]", id));
         }
-        foodCategoryRepository.deleteById(id);
     }
 
-    private FoodCategoryDto toDto(FoodCategoryEntity entity) {
-        return FoodCategoryDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .build();
+    public IIdName findByIdMybatis(Long id) throws Exception {
+        FoodCategoryDto find = this.mapper.findById(id);
+        if ( find != null ) {
+            return find;
+        } else {
+            throw new NotFoundException(String.format("data cat not found [%d]", id));
+        }
     }
+
+    public List<IIdName> findAllRepository() {
+        List<FoodCategoryEntity> all = this.repository.findAllByOrderByIdDesc();
+        List<IIdName> result = all.parallelStream()
+                .map(x -> (IIdName)x).toList();
+        return result;
+    }
+
+    public List<IIdName> findAllMybatis() {
+        List<FoodCategoryDto> all = this.mapper.findAll();
+        List<IIdName> result = all.parallelStream()
+                .map(x -> (IIdName)x).toList();
+        return result;
+    }
+
+    public Page<FoodCategoryEntity> findByNameContainsRepository(String name, Pageable pageable) {
+        Page<FoodCategoryEntity> list = this.repository.findByNameContains(name, pageable);
+        return list;
+    }
+
+//    public List<IIdName> findByNameContainsMybatis(String name, Pageable pageable) {
+//        List<FoodCategoryDto> list = this.mapper.findByNameContains(name, pageable);
+//        List<IIdName> result = list.parallelStream()
+//                .map(x -> (IIdName)x).toList();
+//        return result;
+//    }
 }
