@@ -23,12 +23,18 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Slf4j
 @RestController
 public class FileRestController extends CommonRestController {
     @Autowired
     private ResourceLoader resourceLoader;
+
+    //자료 제한
+    private static final Set<String> ALLOWED_EXTENSIONS =
+            Set.of("jpg", "jpeg", "png", "gif", "pdf", "docx");
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     @PostMapping(value = "/api/v1/rest/file", consumes = "multipart/form-data")
     public ResponseEntity<ResponseDto> upload(@RequestPart(name = "foodCategoryDto", required = true) FoodCategoryDto dto
@@ -41,6 +47,8 @@ public class FileRestController extends CommonRestController {
             }
             log.debug("upload.FoodCategoryDto = {}", dto);
             log.debug("upload.files = {}", files.size());
+            // 예외처리
+            validateFiles(files);
 
             Resource resource = resourceLoader.getResource("classpath:static/images");
             String uploadDir = resource.getFile().getPath();
@@ -60,4 +68,19 @@ public class FileRestController extends CommonRestController {
         frrd.setFiles(result);
         return this.getReponseEntity(ResponseCode.SUCCESS, "ok", frrd, null);
     }
+    private void validateFiles(List<MultipartFile> files) {
+        for (MultipartFile file : files) {
+            String ext = getFileExtension(file.getOriginalFilename());
+            if (!ALLOWED_EXTENSIONS.contains(ext.toLowerCase())) {
+                throw new MyRequestException("허용되지 않는 파일 형식: " + ext);
+            }
+            if (file.getSize() > MAX_FILE_SIZE) {
+                throw new MyRequestException("파일 크기 초과: " + file.getSize());
+            }
+        }
+    }
+    private String getFileExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
 }
