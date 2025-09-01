@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjc813.food_web.food.service.FoodMapper">
+    <insert id="insert" parameterType="FoodDto" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO food_tbl (
+            name
+            , salty_level
+            , sour_level
+            , spicy_level
+            , sweet_level
+            , food_category_id
+        ) VALUES (
+            #{name}
+            , #{saltyLevel}
+            , #{sourLevel}
+            , #{spicyLevel}
+            , #{sweetLevel}
+            , #{foodCategoryId}
+        )
+    </insert>
+
+    <update id="update" parameterType="FoodDto">
+        UPDATE food_tbl SET
+            name = #{name}
+            , name = #{saltyLevel}
+            , salty_level = #{sourLevel}
+            , sour_level = #{spicyLevel}
+            , spicy_level = #{sweetLevel}
+            , sweet_level = #{foodCategoryId}
+            , food_category_id = #{ingredientId}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM food_tbl
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Long" resultType="FoodDto">
+        SELECT
+            id
+            , name
+            , salty_level
+            , sour_level
+            , spicy_level
+            , sweet_level
+            , food_category_id
+        FROM food_tbl
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findAll" resultType="FoodDetailDto">
+        SELECT
+            ft.id
+             , ft.name
+             , ft.salty_level
+             , ft.sour_level
+             , ft.spicy_level
+             , ft.sweet_level
+             , ft.food_category_id
+             , fct.name AS food_category_name
+        FROM food_tbl AS ft
+        LEFT JOIN food_category_tbl AS fct ON ft.food_category_id = fct.id
+        ORDER BY id DESC
+    </select>
+
+    <select id="findBySearch" resultType="FoodDetailDto" parameterType="org.springframework.data.domain.Pageable">
+        SELECT
+            ft.id
+             , ft.name
+             , ft.salty_level
+             , ft.sour_level
+             , ft.spicy_level
+             , ft.sweet_level
+             , ft.food_category_id
+             , fct.name AS food_category_name
+        FROM food_tbl AS ft
+        LEFT JOIN food_category_tbl AS fct ON ft.food_category_id = fct.id
+        <where>
+            1=1
+            <if test="name != null and name != ''">
+                AND ft.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="foodCategoryId != null and foodCategoryId != 0">
+                AND ft.food_category_id = #{foodCategoryId}
+            </if>
+        </where>
+        <if test="pageable.sort != null and !pageable.sort.isEmpty()">
+            ORDER BY
+            <foreach collection="pageable.sort" item="item" separator=",">
+                ${item.property} ${item.direction}
+            </foreach>
+        </if>
+        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+</select>
+
+    <select id="countBySearch" resultType="Long">
+        SELECT
+            count(*) AS cnt
+        FROM food_tbl AS ft
+        LEFT JOIN food_category_tbl AS fct ON ft.food_category_id = fct.id
+        <where>
+            1=1
+            <if test="name != null and name != ''">
+                AND ft.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="foodCategoryId != null and foodCategoryId != 0">
+                AND ft.food_category_id = #{foodCategoryId}
+            </if>
+        </where>
+    </select>
+</mapper>

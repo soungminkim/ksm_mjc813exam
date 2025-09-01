@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjc813.food_web.member.service.IMemberMybatis">
+
+    <insert id="insert" parameterType="MemberDto" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO member_tbl (
+            username
+            , password
+            , name
+            , nick_name
+            , phone_number
+            , email
+            , role
+        ) VALUES (
+            #{username}
+            , #{password}
+            , #{name}
+            , #{nickName}
+            , #{phoneNumber}
+            , #{email}
+            , #{role}
+        )
+    </insert>
+
+    <select id="findAll" resultType="MemberDto">
+        SELECT
+            id
+            , username
+            , nick_name
+            , role
+        FROM member_tbl
+        ORDER BY id
+    </select>
+
+    <select id="findById" resultType="MemberDto" parameterType="Long">
+        SELECT
+            id
+            , username
+            , name
+            , nick_name
+            , phone_number
+            , email
+            , role
+        FROM member_tbl
+        WHERE id = #{id}
+    </select>
+
+    <update id="update" parameterType="MemberDto">
+        UPDATE member_tbl SET
+            id = #{id}
+        <if test="username != null and username != ''">
+            , username = #{username}
+        </if>
+        <if test="name != null and name != ''">
+            , name = #{name}
+        </if>
+        <if test="nickName != null and nickName != ''">
+            , nick_name = #{nickName}
+        </if>
+        <if test="phoneNumber != null and phoneNumber != ''">
+            , phone_number = #{phoneNumber}
+        </if>
+        <if test="email != null and email != ''">
+            , email = #{email}
+        </if>
+        <if test="role != null and role != ''">
+            , role = #{role}
+        </if>
+        WHERE id = #{id}
+    </update>
+
+    <update id="changePasswd" parameterType="MemberDto">
+        UPDATE member_tbl SET
+            password = #{password}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM member_tbl
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findByUsernameContainsAndNickNameContains" resultType="MemberDto" parameterType="org.springframework.data.domain.Pageable">
+        SELECT
+            id
+            , username
+            , nick_name
+            , role
+        FROM member_tbl
+        <where>
+            1=1
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="nickName != null and nickName != ''">
+                AND nick_name LIKE CONCAT('%', #{nickName}, '%')
+            </if>
+            <if test="role != null and role != ''">
+                AND role = #{role}
+            </if>
+        </where>
+        <if test="pageable.sort != null and !pageable.sort.isEmpty()">
+            ORDER BY
+            <foreach collection="pageable.sort" item="item" separator=",">
+                ${item.property} ${item.direction}
+            </foreach>
+        </if>
+        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+    </select>
+
+    <select id="countByUsernameContainsAndNickNameContains" resultType="Long">
+        SELECT
+            count(*) as cnt
+        FROM member_tbl
+        <where>
+            1=1
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%', #{username}, '%')
+            </if>
+            <if test="nickName != null and nickName != ''">
+                AND nick_name LIKE CONCAT('%', #{nickName}, '%')
+            </if>
+            <if test="role != null and role != ''">
+                AND role = #{role}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByUsername" resultType="MemberDto">
+        SELECT
+            id
+             , username
+             , name
+             , password
+             , nick_name
+             , phone_number
+             , email
+             , role
+        FROM member_tbl
+        WHERE username = #{username}
+    </select>
+</mapper>

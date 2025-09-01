@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjc813.food_web.ingredient.service.IngredientMapper">
+    <insert id="insert" parameterType="IngredientDto" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO ingredient_tbl (name, ingredient_category_id)
+        VALUES (#{name}, #{ingredientCategoryId})
+    </insert>
+
+    <update id="update" parameterType="IngredientDto">
+        UPDATE ingredient_tbl SET
+            name = #{name}
+            , ingredient_category_id = #{ingredientCategoryId}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM ingredient_tbl
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Long" resultType="IngredientDto">
+        SELECT
+            id
+             , name
+             , ingredient_category_id
+        FROM ingredient_tbl
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findAll" resultType="IngredientDto">
+        SELECT
+            id
+             , name
+             , ingredient_category_id
+        FROM ingredient_tbl
+        ORDER BY id DESC
+    </select>
+
+    <select id="findBySearch" resultType="IngredientDto" parameterType="org.springframework.data.domain.Pageable">
+        SELECT
+            it.id
+            , it.name
+            , it.ingredient_category_id
+            , ict.name AS ingredient_category_name
+        FROM ingredient_tbl AS it
+        INNER JOIN ingredient_category_tbl AS ict ON it.ingredient_category_id = ict.id
+        <where>
+            1=1
+            <if test="name != null and name != ''">
+                AND it.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="ingredientCategoryId != null and ingredientCategoryId >= 1">
+                AND it.ingredient_category_id = #{ingredientCategoryId}
+            </if>
+        </where>
+        <if test="pageable.sort != null and !pageable.sort.isEmpty()">
+            ORDER BY
+            <foreach collection="pageable.sort" item="item" separator=",">
+                ${item.property} ${item.direction}
+            </foreach>
+        </if>
+        LIMIT #{pageable.pageSize} OFFSET #{pageable.offset}
+    </select>
+
+    <select id="countBySearch" resultType="Long">
+        SELECT
+        count(*) as cnt
+        FROM ingredient_tbl AS it
+        INNER JOIN ingredient_category_tbl AS ict ON it.ingredient_category_id = ict.id
+        <where>
+            1=1
+            <if test="name != null and name != ''">
+                AND it.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="ingredientCategoryId != null and ingredientCategoryId >= 1">
+                AND it.ingredient_category_id = #{ingredientCategoryId}
+            </if>
+        </where>
+    </select>
+</mapper>

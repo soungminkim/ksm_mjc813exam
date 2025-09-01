@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjc813.food_web.ingredient_category.service.IngredientCategoryMapper">
+    <insert id="insert" parameterType="IngredientCategoryDto" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO ingredient_category_tbl (name)
+        VALUES (#{name})
+    </insert>
+
+    <update id="update" parameterType="IngredientCategoryDto">
+        UPDATE ingredient_category_tbl SET
+            name = #{name}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM ingredient_category_tbl
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Long" resultType="IngredientCategoryDto">
+        SELECT
+            id
+             , name
+        FROM ingredient_category_tbl
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findAll" resultType="IngredientCategoryDto">
+        SELECT
+            id
+             , name
+        FROM ingredient_category_tbl
+        ORDER BY id DESC
+    </select>
+</mapper>

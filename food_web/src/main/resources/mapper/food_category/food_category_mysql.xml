@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mjc813.food_web.food_category.service.FoodCategoryMapper">
+    <insert id="insert" parameterType="FoodCategoryDto" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO food_category_tbl (name)
+        VALUES (#{name})
+    </insert>
+
+    <update id="update" parameterType="FoodCategoryDto">
+        UPDATE food_category_tbl SET
+            name = #{name}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM food_category_tbl
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Long" resultType="FoodCategoryDto">
+        SELECT
+            id
+            , name
+        FROM food_category_tbl
+        WHERE ID = #{id}
+    </select>
+
+    <select id="findAll" resultType="FoodCategoryDto">
+        SELECT
+            id
+             , name
+        FROM food_category_tbl
+        ORDER BY id DESC
+    </select>
+</mapper>

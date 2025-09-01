@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue CDN Example</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+<div id="app">
+    <h1>Hello {{ message }}</h1>
+    <input type="text" v-model="message" />
+    <p v-if="message.length>9">message too long!!</p>
+    <button v-on:click="addItem">addItem</button>
+    <button @click="popItem">popItem</button>
+    <button @click="fetchTodos">fetchTodos</button>
+
+    <ul>
+        <li v-for="(todo,index) in todos" :key="index">
+            <!-- <li v-for="todo in todos"> -->
+            {{todo.completed}}
+            <button @click="completeTodo(index)">완료</button>
+        </li>
+    </ul>
+    <!-- <h2 v-bind:class="many"> -->
+    <h2 :class="{ many: completedTodos>5 }">
+        완료된todo는 {{completedTodos}} 개 입니다.
+    </h2>
+
+    <p>{{frameworks}}</p>
+    <ul>
+        <li v-for="(framework,index) in frameworks" :key="index">
+            {{framework}}
+        </li>
+    </ul>
+</div>
+
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                message: "input test",
+                frameworks: ["react", "angular", "vue"],
+                todos: [],
+            };
+        },
+        computed: {
+            completedTodos() {
+                return this.todos.filter((todo) => todo.completed === true).length;
+            },
+        },
+        methods: {
+            addItem() {
+                console.log("test");
+                console.log(this.message);
+                this.frameworks.push(this.message);
+            },
+            popItem() {
+                this.frameworks.pop();
+            },
+            fetchTodos() {
+                fetch("https://jsonplaceholder.typicode.com/todos?_start=0&_end=10")
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log(data);
+                        this.todos = data;
+                    });
+                //   .then((data) => console.log(data));
+            },
+            completeTodo(index) {
+                this.todos[index].completed = true;
+            },
+        },
+    }).mount("#app");
+</script>
+
+<!-- <div id="app">
+  <h1>Hello {{userName}}!!</h1>
+</div>
+<script>
+  const app = new Vue({
+    el: "#app",
+    data: {
+      userName: "kimjiwon",
+    },
+  });
+</script> -->
+<style>
+    .many {
+        color: red;
+    }
+</style>
+</body>
+</html>
