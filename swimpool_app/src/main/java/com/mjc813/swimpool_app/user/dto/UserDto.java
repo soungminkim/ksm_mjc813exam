@@ -1,4 +1,4 @@
-package com.mjc813.swimpool_app.swimpool.dto;
+package com.mjc813.swimpool_app.user.dto;
 
 import lombok.*;
 

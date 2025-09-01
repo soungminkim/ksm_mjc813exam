@@ -3,7 +3,7 @@ package com.mjc813.swimpool_app.swimpool.apicontroller;
 import com.mjc813.swimpool_app.common.ResponseDto;
 import com.mjc813.swimpool_app.common.ResponseEnum;
 import com.mjc813.swimpool_app.swimpool.dto.SwimpoolDto;
-import com.mjc813.swimpool_app.swimpool.dto.PageResponseDto;
+import com.mjc813.swimpool_app.common.PageResponseDto;
 import com.mjc813.swimpool_app.swimpool.service.SwimpoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

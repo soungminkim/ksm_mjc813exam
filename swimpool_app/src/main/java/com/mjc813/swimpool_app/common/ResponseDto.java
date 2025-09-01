@@ -12,4 +12,5 @@ public class ResponseDto {
     private ResponseEnum responseEnum;
     private String message;
     private Object data;
+    private Integer code;
 }

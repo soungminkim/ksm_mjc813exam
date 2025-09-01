@@ -1,10 +1,10 @@
-package com.mjc813.swimpool_app.swimpool.apicontroller;
+package com.mjc813.swimpool_app.user.apicontroller;
 
 import com.mjc813.swimpool_app.common.ResponseDto;
 import com.mjc813.swimpool_app.common.ResponseEnum;
-import com.mjc813.swimpool_app.swimpool.dto.PageResponseDto;
-import com.mjc813.swimpool_app.swimpool.dto.UserDto;
-import com.mjc813.swimpool_app.swimpool.service.UserService;
+import com.mjc813.swimpool_app.common.PageResponseDto;
+import com.mjc813.swimpool_app.user.dto.UserDto;
+import com.mjc813.swimpool_app.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mjc813.swimpool_app.swimpool.service.IUserMybatis">
+<mapper namespace="com.mjc813.swimpool_app.user.service.IUserMybatis">
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user_tbl (name, username, password, email, phone_number, role, max_lock)

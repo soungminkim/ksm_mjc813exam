@@ -1,4 +1,4 @@
-package com.mjc813.swimpool_app.swimpool.dto;
+package com.mjc813.swimpool_app.common;
 
 import lombok.*;
 import java.util.List;

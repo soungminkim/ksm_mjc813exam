@@ -1,6 +1,6 @@
-package com.mjc813.swimpool_app.swimpool.service;
+package com.mjc813.swimpool_app.user.service;
 
-import com.mjc813.swimpool_app.swimpool.dto.UserDto;
+import com.mjc813.swimpool_app.user.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,11 @@ public class UserService {
         this.mybatisMapper.insertUser(dto);
         return dto;
     }
+
+    public UserDto findById(Long id) {
+        return this.mybatisMapper.findById(id);
+    }
+
     public UserDto getOne(Long id){
         UserDto one = this.mybatisMapper.getOneUser(id);
         return one;
