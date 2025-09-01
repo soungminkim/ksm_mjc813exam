@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Done</title>
+</head>
+<body>
+    {{#templateFilePrint}}
+    <div>
+        <div>{{username}}</div>
+        {{#profilePicture}}
+            <div><img src="/images/{{originalFilename}}"></img></div>
+        {{/profilePicture}}
+    </div>
+    {{/templateFilePrint}}
+</body>
+</html>

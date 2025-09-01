@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp / SignIn</title>
+</head>
+<body>
+    {{#loginUser}}
+    <h1>{{name}} 님 환영합니다.</h1>
+    {{/loginUser}}
+    {{^loginUser}}
+    <h1>회원가입 & 회원사인</h1>
+    {{/loginUser}}
+    <div>
+        <div class="nav-item">
+            <div>
+                {{^loginUser}}
+                <span><input type="text" id="signUserId" size="6" maxlength="20"/></span>
+                <span><input type="password" id="signPasswd" size="6" maxlength="20"/></span>
+                <span><button id="signInBtn">SignIn</button></span>
+                {{/loginUser}}
+                {{#loginUser}}
+                <span><button id="signOutBtn">SignOut</button></span>
+                {{/loginUser}}
+            </div>
+            <div>
+                {{^loginUser}}
+                <span><input type="text" id="signNickname" size="6" maxlength="20"/></span>
+                <span><input type="text" id="signEmail" size="6" maxlength="50"/></span>
+                <span><button id="findPassword">Find Passwd</button></span>
+                {{/loginUser}}
+            </div>
+            <div>
+                {{#loginUser}}
+                <span><input type="text" id="signUserId" size="6" maxlength="20" readonly value="{{username}}"/></span>
+                <span><input type="password" id="newPasswd" size="6" maxlength="20"/></span>
+                <span><button id="changePassword">Change Passwd</button></span>
+                {{/loginUser}}
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $("#signInBtn").click(function() {
+            $.signIn();
+        });
+        $("#signOutBtn").click(function() {
+            $.signOut();
+        });
+        $("#findPassword").click(function() {
+            $.findPassword();
+        });
+        $("#changePassword").click(function() {
+            $.changePassword();
+        });
+    });
+
+    $.signIn = function() {
+        let data = {
+            "username": $("#signUserId").val(),
+            "password": $("#signPasswd").val(),
+        };
+
+        $.ajax({
+            url: '/springsign/signin',
+            type: "POST",
+            data: JSON.stringify(data),
+            datatype: "JSON",
+            contentType: 'application/json',
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            document.location.href = "/";
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            alert(`${jqXHR.responseJSON.code} : ${jqXHR.responseJSON.message}`);
+        });
+    }
+
+    $.signOut = () => {
+        $.ajax({
+            url: '/springsign/signout',
+            type: "POST",
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            document.location.href = "/";
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            alert(`${jqXHR.responseJSON.code} : ${jqXHR.responseJSON.message}`);
+        });
+    }
+
+    $.findPassword = () => {
+        let data = {
+            "username": $("#signUserId").val(),
+            "nickName": $("#signNickname").val(),
+            "email": $("#signEmail").val(),
+        };
+        if ( data.username == null || data.username === '' ) {
+            alert("Please input username !");
+            $("#signUserId").focus();
+            return;
+        } else if ( data.nickName == null || data.nickName === '' ) {
+            alert("Please input nickName !");
+            $("#signNickname").focus();
+            return;
+        } else if ( data.email == null || data.email === '' ) {
+            alert("Please input email !");
+            $("#signEmail").focus();
+            return;
+        }
+
+        $.ajax({
+            url: '/cookiesign/findpasswd',
+            type: "POST",
+            data: JSON.stringify(data),
+            datatype: "JSON",
+            contentType: 'application/json',
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            document.location.href = "/";
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            alert(`${jqXHR.responseJSON.code} : ${jqXHR.responseJSON.message}`);
+        });
+    }
+
+    $.changePassword = () => {
+        let data = {
+            "username": $("#signUserId").val(),
+            "password": $("#newPasswd").val(),
+        };
+        if ( data.username == null || data.username === '' ) {
+            alert("Please input username !");
+            $("#signUserId").focus();
+            return;
+        } else if ( data.password == null || data.password === '' ) {
+            alert("Please input password !");
+            $("#newPasswd").focus();
+            return;
+        }
+
+        $.ajax({
+            url: '/cookiesign/changepasswd',
+            type: "POST",
+            data: JSON.stringify(data),
+            datatype: "JSON",
+            contentType: 'application/json',
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            document.location.href = "/";
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            alert(`${jqXHR.responseJSON.code} : ${jqXHR.responseJSON.message}`);
+        });
+    }
+</script>
+</html>

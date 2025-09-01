@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>음식 정보</title>
+    {{> ./include/css}}
+</head>
+<body>
+{{> ./include/topmenu}}
+<div class="container">
+    <div class="bs-docs-section" style="height: 100%;">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header">
+                    <h1 id="tables">음식 정보</h1>
+                </div>
+                <p class="bs-component">
+                    <button type="button" id="showAddModalButton" class="btn btn-primary">Primary</button>
+                    <button type="button" class="btn btn-secondary">Secondary</button>
+                    <button type="button" class="btn btn-success">Success</button>
+                    <button type="button" class="btn btn-info">Info</button>
+                    <button type="button" class="btn btn-warning">Warning</button>
+                    <button type="button" class="btn btn-danger">Danger</button>
+                    <button type="button" class="btn btn-light">Light</button>
+                    <button type="button" class="btn btn-dark">Dark</button>
+                    <button type="button" class="btn btn-link">Link</button>
+                    <button class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code"></i></button>
+                </p>
+                <div class="bs-component">
+                    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="light">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" href="#">Navbar</a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse" id="navbarColor01">
+                                <ul class="navbar-nav me-auto">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#">Home
+                                            <span class="visually-hidden">(current)</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Features</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Pricing</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">About</a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="searchFoodCategoryName">All</a>
+                                        <div class="dropdown-menu" id="selectFoodCategoryName">
+                                        </div>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="pageSize">10</a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="javascript:$.setPageSize(5);">5</a>
+                                            <a class="dropdown-item" href="javascript:$.setPageSize(10);">10</a>
+                                            <a class="dropdown-item" href="javascript:$.setPageSize(20);">20</a>
+                                            <a class="dropdown-item" href="javascript:$.setPageSize(30);">30</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <form class="d-flex">
+                                    <input id="searchText" class="form-control me-sm-2" type="search" placeholder="이름검색">
+                                    <button id="searchButton" class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                                </form>
+                            </div>
+                        </div>
+                    </nav>
+                    <button class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code"></i></button><button class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code"></i></button>
+                </div>
+                <div class="bs-component">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr id="tableHead">
+                            <th scope="col">ID <span id="id-desc" class="sortButton sortDesc">▼</span><span id="id-asc" class="sortButton sortAsc">△</span></th>
+                            <th scope="col">Name <span id="name-desc" class="sortButton sortDesc">▽</span><span id="name-asc" class="sortButton sortAsc">△</span></th>
+                            <th scope="col">짠맛</th>
+                            <th scope="col">신맛</th>
+                            <th scope="col">매운맛</th>
+                            <th scope="col">단맛</th>
+                            <th scope="col">타입 <span id="food_category_id-desc" class="sortButton sortDesc">▽</span><span id="food_category_id-asc" class="sortButton sortAsc">△</span></th>
+                        </tr>
+                        </thead>
+                        <tbody id="listBody">
+                        <tr>
+                            <th scope="row">Default</th>
+                            <td>Column content</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code"></i></button></div><!-- /example -->
+            </div>
+        </div>
+        <ul class="pagination" id="paginationUL">
+        </ul>
+    </div>
+    <div class="bs-docs-section" style="height: 10px;">
+        <div id="modal_box_add" style="display: none; height: 700px;" class="row">
+            <div class="col-lg-12">
+                <div class="bs-component">
+                    <div class="modal">
+                        <div class="modal-dialog" role="document">
+                            <div id="modalDialog" class="modal-content">
+                                <div class="modal-header">
+                                    <h5 id="modal_title" class="modal-title"></h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        <div class="row">
+<!--                                            <label class="col-form-label mt-4" for="id">id</label>-->
+                                            <input type="text" class="form-control mt-8" placeholder="id" id="id" disabled="">
+                                        </div>
+                                        <div class="row">
+<!--                                            <label class="col-form-label mt-4" for="name">음식명</label>-->
+                                            <input type="text" class="form-control mt-8" placeholder="음식명" id="name" maxlength="40">
+                                        </div>
+                                        <div class="row">
+<!--                                            <label class="col-form-label mt-4" for="foodCategoryId">음식타입</label>-->
+                                            <select id="foodCategoryId" class="form-control mt-8"></select>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-form-label mt-4" for="saltyLevel">짠맛/신맛/매운맛/단맛</label>
+                                            <input type="range" class="form-range  mt-8" id="saltyLevel" min="0" max="10">
+                                            <input type="range" class="form-range  mt-8" id="sourLevel" min="0" max="10">
+                                            <input type="range" class="form-range  mt-8" id="spicyLevel" min="0" max="10">
+                                            <input type="range" class="form-range  mt-8" id="sweetLevel" min="0" max="10">
+                                        </div>
+                                    </div>
+                                    <div id="foodIngredientsDiv" style="height: 150px; overflow-y: auto;">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="addIngredientButton" class="btn btn-primary">재료추가</button>
+                                    <button type="button" id="saveButton" class="btn btn-primary">저장</button>
+                                    <button type="button" id="deleteButton" class="btn btn-primary">삭제</button>
+                                    <button type="button" class="btn btn-secondary modalCloseButton" data-bs-dismiss="modal">닫기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal_bg" style="display: none"></div>
+    </div>
+    <div class="bs-docs-section" style="height: 10px;">
+        <div id="modal_box_ingredient" style="display: none; height: 500px;" class="row">
+            <div class="col-lg-12">
+                <div class="bs-component">
+                    <div class="modal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="" id="searchIngredient">
+                                        <span>
+                                            <select id="searchIngredientCategoryId" onchange="$.searchIngredient();">
+                                            </select>
+                                        </span>
+                                        <span>
+                                            <select id="ingredientCategoryPageSize" onchange="$.searchIngredient();">
+                                                <option class="dropdown-item" value="5">5</option>
+                                                <option class="dropdown-item" value="10">10</option>
+                                                <option class="dropdown-item" value="20">20</option>
+                                                <option class="dropdown-item" value="30">30</option>
+                                            </select>
+                                        </span>
+                                        <span>
+                                            <input id="searchIngredientName" class="" type="search" placeholder="재료검색">
+                                            <button id="searchIngredientButton" class="btn btn-secondary" type="submit">Search</button>
+                                        </span>
+                                    </div>
+                                    <div id="ingredientListHead" class='row'><span class='col-2'>ID <span id='ing-id-desc' class='dataRow sortIngredientButton sortIngredientDesc'>▽</span><span id='ing-id-asc' class='dataRow sortIngredientButton sortIngredientAsc'>△</span></span>
+                                        <span class='col-6'>재료 <span id='ing-name-desc' class='dataRow sortIngredientButton sortIngredientDesc'>▽</span><span id='ing-name-asc' class='dataRow sortIngredientButton sortIngredientAsc'>▲</span></span>
+                                        <span class='col-4'>타입 <span id='ing-ingredient_category_name-desc' class='dataRow sortIngredientButton sortIngredientDesc'>▽</span><span id='ing-ingredient_category_name-asc' class='dataRow sortIngredientButton sortIngredientAsc'>△</span></span>
+                                    </div>
+                                    <div id="ingredientList">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <ul class="pagination" id="ulIngredientPages">
+                                    </ul>
+                                    <button type="button" id="insertIngredient" class="btn btn-primary">선택</button>
+                                    <button type="button" class="btn btn-secondary modalIngredientClose" data-bs-dismiss="modal">닫기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal_bg_ingredient" style="display: none"></div>
+    </div>
+    {{> ./include/footer}}
+</div>
+
+<script src="/bootswatch/brite/js/bootstrap.bundle.min.js"></script>
+<script src="/bootswatch/brite/js/prism.js" data-manual></script>
+<script src="/bootswatch/brite/js/custom.js"></script>
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+<script>
+    let modalMode = 1;
+    let sortString = "id,desc";
+    let curPage = 1;
+
+    let sortIngredientString = "name,asc";
+    let curIngredientPage = 1;
+
+    $(document).ready(function(){
+        $.loadFoodCategories();
+        $.loadIngredientCategories();
+        $.loadData($.getPagable());
+
+        $('#showAddModalButton').click(function () {
+            // id="modal_box_add" 요소를 1000ms 동안 서서히 보여준다.
+            $.showModal(1);
+        });
+
+        $('.modalCloseButton').click(function () {
+            // id="modal_box_add" 요소와 class="modal_bg" 요소를 서서히 감춘다.
+            $('#modal_box_add').fadeOut();
+            $('.modal_bg').fadeOut();
+        });
+
+        $("#saveButton").click(function() {
+            if ( modalMode === 1 ) {
+                $.insert();
+            } else if ( modalMode === 2 ) {
+                $.update();
+            }
+        });
+
+        $("#deleteButton").click(function() {
+            $.delete();
+        });
+
+        $(".sortButton").click(function() {
+            $.getSortButton(this);
+        });
+
+        $(".sortIngredientButton").click(function() {
+            $.getIngredientSortButton(this);
+        });
+
+        $("#searchButton").click(function(){
+            $.loadData($.getPagable());
+        });
+
+        $('#addIngredientButton').click(function () {
+            // id="modal_box_add" 요소와 class="modal_bg" 요소를 서서히 감춘다.
+            $.loadIngredients();
+            $('#modal_box_ingredient').fadeIn(300);
+            $('.modal_bg_ingredient').fadeIn(300);
+        });
+
+        $('.modalIngredientClose').click(function () {
+            // id="modal_box_add" 요소와 class="modal_bg" 요소를 서서히 감춘다.
+            $('#modal_box_ingredient').fadeOut();
+            $('.modal_bg_ingredient').fadeOut();
+        });
+
+        $("#searchIngredientButton").click(function() {
+            $.loadIngredients();
+        });
+
+        $("#insertIngredient").click(function() {
+            $.addCheckedIngredients();
+        });
+    });
+
+    $.setPageSize = (num) => {
+        $("#pageSize").text(num);
+        $.loadData($.getPagable());
+    }
+
+    $.getPagable = () => {
+        let data = {
+            "name": $("#searchText").val(),
+            "foodCategoryId": 0,
+            "page": curPage - 1,
+            "size": $("#pageSize").text(),
+            "sort": sortString,
+        };
+        return data;
+    }
+
+    $.loadFoodCategories = () => {
+        $.ajax({
+            url: '/api/v1/food_category/search?name=&page=0&size=9999999&sort=name,asc',
+            method: 'GET'
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.printFoodCategory(data.result.content);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    }
+
+    $.printFoodCategory = (list) => {
+        $("#foodCategoryId").empty();
+        $("#selectFoodCategoryName").empty();
+        $("#selectFoodCategoryName").append("<a class=\"dropdown-item\" href=\"javascript:$.setFoodCategoryId(0, 'All');\">All</a>");
+        for (let item of list) {
+            let opt = `<option value="${item.id}">${item.name}</option>`;
+            $("#foodCategoryId").append(opt);
+            let aTag = `<a class="dropdown-item" href="javascript:$.setFoodCategoryId(${item.id}, '${item.name}');">${item.name}</a>`;
+            $("#selectFoodCategoryName").append(aTag);
+        }
+    }
+
+    $.setFoodCategoryId = (foodCategoryId, foodCategoryName) => {
+        $("#searchFoodCategoryName").text(foodCategoryName);
+        $.loadData($.getPagable());
+    }
+
+    $.loadIngredientCategories = () => {
+        $.ajax({
+            url: '/api/v1/ingredient_category/search?name=&page=0&size=9999999&sort=name,asc',
+            method: 'GET'
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.printIngredientCategory(data.result.content);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    }
+
+    $.printIngredientCategory = (list) => {
+        $("#searchIngredientCategoryId").empty();
+        $("#searchIngredientCategoryId").append("<option value='0'>All</option>");
+        for (let item of list) {
+            let opt = `<option value="${item.id}">${item.name}</option>`;
+            $("#searchIngredientCategoryId").append(opt);
+        }
+    }
+
+    $.searchIngredient = () => {
+        $.loadIngredients();
+    }
+
+    $.loadData = (pagable) => {
+        let url = `?name=${pagable.name}&foodCategoryId=${pagable.foodCategoryId}&page=${pagable.page}&size=${pagable.size}&sort=${pagable.sort}`;
+        $.ajax({
+            url: '/api/v1/food/search' + url,
+            method: 'GET'
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.printList(data.result);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    }
+
+    $.printList = function(result) {
+        $.makeDataRows(result.content);
+        $.makePageButtons(result);
+    }
+
+    $.makeOneRow = function(item) {
+        let html = `<tr class="dataRow" onclick="$.showInfo(${item.id})">
+                        <th scope="row">${item.id}</th>
+                        <td>${item.name}</td>
+                        <td>${item.saltyLevel}</td>
+                        <td>${item.sourLevel}</td>
+                        <td>${item.spicyLevel}</td>
+                        <td>${item.sweetLevel}</td>
+                        <td>${item.foodCategoryName}</td>
+                    </tr>`;
+        return html;
+    }
+
+    $.makeDataRows = function(list) {
+        let html = "";
+        for ( let i = 0; i < list.length; i++ ) {
+            html += $.makeOneRow(list[i]);
+        }
+        $("#listBody").empty();
+        $("#listBody").append(html);
+    }
+
+    $.makePageButtons = function(result) {
+        let html = "";
+        html += $.makePrevButton(result.pageable.pageNumber + 1);
+        html += $.makeFSTFFButtons(result.pageable.pageNumber + 1, result.totalPages);
+        html += $.makeNextButton(result.pageable.pageNumber + 1, result.totalPages);
+        $("#paginationUL").empty();
+        $("#paginationUL").append(html);
+    }
+
+    $.makePrevButton = function(curPage) {
+        if ( curPage <= 1 ) {
+            return `<li class="page-item disabled">
+                        <a class="page-link" href="#" id="pagePrev">«</a>
+                    </li>`;
+        } else {
+            return `<li class="page-item">
+                        <a class="page-link" href="javascript:$.goPage(${curPage - 1});" id="pagePrev">«</a>
+                    </li>`;
+        }
+    }
+
+    $.makeFSTFFButtons = function(curPage, maxPage) {
+        let startPage = (curPage - 2) <= 0 ? 1 : curPage - 2;
+        let lastPage = curPage + 2 >= maxPage ? maxPage : curPage + 2 <= 5 && maxPage >= 5 ? 5 : curPage + 2;
+        // lastPage = lastPage >= maxPage ? maxPage : lastPage;
+        //
+        // 현재페이지    출력페이지   max페이지
+        // 2            12345       7
+        // 1            12345       7
+        // 4            23456       7
+        // 6            4567        7
+        let html = "";
+        for ( let count = 1, page = startPage; count <= 5 && page <= lastPage; count++, page++ ) {
+            if ( page === curPage ) {
+                html += `<li class="page-item active">
+                            <a class="page-link" href="javascript:$.goPage(${page});">${page}</a>
+                        </li>`
+            } else {
+                html += `<li class="page-item">
+                            <a class="page-link" href="javascript:$.goPage(${page});">${page}</a>
+                        </li>`
+            }
+        }
+        return html;
+    }
+
+    $.makeNextButton = function(curPage, maxPage) {
+        if ( curPage >= maxPage ) {
+            return `<li class="page-item disabled">
+                        <a class="page-link" href="#" id="pageNext">»</a>
+                    </li>`;
+        } else {
+            return `<li class="page-item">
+                        <a class="page-link" href="javascript:$.goPage(${curPage + 1});" id="pageNext">»</a>
+                    </li>`;
+        }
+    }
+
+    $.goPage = function(goPage) {
+        curPage = goPage;
+        $.loadData($.getPagable());
+    }
+
+    $.getSortButton = (tag) => {
+        let str = $(tag)[0].id;
+        let arr = str.split("-");
+        let req = `${arr[0]},${arr[1]}`;
+        console.log( req );
+
+        $(".sortDesc").text("▽");
+        $(".sortAsc").text("△");
+        if( arr[1] === "desc") {
+            $("#tableHead").find("#"+str).text("▼")
+        } else {
+            $("#tableHead").find("#"+str).text("▲")
+        }
+
+        sortString = req;
+        $.loadData($.getPagable());
+    }
+
+    $.makeDatalist = function() {
+        let array = [];
+        $("#foodIngredientsDiv").children("div").each(function(){
+            let id = $(this).find(".span_ingredientId").text();
+            let unit = $(this).find(".select_ingredientUnit").val();
+            let capacity = $(this).find(".input_ingredientCapacity").val();
+            let data = {
+                "foodId": 0,
+                "ingredientId": id,
+                "capacity": capacity,
+                "unit": unit
+            };
+            console.log(`${JSON.stringify(data)}`);
+            array.push(data);
+        });
+        return array;
+    }
+
+    $.insert = function() {
+        if( $.isValid() === false ) {
+            return;
+        }
+        let name = $("#name").val();
+        if ( confirm(`Are you ok insert [${name}] ?`) === false ) {
+            return;
+        }
+        let dataMember = {
+            "food": {
+                // "id": 0,
+                "name": $("#name").val(),
+                "saltyLevel": $("#saltyLevel").val(),
+                "sourLevel": $("#sourLevel").val(),
+                "spicyLevel": $("#spicyLevel").val(),
+                "sweetLevel": $("#sweetLevel").val(),
+                "foodCategoryId": $("#foodCategoryId").val(),
+            },
+            "foodIngs": [
+            ]
+        };
+        dataMember.foodIngs = $.makeDatalist();
+
+        console.log(`${JSON.stringify(dataMember)}`);
+
+        $.ajax({
+            url: '/api/v1/food/ings',
+            type: "POST",
+            data: JSON.stringify(dataMember),
+            datatype: "JSON",
+            contentType: 'application/json',
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.clearModalForm();
+            $.loadData($.getPagable());
+            $(".modalCloseButton").trigger("click");
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    };
+
+    $.clearModalForm = () => {
+        $("#id").val("");
+        $("#name").val("");
+        $("#saltyLevel").val("");
+        $("#sourLevel").val("");
+        $("#spicyLevel").val("");
+        $("#sweetLevel").val("");
+        $("#foodCategoryId").val("");
+        $("#foodIngredientsDiv").empty();
+    }
+
+    $.showModal = (mode) => {
+        $('#modal_box_add').fadeIn(500);
+        $('.modal_bg').fadeIn(500);
+        if( mode === 1 ) {
+            $.clearModalForm();
+            $("#modal_title").text("입력 창")
+        } else if ( mode === 2 ) {
+            $("#modal_title").text("보기/수정 창")
+        }
+        modalMode = mode;
+    }
+
+    $.showInfo = function(id) {
+        $.ajax({
+            url: '/api/v1/food/' + id,
+            method: 'GET'
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.printOne(data.result);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    };
+
+    $.printOne = function(param) {
+        if(param == null || param == undefined) {
+            return;
+        }
+        if(param.food == null || param.food == undefined) {
+            return;
+        }
+        let item = param.food;
+        $("#id").val(item.id);
+        $("#name").val(item.name);
+        $("#saltyLevel").val(item.saltyLevel);
+        $("#sourLevel").val(item.sourLevel);
+        $("#spicyLevel").val(item.spicyLevel);
+        $("#sweetLevel").val(item.sweetLevel);
+        $("#foodCategoryId").val(item.foodCategoryId);
+        let list = param.foodIngs;
+        $.printFoodIngredients(list);
+        $.showModal(2);
+    }
+
+    $.printFoodIngredients = (list) => {
+        $("#foodIngredientsDiv").empty();
+        for ( let item of list ) {
+            let html = `<div id="ingreidnt_${item.id}">
+<span class="span_ingredientId">${item.ingredientId}</span><span>${item.ingredientDto.name}</span>
+<span><select class="select_ingredientUnit"><option value="0">ml</option><option value="1">g</option><option value="2">ea</option></select></span>
+<span><input type="number" id="ingreidnt_capacity_${item.id}" class="input_ingredientCapacity" value="${item.capacity}"/></span>
+<span><button onclick="$.deleteIngredient('ingreidnt_${item.id}');">삭제</button></span>
+</div>`;
+            $("#foodIngredientsDiv").append(html);
+            $(`#ingreidnt_${item.id}`).find(".select_ingredientUnit").val($.getNumberFromUnit(item.unit));
+        }
+    }
+
+    $.getNumberFromUnit = (unit) => {
+        switch(unit) {
+            case 'ml':
+                return 0;
+            case 'g':
+                return 1;
+            case 'ea':
+                return 2;
+        }
+    }
+
+    $.update = function() {
+        if( $.isValid() === false ) {
+            return;
+        }
+        let name = $("#name").val();
+        if ( confirm(`Are you ok update [${name}] ?`) === false ) {
+            return;
+        }
+        let dataMember = {
+            "food": {
+                "id": $("#id").val(),
+                "name": $("#name").val(),
+                "saltyLevel": $("#saltyLevel").val(),
+                "sourLevel": $("#sourLevel").val(),
+                "spicyLevel": $("#spicyLevel").val(),
+                "sweetLevel": $("#sweetLevel").val(),
+                "foodCategoryId": $("#foodCategoryId").val(),
+            },
+            "foodIngs": [
+            ]
+        };
+        dataMember.foodIngs = $.makeDatalist();
+
+        $.ajax({
+            url: '/api/v1/food/ings/' + $("#id").val(),
+            type: "PATCH",
+            data: JSON.stringify(dataMember),
+            datatype: "JSON",
+            contentType: 'application/json',
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.clearModalForm();
+            $.loadData($.getPagable());
+            $(".modalCloseButton").trigger("click");
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    };
+
+    $.delete = function() {
+        let name = $("#name").val();
+        if ( confirm(`Are you ok delete [${name}] ?`) === false ) {
+            return;
+        }
+        $.ajax({
+            url: '/api/v1/food/' + $("#id").val(),
+            type: "DELETE",
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.clearModalForm();
+            $.loadData($.getPagable());
+            $(".modalCloseButton").trigger("click");
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            alert(`${jqXHR.responseJSON.code} : ${jqXHR.responseJSON.message}`);
+        });
+    };
+
+    $.loadIngredients = () => {
+        let searchName = $("#searchIngredientName").val();
+        let ingredientCategoryId = $("#searchIngredientCategoryId").val();
+        let page = curIngredientPage - 1;
+        let size = $("#ingredientCategoryPageSize").val();
+        let sort = sortIngredientString;
+        $.ajax({
+            url: `/api/v1/ingredient/search?name=${searchName}&ingredientCategoryId=${ingredientCategoryId}&page=${page}&size=${size}&sort=${sort}`,
+            method: 'GET'
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.printIngredients(data.result.content);
+            $.makeIngredientPageButtons(data.result);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            alert(`${jqXHR.responseJSON.code} : ${jqXHR.responseJSON.message}`);
+        });
+    }
+
+    $.printIngredients = (list) => {
+        $("#ingredientList").empty();
+        for ( let item of list ) {
+            let html = `<div class='row dataRow'><span class='col-2'><input type="checkbox" class="chkings_boxes" id="chkings_${item.id}_${item.name}" />${item.id}</span>
+<span class='col-6' onclick="$.choiceIngredient(${item.id}, '${item.name}');">${item.name}</span>
+<span class='col-4'>${item.ingredientCategoryName}</span></div>`;
+            $("#ingredientList").append(html);
+        }
+    }
+
+    $.choiceIngredient = (ingredientId, ingredientName) => {
+        let html = `<div id="ingreidnt_${ingredientId}">
+<span class="span_ingredientId">${ingredientId}</span><span>${ingredientName}</span>
+<span><select class="select_ingredientUnit"><option value="0">ml</option><option value="1">g</option><option value="2">ea</option></select></span>
+<span><input type="number" id="ingreidnt_capacity_${ingredientId}" class="input_ingredientCapacity"/></span>
+<span><button onclick="$.deleteIngredient('ingreidnt_${ingredientId}');">삭제</button></span>
+</div>`;
+        $("#foodIngredientsDiv").append(html);
+    }
+
+    $.addCheckedIngredients = () => {
+        $('input.chkings_boxes:checked').each(function() {
+            let arr = $(this)[0].id.split("_");
+            $.choiceIngredient(arr[1], arr[2]);
+            // console.log('checked : ' + $(this)[0].id);
+        });
+        $(".modalIngredientClose").trigger("click");
+    }
+
+    $.deleteIngredient = (ingredientDivId) => {
+        $("#" + ingredientDivId).remove();
+    }
+
+    $.getIngredientSortButton = (tag) => {
+        let str = $(tag)[0].id;
+        let arr = str.split("-");
+        let req = `${arr[1]},${arr[2]}`;
+
+        $(".sortIngredientDesc").text("▽");
+        $(".sortIngredientAsc").text("△");
+        if( arr[2] === "desc") {
+            $("#ingredientListHead").find("#"+str).text("▼")
+        } else {
+            $("#ingredientListHead").find("#"+str).text("▲")
+        }
+
+        sortIngredientString = req;
+        $.loadIngredients();
+    }
+
+    $.isValid = () => {
+        let inputData = {
+            "name": $("#name").val(),
+            "foodCategoryId": $("#foodCategoryId").val(),
+        };
+        if ( inputData.name === '' || inputData.name.length < 2 ) {
+            alert('Please input name (2~40 size) !');
+            $("#name").focus();
+            return false;
+        } else if ( inputData.foodCategoryId == null ) {
+            alert('Please select foodCategoryId !');
+            $("#foodCategoryId").focus();
+            return false;
+        }
+        let cnt = 0;
+        $("#foodIngredientsDiv").children("div").each(function(){
+            cnt++;
+            let id = $(this).find(".span_ingredientId").text();
+            let unit = $(this).find(".select_ingredientUnit");
+            let capacity = $(this).find(".input_ingredientCapacity");
+            if ( id === '' ) {
+                // alert('Please check ingredientId !');
+                cnt = 0;
+                return false;
+            } else if ( unit.val() == null ) {
+                // alert('Please select unit !');
+                unit.focus();
+                cnt = 0;
+                return false;
+            } else if ( capacity.val() === '' || capacity.val() <= 0 ) {
+                // alert('Please input capacity !');
+                capacity.focus();
+                cnt = 0;
+                return false;
+            }
+        });
+        if ( cnt <= 0 ) {
+            alert('Please check ingredient !');
+            return false;
+        }
+        return true;
+    }
+
+    $.showErrors = function(json) {
+        if ( json.code != null ) {
+            alert(`${json.code} : ${json.message}`);
+        } else {
+            let msg = "";
+            for ( let i = 0; i < json.errors.length; i++ ) {
+                let item = json.errors[i];
+                msg += `${item.field} : ${item.defaultMessage}\n`;
+            }
+            alert(`${json.error}\n${msg}`);
+        }
+    }
+
+    $.makeIngredientPageButtons = function(result) {
+        let html = "";
+        html += $.makeIngredientPrevButton(result.pageable.pageNumber + 1);
+        html += $.makeIngredientCenterButtons(result.pageable.pageNumber + 1, result.totalPages);
+        html += $.makeIngredientNextButton(result.pageable.pageNumber + 1, result.totalPages);
+        $("#ulIngredientPages").empty();
+        $("#ulIngredientPages").append(html);
+    }
+
+    $.makeIngredientPrevButton = function(curPage) {
+        if ( curPage <= 1 ) {
+            return `<li class="page-item disabled">
+                        <a class="page-link" href="#" id="pageIngredientPrev">«</a>
+                    </li>`;
+        } else {
+            return `<li class="page-item">
+                        <a class="page-link" href="javascript:$.goIngredientPage(${curPage - 1});" id="pageIngredientPrev">«</a>
+                    </li>`;
+        }
+    }
+
+    $.makeIngredientCenterButtons = function(curPage, maxPage) {
+        let startPage = (curPage - 2) <= 0 ? 1 : curPage - 2;
+        let lastPage = curPage + 2 >= maxPage ? maxPage : curPage + 2 <= 5 && maxPage >= 5 ? 5 : curPage + 2;
+        let html = "";
+        for ( let count = 1, page = startPage; count <= 5 && page <= lastPage; count++, page++ ) {
+            if ( page === curPage ) {
+                html += `<li class="page-item active">
+                            <a class="page-link" href="javascript:$.goIngredientPage(${page});">${page}</a>
+                        </li>`
+            } else {
+                html += `<li class="page-item">
+                            <a class="page-link" href="javascript:$.goIngredientPage(${page});">${page}</a>
+                        </li>`
+            }
+        }
+        return html;
+    }
+
+    $.makeIngredientNextButton = function(curPage, maxPage) {
+        if ( curPage >= maxPage ) {
+            return `<li class="page-item disabled">
+                        <a class="page-link" href="#" id="pageIngredientNext">»</a>
+                    </li>`;
+        } else {
+            return `<li class="page-item">
+                        <a class="page-link" href="javascript:$.goIngredientPage(${curPage + 1});" id="pageIngredientNext">»</a>
+                    </li>`;
+        }
+    }
+
+    $.goIngredientPage = function(goPage) {
+        curIngredientPage = goPage;
+        $.loadIngredients();
+    }
+</script>
+</body>
+</html>

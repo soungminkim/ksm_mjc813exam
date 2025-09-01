@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Test</title>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div><img src="/images/baby-chiken.gif"></img></div>
+<form action="/file/upload_mpa" method="post" enctype="multipart/form-data">
+    <label for="username">이름</label><input type="text" id="username" name="username" />
+    <a onclick="javascript:addFile();" id="addFile" style="cursor: pointer;">+</a><br/>
+    <div id="uploadFiles">
+        <div>
+            <label for="profilePicture">사용프로파일</label>
+            <input type="file" id="profilePicture" name="profilePicture" />
+            <br/>
+        </div>
+    </div>
+    <button type="submit">Upload</button>
+</form>
+</body>
+<script>
+    function addFile() {
+        let html = `<div>
+                        <label for="profilePicture">사용프로파일</label>
+                        <input type="file" id="profilePicture" name="profilePicture" />
+                        <a onclick="removeThis($(this));" style="cursor: pointer;">-</a>
+                        <br/>
+                    </div>`;
+        if ( $("#uploadFiles").children().length < 10 ) {
+            $("#uploadFiles").append(html);
+        }
+    }
+
+    function removeThis(object) {
+        object.parent().remove();
+    }
+</script>
+</html>

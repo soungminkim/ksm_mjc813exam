@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>멤버 정보</title>
+    {{> ./include/css}}
+</head>
+<body>
+{{> ./include/topmenu}}
+<div class="container">
+    <div class="bs-docs-section" style="height: 100%;">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header">
+                    <h1 id="tables">멤버 정보</h1>
+                </div>
+                <p class="bs-component">
+                    <button type="button" id="showAddModalButton" class="btn btn-primary">Primary</button>
+                    <button type="button" class="btn btn-secondary">Secondary</button>
+                    <button type="button" class="btn btn-success">Success</button>
+                    <button type="button" class="btn btn-info">Info</button>
+                    <button type="button" class="btn btn-warning">Warning</button>
+                    <button type="button" class="btn btn-danger">Danger</button>
+                    <button type="button" class="btn btn-light">Light</button>
+                    <button type="button" class="btn btn-dark">Dark</button>
+                    <button type="button" class="btn btn-link">Link</button>
+                    <button class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code"></i></button>
+                </p>
+                <div class="bs-component">
+                    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="light">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" href="#">Navbar</a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse" id="navbarColor01">
+                                <ul class="navbar-nav me-auto">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#">Home
+                                            <span class="visually-hidden">(current)</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Features</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Pricing</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">About</a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="searchRole">All</a>
+                                        <div class="dropdown-menu" id="selectRoles">
+                                        </div>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="pageSize">10</a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="javascript:$.setPageSize(5);">5</a>
+                                            <a class="dropdown-item" href="javascript:$.setPageSize(10);">10</a>
+                                            <a class="dropdown-item" href="javascript:$.setPageSize(20);">20</a>
+                                            <a class="dropdown-item" href="javascript:$.setPageSize(30);">30</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <form class="d-flex">
+                                    <input id="searchUserId" class="form-control me-sm-2" type="search" placeholder="아이디검색">
+                                    <input id="searchNickName" class="form-control me-sm-2" type="search" placeholder="닉네임검색">
+                                    <button id="searchButton" class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                                </form>
+                            </div>
+                        </div>
+                    </nav>
+                    <button class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code"></i></button><button class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code"></i></button>
+                </div>
+                <div class="bs-component">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID <span id="id-desc" class="sortButton sortDesc">▼</span><span id="id-asc" class="sortButton sortAsc">△</span></th>
+                            <th scope="col">Username <span id="username-desc" class="sortButton sortDesc">▽</span><span id="username-asc" class="sortButton sortAsc">△</span></th>
+                            <th scope="col">NickName <span id="nick_name-desc" class="sortButton sortDesc">▽</span><span id="nick_name-asc" class="sortButton sortAsc">△</span></th>
+                            <th scope="col">Role <span id="role-desc" class="sortButton sortDesc">▽</span><span id="role-asc" class="sortButton sortAsc">△</span></th>
+                        </tr>
+                        </thead>
+                        <tbody id="listBody">
+                        <tr>
+                            <th scope="row">Default</th>
+                            <td>Column content</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code"></i></button></div><!-- /example -->
+            </div>
+        </div>
+        <ul class="pagination" id="paginationUL">
+        </ul>
+    </div>
+    <div class="bs-docs-section" style="height: 10px;">
+        <div id="modal_box_add" style="display: none; height: 650px;" class="row">
+            <div class="col-lg-12">
+                <h2>Modals</h2>
+                <div class="bs-component">
+                    <div class="modal">
+                        <div class="modal-dialog" role="document">
+                            <div id="modalDialog" class="modal-content">
+                                <div class="modal-header">
+                                    <h5 id="modal_title" class="modal-title"></h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        <div>
+                                            <input type="hidden" id="id" disabled="">
+                                            <label class="col-2" for="name">이름</label>
+                                            <input class="col-10" type="text" id="name" placeholder="이름" maxlength="20">
+                                        </div>
+                                        <div>
+                                            <label class="col-2" for="username">아이디</label>
+                                            <input class="col-10" type="text" id="username" placeholder="로그인아이디" maxlength="20">
+                                        </div>
+                                        <div>
+                                            <label class="col-2" for="password">암호</label>
+                                            <input class="col-10" type="text" id="password" placeholder="암호" maxlength="20">
+                                        </div>
+                                        <div>
+                                            <label class="col-2" for="nickName">별명</label>
+                                            <input class="col-10" type="text" id="nickName" placeholder="별명" maxlength="20">
+                                        </div>
+                                        <div>
+                                            <label class="col-2" for="phoneNumber">연락처</label>
+                                            <input class="col-10" type="text" id="phoneNumber" placeholder="연락처" maxlength="15">
+                                        </div>
+                                        <div>
+                                            <label class="col-2" for="email">이메일</label>
+                                            <input class="col-10" type="text" id="email" placeholder="이메일" maxlength="50">
+                                        </div>
+                                        <div>
+                                            <label class="col-2" for="role">권한</label>
+                                            <select class="col-10" id="role">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="saveButton" class="btn btn-primary">저장</button>
+                                    <button type="button" id="deleteButton" class="btn btn-primary">삭제</button>
+                                    <button type="button" class="btn btn-secondary modalCloseButton" data-bs-dismiss="modal">닫기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal_bg" style="display: none"></div>
+    </div>
+    {{> ./include/footer}}
+</div>
+
+<script src="/bootswatch/brite/js/bootstrap.bundle.min.js"></script>
+<script src="/bootswatch/brite/js/prism.js" data-manual></script>
+<script src="/bootswatch/brite/js/custom.js"></script>
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+<script>
+    let modalMode = 1;
+    let sortString = "id,desc";
+    let curPage = 1;
+    $(document).ready(function(){
+        $.loadERoles();
+        $.loadData($.getPagable());
+
+        $('#showAddModalButton').click(function () {
+            // id="modal_box_add" 요소를 1000ms 동안 서서히 보여준다.
+            $.showModal(1);
+        });
+
+        $('.modalCloseButton').click(function () {
+            // id="modal_box_add" 요소와 class="modal_bg" 요소를 서서히 감춘다.
+            $('#modal_box_add').fadeOut();
+            $('.modal_bg').fadeOut();
+        });
+
+        $("#saveButton").click(function() {
+            if ( modalMode === 1 ) {
+                $.insert();
+            } else if ( modalMode === 2 ) {
+                $.update();
+            }
+        });
+
+        $("#deleteButton").click(function() {
+            $.delete();
+        });
+
+        $(".sortButton").click(function() {
+            $.getSortButton(this);
+        });
+
+        $("#searchButton").click(function(){
+            $.loadData($.getPagable());
+        });
+    });
+
+    $.setPageSize = (num) => {
+        $("#pageSize").text(num);
+        $.loadData($.getPagable());
+    }
+
+    $.getPagable = () => {
+        let data = {
+            "username": $("#searchUserId").val(),
+            "nickName": $("#searchNickName").val(),
+            "role": $("#searchRole").text() === 'All' ? '' : $("#searchRole").text(),
+            "page": curPage - 1,
+            "size": $("#pageSize").text(),
+            "sort": sortString,
+        };
+        return data;
+    }
+
+    $.loadERoles = () => {
+        $.ajax({
+            url: '/api/v1/erole',
+            method: 'GET'
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.printERoles(data.result);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    }
+
+    $.printERoles = (list) => {
+        $("#role").empty();
+        $("#selectRoles").empty();
+        $("#selectRoles").append("<a class=\"dropdown-item\" href=\"javascript:$.setRole('All');\">All</a>");
+        for (let item of list) {
+            let opt = `<option value="${item}">${item}</option>`;
+            $("#role").append(opt);
+            let aTag = `<a class="dropdown-item" href="javascript:$.setRole('${item}');">${item}</a>`;
+            $("#selectRoles").append(aTag);
+        }
+    }
+
+    $.setRole = (role) => {
+        $("#searchRole").text(role);
+        $.loadData($.getPagable());
+    }
+
+    $.loadData = (pagable) => {
+        let url = `?username=${pagable.username}&nickName=${pagable.nickName}&role=${pagable.role}&page=${pagable.page}&size=${pagable.size}&sort=${pagable.sort}`;
+        $.ajax({
+            url: '/api/v1/member/search' + url,
+            method: 'GET'
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.printList(data.result);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    }
+
+    $.printList = function(result) {
+        $.makeDataRows(result.content);
+        $.makePageButtons(result);
+    }
+
+    $.makeOneRow = function(item) {
+        let html = `<tr class="dataRow" onclick="$.showInfo(${item.id})">
+                        <th scope="row">${item.id}</th>
+                        <td>${item.username}</td>
+                        <td>${item.nickName}</td>
+                        <td>${item.role}</td>
+                    </tr>`;
+        return html;
+    }
+
+    $.makeDataRows = function(list) {
+        let html = "";
+        for ( let i = 0; i < list.length; i++ ) {
+            html += $.makeOneRow(list[i]);
+        }
+        $("#listBody").empty();
+        $("#listBody").append(html);
+    }
+
+    $.makePageButtons = function(result) {
+        let html = "";
+        html += $.makePrevButton(result.pageable.pageNumber + 1);
+        html += $.makeFSTFFButtons(result.pageable.pageNumber + 1, result.totalPages);
+        html += $.makeNextButton(result.pageable.pageNumber + 1, result.totalPages);
+        $("#paginationUL").empty();
+        $("#paginationUL").append(html);
+    }
+
+    $.makePrevButton = function(curPage) {
+        if ( curPage <= 1 ) {
+            return `<li class="page-item disabled">
+                        <a class="page-link" href="#" id="pagePrev">«</a>
+                    </li>`;
+        } else {
+            return `<li class="page-item">
+                        <a class="page-link" href="javascript:$.goPage(${curPage - 1});" id="pagePrev">«</a>
+                    </li>`;
+        }
+    }
+
+    $.makeFSTFFButtons = function(curPage, maxPage) {
+        let startPage = (curPage - 2) <= 0 ? 1 : curPage - 2;
+        let lastPage = curPage + 2 >= maxPage ? maxPage : curPage + 2 <= 5 && maxPage >= 5 ? 5 : curPage + 2;
+        let html = "";
+        for ( let count = 1, page = startPage; count <= 5 && page <= lastPage; count++, page++ ) {
+            if ( page === curPage ) {
+                html += `<li class="page-item active">
+                            <a class="page-link" href="javascript:$.goPage(${page});">${page}</a>
+                        </li>`
+            } else {
+                html += `<li class="page-item">
+                            <a class="page-link" href="javascript:$.goPage(${page});">${page}</a>
+                        </li>`
+            }
+        }
+        return html;
+    }
+
+    $.makeNextButton = function(curPage, maxPage) {
+        if ( curPage >= maxPage ) {
+            return `<li class="page-item disabled">
+                        <a class="page-link" href="#" id="pageNext">»</a>
+                    </li>`;
+        } else {
+            return `<li class="page-item">
+                        <a class="page-link" href="javascript:$.goPage(${curPage + 1});" id="pageNext">»</a>
+                    </li>`;
+        }
+    }
+
+    $.goPage = function(goPage) {
+        curPage = goPage;
+        $.loadData($.getPagable());
+    }
+
+    $.getSortButton = (tag) => {
+        let str = $(tag)[0].id;
+        let arr = str.split("-");
+        let req = `${arr[0]},${arr[1]}`;
+        console.log( req );
+
+        $(".sortDesc").text("▽");
+        $(".sortAsc").text("△");
+        if( arr[1] === "desc") {
+            $("#"+str).text("▼")
+        } else {
+            $("#"+str).text("▲")
+        }
+
+        sortString = req;
+        $.loadData($.getPagable());
+    }
+
+    $.isValid = () => {
+        let inputData = {
+            "name": $("#name").val(),
+            "username": $("#username").val(),
+            "password": $("#password").val(),
+            "nickName": $("#nickName").val(),
+            "phoneNumber": $("#phoneNumber").val(),
+            "email": $("#email").val(),
+            "role": $("#role").val(),
+        };
+        if ( inputData.name === '' || inputData.name.length < 2 ) {
+            alert('Please input name (3~20 size) !');
+            $("#name").focus();
+            return false;
+        } else if ( inputData.username === '' || inputData.username.length < 2 ) {
+            alert('Please input username (7~20 size) !');
+            $("#username").focus();
+            return false;
+        } else if ( inputData.password === '' || inputData.password.length < 2 ) {
+            alert('Please input password (8~20 size) !');
+            $("#password").focus();
+            return false;
+        } else if ( inputData.nickName === '' || inputData.nickName.length < 2 ) {
+            alert('Please input nickName (8~20 size) !');
+            $("#nickName").focus();
+            return false;
+        } else if ( inputData.nickName === '' || inputData.nickName.length < 2 ) {
+            alert('Please input nickName (8~20 size) !');
+            $("#nickName").focus();
+            return false;
+        } else if ( inputData.phoneNumber === '' || inputData.phoneNumber.length < 2 ) {
+            alert('Please input phoneNumber (15~20 size) !');
+            $("#phoneNumber").focus();
+            return false;
+        } else if ( inputData.email === '' || inputData.email.length < 2 ) {
+            alert('Please input email (5~20 size) !');
+            $("#email").focus();
+            return false;
+        } else if ( inputData.role == null ) {
+            alert('Please select role !');
+            $("#role").focus();
+            return false;
+        }
+        return true;
+    }
+
+    $.insert = function() {
+        if( $.isValid() === false ) {
+            return;
+        }
+        let name = $("#name").val();
+        if ( confirm(`Are you ok insert [${name}] ?`) === false ) {
+            return;
+        }
+
+        let dataMember = {
+            // "id": 0,
+            "name": $("#name").val(),
+            "username": $("#username").val(),
+            "password": $("#password").val(),
+            "nickName": $("#nickName").val(),
+            "phoneNumber": $("#phoneNumber").val(),
+            "email": $("#email").val(),
+            "role": $("#role").val(),
+        };
+
+        $.ajax({
+            url: '/api/v1/member',
+            type: "POST",
+            data: JSON.stringify(dataMember),
+            datatype: "JSON",
+            contentType: 'application/json',
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.clearModalForm();
+            $.loadData($.getPagable());
+            $(".modalCloseButton").trigger("click");
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    };
+
+    $.showErrors = function(json) {
+        if ( json.code != null ) {
+            alert(`${json.code} : ${json.message}`);
+        } else {
+            let msg = "";
+            for ( let i = 0; i < json.errors.length; i++ ) {
+                let item = json.errors[i];
+                msg += `${item.field} : ${item.defaultMessage}\n`;
+            }
+            alert(`${json.error}\n${msg}`);
+        }
+    }
+
+    $.clearModalForm = () => {
+        $("#id").val("");
+        $("#name").val("");
+        $("#username").val("");
+        $("#password").val("");
+        $("#nickName").val("");
+        $("#phoneNumber").val("");
+        $("#email").val("");
+        $("#role").val("");
+    }
+
+    $.showModal = (mode) => {
+        $('#modal_box_add').fadeIn(500);
+        $('.modal_bg').fadeIn(500);
+        if( mode === 1 ) {
+            $.clearModalForm();
+            $("#modal_title").text("입력 창")
+        } else if ( mode === 2 ) {
+            $("#modal_title").text("보기/수정 창")
+        }
+        modalMode = mode;
+    }
+
+    $.showInfo = function(id) {
+        $.ajax({
+            url: '/api/v1/member/' + id,
+            method: 'GET'
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.printOne(data.result);
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    };
+
+    $.printOne = function(item) {
+        if(item == null || item == undefined) {
+            return;
+        }
+        $("#id").val(item.id);
+        $("#name").val(item.name);
+        $("#username").val(item.username);
+        $("#nickName").val(item.nickName);
+        $("#phoneNumber").val(item.phoneNumber);
+        $("#email").val(item.email);
+        $("#role").val(item.role);
+        $.showModal(2);
+    }
+
+    $.update = function() {
+        if( $.isValid() === false ) {
+            return;
+        }
+        let name = $("#name").val();
+        if ( confirm(`Are you ok update [${name}] ?`) === false ) {
+            return;
+        }
+        let dataMember = {
+            "id": $("#id").val(),
+            "name": $("#name").val(),
+            "username": $("#username").val(),
+            "password": $("#password").val(),
+            "nickName": $("#nickName").val(),
+            "phoneNumber": $("#phoneNumber").val(),
+            "email": $("#email").val(),
+            "role": $("#role").val(),
+        };
+
+        $.ajax({
+            url: '/api/v1/member/' + $("#id").val(),
+            type: "PATCH",
+            data: JSON.stringify(dataMember),
+            datatype: "JSON",
+            contentType: 'application/json',
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.clearModalForm();
+            $.loadData($.getPagable());
+            $(".modalCloseButton").trigger("click");
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);
+        });
+    };
+
+    $.delete = function() {
+        let name = $("#name").val();
+        if ( confirm(`Are you ok delete [${name}] ?`) === false ) {
+            return;
+        }
+        $.ajax({
+            url: '/api/v1/member/' + $("#id").val(),
+            type: "DELETE",
+        }).done(function(data, textStatus, jqXHR) {
+            console.log("Success:", data.result);
+            $.clearModalForm();
+            $.loadData($.getPagable());
+            $(".modalCloseButton").trigger("click");
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            $.showErrors(jqXHR.responseJSON);$.showErrors(jqXHR.responseJSON);
+        });
+    };
+</script>
+</body>
+</html>
