@@ -1,5 +1,6 @@
 package com.mjc813.food_web.food.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc813.food_web.common.IIdName;
 
 public interface IFood extends IIdName {
@@ -15,14 +16,31 @@ public interface IFood extends IIdName {
     Integer getSaltyLevel();
     void setSaltyLevel(Integer saltyLevel);
 
-    default void copyMembers(IFood from) {
-        if (from == null) {
+//	Long getIngredientId();
+//    void setIngredientId(Long ingredientId);
+//
+//    @JsonIgnore
+//    IIngredient getIngredient();
+//    void setIngredient(IIngredient iIngredient);
+
+    Long getFoodCategoryId();
+    void setFoodCategoryId(Long foodCategoryId);
+
+    @JsonIgnore
+    IIdName getFoodCategory();
+    void setFoodCategory(IIdName iIdName);
+
+    default void copyMembersFood(IFood iFood) {
+        if ( iFood == null ) {
             return;
         }
-        copyIdName(from);
-        setSpicyLevel(from.getSpicyLevel());
-        setSweetLevel(from.getSweetLevel());
-        setSourLevel(from.getSourLevel());
-        setSaltyLevel(from.getSaltyLevel());
+        this.copyMembersIdName(iFood);
+        this.setSpicyLevel(iFood.getSpicyLevel());
+        this.setSweetLevel(iFood.getSweetLevel());
+        this.setSourLevel(iFood.getSourLevel());
+        this.setSaltyLevel(iFood.getSaltyLevel());
+
+//        this.setIngredient(iFood.getIngredient());
+        this.setFoodCategory(iFood.getFoodCategory());
     }
 }
