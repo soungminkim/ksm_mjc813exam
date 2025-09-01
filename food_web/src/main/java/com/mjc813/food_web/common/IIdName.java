@@ -5,25 +5,25 @@ public interface IIdName {
     void setId(Long id);
 
     String getName();
-    void setName(String name);
+    void setName(String id);
 
-    default void copyIdName(IIdName source) {
-        if (source == null) {
+    default void copyMembersIdName(IIdName iIdName) {
+        if ( iIdName == null ) {  // 매개변수의 객체가 null 이면 복사 중지
             return;
         }
-        this.setId(source.getId());
-        this.setName(source.getName());
+        this.setId(iIdName.getId());
+        this.setName(iIdName.getName());
     }
 
-    default void copyIdNameNotNull(IIdName source) {
-        if (source == null) {
+    default void copyMembersIdNameNotNull(IIdName iIdName) {
+        if ( iIdName == null ) {  // 매개변수의 객체가 null 이면 복사 중지
             return;
         }
-        if (source.getId() != null) {
-            this.setId(source.getId());
+        if (iIdName.getId() != null) {  // 매개변수의 객체의 멤버변수 id가 null 이면 복사 중지
+            this.setId(iIdName.getId());
         }
-        if (source.getName() != null) {
-            this.setName(source.getName());
+        if (iIdName.getName() != null) {  // 매개변수의 객체의 멤버변수 name이 null 이면 복사 중지
+            this.setName(iIdName.getName());
         }
     }
 }

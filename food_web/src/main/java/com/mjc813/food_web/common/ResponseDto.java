@@ -1,14 +1,14 @@
 package com.mjc813.food_web.common;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class ResponseDto {
+    private ResponseCode code;
     private String message;
-    private Integer resultCode;
-    private Object resultData;
+    private Object result;
 }
