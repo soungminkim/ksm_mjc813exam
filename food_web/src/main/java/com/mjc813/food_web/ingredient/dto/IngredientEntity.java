@@ -9,35 +9,59 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity(name = "IngredientEntity")
 @Table(name = "ingredient_tbl")
+@Builder
 public class IngredientEntity implements IIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ingredient_category_id")
-    private IngredientCategoryEntity ingredientCategory;
+    @Transient
+    private Long ingredientCategoryId;
+    @Transient
+    private String ingredientCategoryName;
+
+//    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "ingredient_category_id", nullable = false)
+    private IngredientCategoryEntity ingredientCategoryEntity;
 
     @Override
-    public Long getIngredientCategoryId() {
-        return ingredientCategory != null ? ingredientCategory.getId() : null;
-    }
-
-    @Override
-    public void setIngredientCategoryId(Long ingredientCategoryId) {
-        // This is handled by setting the ingredientCategory entity
+    public IIdName getIngredientCategory() {
+        return this.ingredientCategoryEntity;
     }
 
     @Override
     public void setIngredientCategory(IIdName ingredientCategory) {
-        if (ingredientCategory instanceof IngredientCategoryEntity) {
-            this.ingredientCategory = (IngredientCategoryEntity) ingredientCategory;
+        if( this.ingredientCategoryEntity == null ) {
+            this.ingredientCategoryEntity = new IngredientCategoryEntity();
         }
+        this.ingredientCategoryEntity.copyMembersIdName(ingredientCategory);
+    }
+
+    @Override
+    public Long getIngredientCategoryId() {
+        // Long ingredientCategoryId 값과 IngredientCategoryEntity ingredientCategoryEntity.getId() 값이 항상 같도록 get 하는 기능
+        if (this.ingredientCategoryEntity == null) {
+            this.ingredientCategoryEntity = new IngredientCategoryEntity();
+        }
+        return this.ingredientCategoryEntity.getId();
+    }
+
+    @Override
+    public void setIngredientCategoryId(Long ingredientCategoryId) {
+        // Long ingredientCategoryId 값과 IngredientCategoryEntity ingredientCategoryEntity.getId() 값이 항상 같도록 set 하는 기능
+        if (ingredientCategoryId == null) {
+            return;
+        }
+        if (this.ingredientCategoryEntity == null) {
+            this.ingredientCategoryEntity = new IngredientCategoryEntity();
+        }
+        this.ingredientCategoryEntity.setId(ingredientCategoryId);
+        this.ingredientCategoryId = ingredientCategoryId;
     }
 }
