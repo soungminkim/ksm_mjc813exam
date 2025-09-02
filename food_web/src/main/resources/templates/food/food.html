@@ -137,6 +137,12 @@
                                     </div>
                                     <div id="foodIngredientsDiv" style="height: 150px; overflow-y: auto;">
                                     </div>
+                                    <a onclick="addFile();" id="addFile" style="cursor: pointer;">파일 ┼</a><br/>
+                                    <div id="uploadFiles">
+                                        <div>
+                                            <input type="file" id="imgFile" class="imageFiles"/>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" id="addIngredientButton" class="btn btn-primary">재료추가</button>
@@ -507,9 +513,10 @@
         if ( confirm(`Are you ok insert [${name}] ?`) === false ) {
             return;
         }
+
+        let formData = new FormData();
         let dataMember = {
             "food": {
-                // "id": 0,
                 "name": $("#name").val(),
                 "saltyLevel": $("#saltyLevel").val(),
                 "sourLevel": $("#sourLevel").val(),
@@ -523,15 +530,20 @@
             ]
         };
         dataMember.foodIngs = $.makeDatalist();
-
-        console.log(`${JSON.stringify(dataMember)}`);
+        formData.append("foodAndIngs"
+            , new Blob([JSON.stringify(dataMember)]
+                , {type: "application/json"}));
+        $(".imageFiles").each(function(index, fileOne){
+            formData.append("fileList", fileOne.files[0]);
+        });
 
         $.ajax({
-            url: '/api/v1/food/ings',
-            type: "POST",
-            data: JSON.stringify(dataMember),
-            datatype: "JSON",
-            contentType: 'application/json',
+            url: '/api/v1/food/ings'
+            , type: "POST"
+            , datatype: "JSON"
+            , data: formData
+            , contentType: false
+            , processData: false
         }).done(function(data, textStatus, jqXHR) {
             console.log("Success:", data.result);
             $.clearModalForm();
@@ -554,6 +566,7 @@
         toastEditor.setMarkdown("");
         $("#foodCategoryId").val("");
         $("#foodIngredientsDiv").empty();
+        $("#uploadFiles").empty();
     }
 
     $.showModal = (mode) => {
@@ -869,6 +882,20 @@
     $.goIngredientPage = function(goPage) {
         curIngredientPage = goPage;
         $.loadIngredients();
+    }
+
+    function addFile() {
+        let html = `<div>
+						<input type="file" id="imgFile" class="imageFiles"/>
+                        <a onclick="removeThis($(this));" style="cursor: pointer;">-</a>
+					</div>`;
+        if ( $("#uploadFiles").children().length < 10 ) {
+            $("#uploadFiles").append(html);
+        }
+    }
+
+    function removeThis(object) {
+        object.parent().remove();
     }
 </script>
 </body>

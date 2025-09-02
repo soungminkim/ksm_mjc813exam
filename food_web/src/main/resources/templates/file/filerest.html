@@ -7,12 +7,12 @@
 </head>
 <body>
 <div><img src="/images/baby-chiken.gif"></img></div>
-<label for="username">이름</label><input type="text" id="username" name="username" />
+<label for="username">이름</label><input type="text" id="username" />
 <a onclick="javascript:addFile();" id="addFile" style="cursor: pointer;">+</a><br/>
 <div id="uploadFiles">
     <div>
         <label for="profilePicture">사용프로파일</label>
-        <input type="file" id="profilePicture" name="profilePicture" class="classProfilePictures"/>
+        <input type="file" id="profilePicture" class="classProfilePictures"/>
         <br/>
     </div>
 </div>
@@ -40,17 +40,17 @@
         object.parent().remove();
     }
 
-    $(document).remove(function() {
+    $(document).ready(function() {
     });
 
     $.restUpload = function() {
         let formData = new FormData();
-        $(".classProfilePictures").each(function(index, fileOne){
-            formData.append("fileList", fileOne.files[0]);
-        });
         formData.append("foodCategoryDto"
             , new Blob([JSON.stringify({"id": 55, "name": "this is name"})]
                 , {type: "application/json"}));
+        $(".classProfilePictures").each(function(index, fileOne){
+            formData.append("fileList", fileOne.files[0]);
+        });
         $.ajax({
             url: "/api/v1/rest/file"
             , type: "POST"

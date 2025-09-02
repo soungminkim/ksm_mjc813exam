@@ -1,5 +1,6 @@
 package com.mjc813.food_web.member.service;
 
+import com.mjc813.food_web.common.MyFileUtil;
 import com.mjc813.food_web.common.exception.MyDataNotFoundException;
 import com.mjc813.food_web.common.exception.MyRequestException;
 import com.mjc813.food_web.member.dto.IMember;
@@ -34,6 +35,8 @@ public class MemberService implements UserDetailsService {
     private EmailService emailService;
     @Autowired
     private MySecurity mySecurity;
+
+    private MyFileUtil mfu = new MyFileUtil();
 
     public MemberDto insert(MemberDto dto) {
         if (dto == null) {
@@ -151,7 +154,7 @@ public class MemberService implements UserDetailsService {
         }
         String to = find.getEmail();
         String subject = "FoodWeb homepage send to you about user init password !";
-        String newPassword = this.emailService.generateRandomString(10);
+        String newPassword = this.mfu.generateRandomString(10);
 
         find.setPassword(encoder.encode(newPassword));
         MemberEntity data = (MemberEntity)this.encode(find);

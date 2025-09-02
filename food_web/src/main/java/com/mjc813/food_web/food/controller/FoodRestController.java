@@ -6,7 +6,9 @@ import com.mjc813.food_web.common.ResponseDto;
 import com.mjc813.food_web.food.dto.*;
 import com.mjc813.food_web.food.service.FoodJpaTransactionService;
 import com.mjc813.food_web.food.service.FoodService;
+import com.mjc813.food_web.food_category.dto.FoodCategoryEntity;
 import com.mjc813.food_web.food_ingredient.dto.FoodIngredientDto;
+import com.mjc813.food_web.food_ingredient.dto.FoodIngredientEntity;
 import com.mjc813.food_web.food_ingredient.service.FoodIngredientService;
 import com.mjc813.food_web.ingredient.dto.IngredientDto;
 import com.mjc813.food_web.ingredient_category.dto.IngredientCategoryDto;
@@ -19,6 +21,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,10 +122,11 @@ public class FoodRestController extends CommonRestController {
 
     @PostMapping("/ings")
     public ResponseEntity<ResponseDto> insertFoodIngs(
-            @Validated @RequestBody FoodIngsRequestDto foodIngs
+            @Validated @RequestPart(value = "foodAndIngs", required = true) FoodIngsRequestDto foodIngs
+            , @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList
     ) {
         try {
-            this.foodJpaTransactionService.insert(foodIngs.getFood(), foodIngs.getFoodIngs());
+            this.foodJpaTransactionService.insert(foodIngs.getFood(), foodIngs.getFoodIngs(), fileList);
             return this.getReponseEntity(ResponseCode.SUCCESS, "OK", foodIngs, null);
         } catch (Throwable th) {
             log.error(th.toString());
@@ -148,9 +152,9 @@ public class FoodRestController extends CommonRestController {
     public ResponseEntity<ResponseDto> getIngs() {
         try {
             FoodDto fd = FoodDto.builder().id(123L).name("1234").saltyLevel(1)
-                            .sourLevel(2).spicyLevel(3).sweetLevel(4)
-                            .foodCategoryId(1L)
-                            .build();
+                    .sourLevel(2).spicyLevel(3).sweetLevel(4)
+                    .foodCategoryId(1L)
+                    .build();
             FoodIngsRequestDto fird = new FoodIngsRequestDto();
             fird.setFood(fd);
             List<FoodIngredientDto> list = new ArrayList<>();
