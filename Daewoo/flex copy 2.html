@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* 로그인 화면 */
+        .container{
+            display: flex;
+            height: 100vh;
+        }
+        .login-form-section{
+            border: 1px solid black;
+            position: relative;
+            width: 100%;
+        }
+        .img{
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 좌측 -->
+        <div>
+            <h1>
+                Login
+            </h1>
+            로그인해주세요
+            <form>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" value="">
+                    <span>
+                        <!-- <img src="eyes" alt="화면 잠그는 눈 찾을것"> -->
+                    </span>
+                </div>
+
+                <div class="options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="rememver-checkbox">
+                        <label for="rememver-checkbox">비밀번호 기억하기</label>
+                    </div>
+                
+                     <a href="#" class="forgot-password">Forgot Password</a>
+
+                    <button type="submit" class="login-button">Login</button>
+                    <a href="#" class="signup-link">회원가입</a>
+                </div>
+            </form>
+
+            <div class="divider">
+                <span>Or login with</span>
+            </div>
+
+            <div class="social-login">
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
